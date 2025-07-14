@@ -1,3 +1,4 @@
+// MenuPage.jsx
 import Header from "../components/Header";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -8,7 +9,6 @@ import restaurantBg from "../assets/images/restaurant-img.png";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { motion } from "framer-motion";
 
-// ✅ Load API URLs from .env
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
 const flaskApi = import.meta.env.VITE_FLASK_API_URL;
 
@@ -281,21 +281,26 @@ export default function MenuPage() {
                 </div>
               ) : (
                 <div className="flex flex-col gap-4">
-                  {Object.entries(groupedMenu).map(([category, items]) => (
-                    <div key={category} className="bg-[#fdf6ee] rounded-lg shadow-sm">
-                      <button
-                        onClick={() => setOpenCategory(openCategory === category ? null : category)}
-                        className="w-full px-4 py-2 text-left text-lg font-semibold text-[#4b2e28] flex justify-between items-center"
-                      >{category}<span>{openCategory === category ? "▲" : "▼"}</span></button>
-                      {openCategory === category && (
-                        <div className="p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[180px]">
-                          {items.map((item, idx) => (
-                            <TranslatedItem key={idx} item={item} onAdd={handleAdd} onRemove={handleRemove} count={cart[item.name] || 0} />
-                          ))}
-                        </div>
-                      )}
-                    </div>
-                  ))}
+                  {Object.entries(groupedMenu).map(([category, items]) => {
+                    const [translatedCategory] = useAITranslation(category);
+                    return (
+                      <div key={category} className="bg-[#fdf6ee] rounded-lg shadow-sm">
+                        <button
+                          onClick={() => setOpenCategory(openCategory === category ? null : category)}
+                          className="w-full px-4 py-2 text-left text-lg font-semibold text-[#4b2e28] flex justify-between items-center"
+                        >
+                          {translatedCategory} <span>{openCategory === category ? "▲" : "▼"}</span>
+                        </button>
+                        {openCategory === category && (
+                          <div className="p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[180px]">
+                            {items.map((item, idx) => (
+                              <TranslatedItem key={idx} item={item} onAdd={handleAdd} onRemove={handleRemove} count={cart[item.name] || 0} />
+                            ))}
+                          </div>
+                        )}
+                      </div>
+                    );
+                  })}
                 </div>
               )}
             </div>

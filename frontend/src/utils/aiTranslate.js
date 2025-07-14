@@ -1,12 +1,21 @@
 import axios from "axios";
 
+const flaskApi = import.meta.env.VITE_FLASK_API_URL;
+
 export const translateText = async (text, targetLang) => {
   try {
-    const res = await axios.post("http://localhost:5050/api/translate", {
+    const res = await axios.post(`${flaskApi}/api/translate`, {
       text,
       targetLang,
     });
-    return res.data.translatedText;
+
+    const raw = res.data.translatedText;
+
+    // ✅ Extract just the translated word using regex
+    const match = raw.match(/as\s+"(.*?)"/);
+    const cleanTranslation = match?.[1] || raw || text;
+
+    return cleanTranslation;
   } catch (err) {
     console.error("Translation error:", err);
     return text;
