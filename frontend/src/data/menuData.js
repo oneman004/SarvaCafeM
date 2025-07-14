@@ -8,8 +8,6 @@ import tandoori_soya_chaapImg from "../assets/images/tandoori-soya-chaap.webp";
 import veg_crispyImg from "../assets/images/veg-crispy.webp";
 import namaste_kharda_paneerImg from "../assets/images/namaste-kharda-paneer.webp";
 import corn_cheese_ballsImg from "../assets/images/corn-cheese-balls.webp";
-
-import kurkure_aloo_chola_tikki_chaatImg from "../assets/images/kurkure-aloo-chola-tikki-chaat.webp";
 import classic_paneer_chilliImg from "../assets/images/classic-paneer-chilli.webp";
 import peri_peri_momosImg from "../assets/images/peri-peri-momos.webp";
 import palak_patta_chaat_chef_specialImg from "../assets/images/palak-patta-chaat.webp";
@@ -40,7 +38,7 @@ const menuItems = [
 { name: "Veg Crispy", price: 210, category: "Veg Starters", image: veg_crispyImg },
 { name: "Namaste Kharda Paneer", price: 220, category: "Veg Starters", image: namaste_kharda_paneerImg },
 { name: "Corn Cheese Balls", price: 155, category: "Veg Starters", image: corn_cheese_ballsImg },
-{ name: "KurKure Aloo Chola Tikki Chaat", price: 210, category: "Veg Starters", image: kurkure_aloo_chola_tikki_chaatImg },
+{ name: "KurKure Aloo Chola Tikki Chaat", price: 210, category: "Veg Starters" },
 { name: "Classic Paneer Chilli", price: 190, category: "Veg Starters", image: classic_paneer_chilliImg },
 { name: "Peri Peri Momos", price: 230, category: "Veg Starters", image: peri_peri_momosImg },
 { name: "Palak Patta Chaat (Chef Special)", price: 160, category: "Veg Starters", image: palak_patta_chaat_chef_specialImg },
