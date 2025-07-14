@@ -16,7 +16,7 @@ import page8 from "../assets/images/8.png";
 import page9 from "../assets/images/9.png";
 import page10 from "../assets/images/10.png";
 
-export default function FloatingPDFButton() {
+export default function FloatingPDFButton({ accessibilityMode }) {
   const [showModal, setShowModal] = useState(false);
   const [page, setPage] = useState(0);
 
@@ -34,18 +34,25 @@ export default function FloatingPDFButton() {
   };
 
   const toggleModal = () => {
-    if (!showModal) {
-      setPage(0); // 🔄 Reset to first page on open
-    }
+    if (!showModal) setPage(0);
     setShowModal((prev) => !prev);
   };
+
+  // Theme classes
+  const mainBtnClass = accessibilityMode
+    ? "bg-[#00BFFF] hover:bg-[#0099cc] text-black"
+    : "bg-[#f28500] hover:bg-[#d77400] text-white";
+
+  const navBtnClass = accessibilityMode
+    ? "bg-[#00BFFF] hover:bg-[#0099cc] text-black"
+    : "bg-[#f28500] hover:bg-[#d77400] text-white";
 
   return (
     <>
       {/* Floating Button */}
       <button
         onClick={toggleModal}
-        className="fixed bottom-6 right-6 bg-[#f28500] text-white p-4 rounded-full shadow-lg hover:bg-[#d77400] transition-all z-50 cursor-pointer flex items-center gap-2"
+        className={`fixed bottom-6 right-6 ${mainBtnClass} p-4 rounded-full shadow-lg transition-all z-50 cursor-pointer flex items-center gap-2`}
       >
         <FaRegHandPeace className="text-xl" />
         <span className="font-medium hidden sm:inline">
@@ -53,7 +60,7 @@ export default function FloatingPDFButton() {
         </span>
       </button>
 
-      {/* Minimal Modal */}
+      {/* Modal */}
       {showModal && (
         <div className="fixed inset-0 z-40 bg-transparent backdrop-blur-lg flex justify-center items-center">
           <div className="relative w-full h-full flex items-center justify-center px-6">
@@ -61,7 +68,7 @@ export default function FloatingPDFButton() {
             <button
               onClick={prevPage}
               disabled={page === 0}
-              className="absolute left-4 sm:left-6 bg-[#f28500] hover:bg-[#d77400] text-white text-2xl p-3 rounded-full cursor-pointer z-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`absolute left-4 sm:left-6 ${navBtnClass} text-2xl p-3 rounded-full cursor-pointer z-50 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <FaChevronLeft />
             </button>
@@ -77,7 +84,7 @@ export default function FloatingPDFButton() {
             <button
               onClick={nextPage}
               disabled={page === pages.length - 1}
-              className="absolute right-4 sm:right-6 bg-[#f28500] hover:bg-[#d77400] text-white text-2xl p-3 rounded-full cursor-pointer z-50 disabled:opacity-50 disabled:cursor-not-allowed"
+              className={`absolute right-4 sm:right-6 ${navBtnClass} text-2xl p-3 rounded-full cursor-pointer z-50 disabled:opacity-50 disabled:cursor-not-allowed`}
             >
               <FaChevronRight />
             </button>
