@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import bgImage from "../assets/images/restaurant-img.png";
 
+// ✅ Load API URL from env
+const nodeApi = import.meta.env.VITE_NODE_API_URL;
+
 export default function OrderSummary() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
@@ -11,7 +14,8 @@ export default function OrderSummary() {
     const orderId = localStorage.getItem("sarva_orderId");
     if (!orderId) return alert("❌ No order found!");
 
-    fetch(`http://localhost:5000/api/orders/${orderId}`)
+    // ✅ Use production-safe API URL
+    fetch(`${nodeApi}/api/orders/${orderId}`)
       .then((res) => res.json())
       .then((data) => setOrder(data))
       .catch(() => alert("❌ Failed to fetch order summary."));

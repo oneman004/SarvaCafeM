@@ -8,6 +8,10 @@ import restaurantBg from "../assets/images/restaurant-img.png";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { motion } from "framer-motion";
 
+// ✅ Load API URLs from .env
+const nodeApi = import.meta.env.VITE_NODE_API_URL;
+const flaskApi = import.meta.env.VITE_FLASK_API_URL;
+
 const groupedMenu = menuItems.reduce((acc, item) => {
   acc[item.category] = acc[item.category] || [];
   acc[item.category].push(item);
@@ -106,11 +110,7 @@ export default function MenuPage() {
 
     const itemsArray = Object.entries(cart).map(([name, quantity]) => {
       const item = menuItems.find((i) => i.name === name);
-      return {
-        name,
-        quantity,
-        price: item?.price || 0,
-      };
+      return { name, quantity, price: item?.price || 0 };
     });
 
     const subtotal = itemsArray.reduce((acc, item) => acc + item.price * item.quantity, 0);
@@ -126,11 +126,9 @@ export default function MenuPage() {
     };
 
     try {
-      const res = await fetch("http://localhost:5000/api/orders", {
+      const res = await fetch(`${nodeApi}/api/orders`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
       });
 
@@ -139,7 +137,7 @@ export default function MenuPage() {
         localStorage.setItem("sarva_orderId", data._id);
         navigate("/order-summary");
       } else {
-        alert("❌ Failed to place order. Try again.");
+        alert("❌ Failed to place order.");
       }
     } catch (err) {
       alert("❌ Server Error");
@@ -169,7 +167,7 @@ export default function MenuPage() {
           setIsProcessing(true);
 
           try {
-            const res = await fetch("http://localhost:5050/speech-to-text", {
+            const res = await fetch(`${flaskApi}/speech-to-text`, {
               method: "POST",
               body: formData,
             });
@@ -177,9 +175,11 @@ export default function MenuPage() {
             if (data.order) {
               setOrderText(data.order);
               processVoiceOrder(data.order);
-            } else alert("⚠️ Could not detect any valid items in speech.");
+            } else {
+              alert("⚠️ Could not detect valid items.");
+            }
           } catch {
-            alert("❌ Failed to reach backend.");
+            alert("❌ Failed to connect to backend.");
           }
           setIsProcessing(false);
         };
@@ -187,7 +187,7 @@ export default function MenuPage() {
         mediaRecorder.start();
         setRecording(true);
       } catch {
-        alert("❌ Microphone access denied or failed.");
+        alert("❌ Microphone access failed.");
         setRecording(false);
       }
     }
@@ -234,11 +234,11 @@ export default function MenuPage() {
         <Header />
         <div className="max-w-6xl mx-auto px-4 py-8 mt-10">
           <div className="flex flex-col md:flex-row gap-10">
-            <div className={`${Object.keys(cart).length > 0 ? "md:w-[60%]" : "md:w-[40%]"} transition-all bg-white bg-opacity-90 p-6 rounded-xl shadow-lg text-center`}>
+            <div className="md:w-[40%] bg-white bg-opacity-90 p-6 rounded-xl shadow-lg text-center">
               <h3 className="text-3xl font-bold mb-4 text-[#f28500]">{smartServe}</h3>
               <button
                 onClick={handleVoiceOrder}
-                className={`mx-auto mb-4 p-4 rounded-full ${recording ? "bg-red-600 animate-pulse" : "bg-[#f28500]"} text-white text-3xl cursor-pointer`}
+                className={`mx-auto mb-4 p-4 rounded-full ${recording ? "bg-red-600 animate-pulse" : "bg-[#f28500]"} text-white text-3xl`}
               >
                 {recording ? <FiMicOff /> : <FiMic />}
               </button>
@@ -253,14 +253,10 @@ export default function MenuPage() {
                     ))}
                   </ul>
                   <div className="flex flex-wrap gap-3 justify-center">
-                    <button
-                      onClick={handleContinue}
-                      className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white cursor-pointer"
-                    >{confirmBtn}</button>
-                    <button
-                      onClick={speakOrderSummary}
-                      className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white cursor-pointer flex items-center gap-2"
-                    >
+                    <button onClick={handleContinue} className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white">
+                      {confirmBtn}
+                    </button>
+                    <button onClick={speakOrderSummary} className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white flex items-center gap-2">
                       <HiSpeakerWave className="text-lg" /> {speakBtn}
                     </button>
                   </div>

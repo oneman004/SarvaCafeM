@@ -3,6 +3,9 @@ import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import restaurantBg from "../assets/images/restaurant-img.png";
 
+// ✅ Import VITE env variable
+const nodeApi = import.meta.env.VITE_NODE_API_URL;
+
 export default function Billing() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
@@ -11,7 +14,8 @@ export default function Billing() {
     const orderId = localStorage.getItem("sarva_orderId");
     if (!orderId) return;
 
-    fetch(`http://localhost:5000/api/orders/${orderId}`)
+    // ✅ Use env-based Node.js API URL
+    fetch(`${nodeApi}/api/orders/${orderId}`)
       .then((res) => res.json())
       .then((data) => setOrder(data))
       .catch(() => alert("❌ Failed to fetch order."));
