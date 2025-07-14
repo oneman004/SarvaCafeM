@@ -1,7 +1,7 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import restaurantBg from "../assets/images/restaurant-img.png";
+import restaurantBg from "../assets/images/restaurant-img.jpg";
 
 export default function SecondPage() {
   const navigate = useNavigate();

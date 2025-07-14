@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import restaurantBg from "../assets/images/restaurant-img.png"; // ✅ Background image
+import restaurantBg from "../assets/images/restaurant-img.jpg"; // ✅ Background image
 
 export default function OrderConfirmed() {
   const navigate = useNavigate();

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import { FiMic, FiMicOff } from "react-icons/fi";
 import { useAITranslation } from "../hooks/useAITranslation";
 import menuItems from "../data/menuData";
-import restaurantBg from "../assets/images/restaurant-img.png";
+import restaurantBg from "../assets/images/restaurant-img.jpg";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { motion } from "framer-motion";
 

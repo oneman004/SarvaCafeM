@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import bgImage from "../assets/images/restaurant-img.png";
+import bgImage from "../assets/images/restaurant-img.jpg";
 
 // ✅ Load API URL from env
 const nodeApi = import.meta.env.VITE_NODE_API_URL;

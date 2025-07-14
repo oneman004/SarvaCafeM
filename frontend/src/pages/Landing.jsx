@@ -41,7 +41,7 @@ export default function Landing() {
           accessibilityMode ? "brightness-50 grayscale" : "brightness-75"
         }`}
         style={{
-          backgroundImage: "url('/src/assets/images/restaurant-img.png')",
+          backgroundImage: "url('/src/assets/images/restaurant-img.jpg')",
         }}
       ></div>
 

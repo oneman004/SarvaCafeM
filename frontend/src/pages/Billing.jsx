@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
-import restaurantBg from "../assets/images/restaurant-img.png";
+import restaurantBg from "../assets/images/restaurant-img.jpg";
 
 // ✅ Import VITE env variable
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
