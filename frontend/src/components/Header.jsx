@@ -85,23 +85,26 @@ export default function Header() {
 
 
         {/* Right Buttons */}
-        <div className="flex items-center gap-2 sm:gap-3">
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 text-sm sm:text-base rounded-md bg-[#d86d2a] text-white shadow hover:bg-[#c75b1a] transition cursor-pointer"
-            onClick={() => alert("Group ordering feature coming soon!")}
-          >
-            Group Ordering
-          </motion.button>
+        
+<div className="flex items-center gap-2 sm:gap-3 ml-auto">
+  <motion.button
+    whileTap={{ scale: 0.95 }}
+    className="px-3 py-1.5 text-xs sm:text-sm md:text-base rounded-md bg-[#d86d2a] text-white shadow hover:bg-[#c75b1a] transition cursor-pointer"
+    onClick={() => alert("Group ordering feature coming soon!")}
+  >
+    Group Ordering
+  </motion.button>
 
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            className="px-4 py-2 text-sm sm:text-base rounded-md bg-[#d86d2a] text-white shadow hover:bg-[#c75b1a] transition cursor-pointer"
-            onClick={() => setShowCard(true)}
-          >
-             Table Service
-          </motion.button>
-        </div>
+  <motion.button
+    whileTap={{ scale: 0.95 }}
+    className="px-3 py-1.5 text-xs sm:text-sm md:text-base rounded-md bg-[#d86d2a] text-white shadow hover:bg-[#c75b1a] transition cursor-pointer"
+    onClick={() => setShowCard(true)}
+  >
+    Table Service
+  </motion.button>
+</div>
+
+
       </header>
 
       {/* Request Popup */}
