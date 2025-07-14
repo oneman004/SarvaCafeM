@@ -8,6 +8,7 @@ import tandoori_soya_chaapImg from "../assets/images/tandoori-soya-chaap.webp";
 import veg_crispyImg from "../assets/images/veg-crispy.webp";
 import namaste_kharda_paneerImg from "../assets/images/namaste-kharda-paneer.webp";
 import corn_cheese_ballsImg from "../assets/images/corn-cheese-balls.webp";
+
 import kurkure_aloo_chola_tikki_chaatImg from "../assets/images/kurkure-aloo-chola-tikki-chaat.webp";
 import classic_paneer_chilliImg from "../assets/images/classic-paneer-chilli.webp";
 import peri_peri_momosImg from "../assets/images/peri-peri-momos.webp";
