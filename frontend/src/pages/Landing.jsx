@@ -4,6 +4,8 @@ import { motion } from "framer-motion";
 import { FiEye } from "react-icons/fi";
 import FloatingPDFButton from "../components/FloatingPDFButton";
 import logo from "../assets/images/logo.png";
+import restaurantBg from "../assets/images/restaurant-img.jpg";
+
 
 const languages = [
   { code: "en", label: "English" },
@@ -37,13 +39,14 @@ export default function Landing() {
     >
       {/* Background */}
       <div
-        className={`absolute inset-0 bg-cover bg-center z-0 ${
-          accessibilityMode ? "brightness-50 grayscale" : "brightness-75"
-        }`}
-        style={{
-          backgroundImage: "url('/src/assets/images/restaurant-img.jpg')",
-        }}
-      ></div>
+  className={`absolute inset-0 bg-cover bg-center z-0 ${
+    accessibilityMode ? "brightness-50 grayscale" : "brightness-75"
+  }`}
+  style={{
+    backgroundImage: `url(${restaurantBg})`,
+  }}
+></div>
+
 
       {/* Accessibility Toggle Button */}
       <button
