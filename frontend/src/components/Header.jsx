@@ -14,7 +14,7 @@ export default function Header() {
   const streamRef = useRef(null);
 
   const handleFeatureClick = () => {
-    alert("Coming Soon");
+    alert("Alert sent !");
   };
 
   const handleVoiceInput = async () => {
