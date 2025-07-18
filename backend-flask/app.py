@@ -1,6 +1,6 @@
 from flask import Flask, request, jsonify
 from flask_cors import CORS
-import whisper
+import openai
 from dotenv import load_dotenv
 import os
 import tempfile
@@ -14,7 +14,8 @@ app = Flask(__name__)
 CORS(app)
 
 # 🧠 Load Whisper + GPT model
-model = whisper.load_model("medium")  # Use "base" or "small" for faster startup on Render
+openai.api_key = os.getenv("OPENAI_API_KEY")
+
 llm = ChatOpenAI(model="gpt-4o", temperature=0)
 
 # 🎙️ Speech-to-Text + GPT-4o formatting
@@ -33,8 +34,12 @@ def speech_to_text():
 
     try:
         # Transcribe
-        result = model.transcribe(temp_path)
-        transcription = result["text"]
+        with open(temp_path, "rb") as af:
+            transcription_response = openai.audio.transcriptions.create(
+                model="whisper-1",
+                file=af
+            )
+        transcription = transcription_response.text
         print("📝 Transcribed:", transcription)
 
         # Format via GPT
