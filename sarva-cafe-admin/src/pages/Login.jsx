@@ -11,7 +11,7 @@ const Login = () => {
     e.preventDefault();
     if (email && password) {
       console.log('Logging in with:', { email, password });
-      navigate('/'); // Redirect to Dashboard
+      navigate('/dashboard'); // Redirect to Dashboard
     } else {
       alert('Please enter email and password.');
     }

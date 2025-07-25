@@ -25,7 +25,7 @@ const Sidebar = () => {
       </div>
       <nav className="flex-1 px-4 py-6 space-y-2">
         <NavLink 
-          to="/" 
+          to="/dashboard" 
           end
           style={({ isActive }) => (isActive ? activeLinkStyle : undefined)}
           className="flex items-center px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors"
