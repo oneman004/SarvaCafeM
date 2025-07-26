@@ -7,6 +7,7 @@ import SignUp from './pages/SignUp';
 import Dashboard from './pages/Dashboard';
 import Orders from './pages/Orders';
 import Tables from './pages/Tables';
+import Staff from './pages/Staff'; // 👈 import your Staff page
 
 function App() {
   const location = useLocation();
@@ -16,10 +17,17 @@ function App() {
   const showLayout = !noLayoutRoutes.includes(location.pathname);
 
   return (
-    <div className="flex bg-gray-100 min-h-screen font-sans">
+    <div className="bg-gray-100 min-h-screen font-sans">
       {showLayout && <Sidebar />}
 
-      <div className="flex-1 flex flex-col">
+      {/* 👉 main content wrapper with margin-left when sidebar is visible */}
+      <div
+        className={
+          showLayout
+            ? 'ml-64 flex flex-col min-h-screen'
+            : 'flex flex-col min-h-screen'
+        }
+      >
         {showLayout && <Navbar />}
         <main className="flex-1 p-6">
           <Routes>
@@ -31,6 +39,7 @@ function App() {
             <Route path="/dashboard" element={<Dashboard />} />
             <Route path="/orders" element={<Orders />} />
             <Route path="/tables" element={<Tables />} />
+            <Route path="/staff" element={<Staff />} /> {/* 👈 new route */}
 
             {/* ✅ Optional: redirect unknown routes to Login */}
             <Route path="*" element={<Navigate to="/" replace />} />
