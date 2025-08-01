@@ -79,12 +79,12 @@ export default function FloatingSignLanguageButton({ accessibilityMode, setAcces
               accessibilityMode ? "text-[#00BFFF]" : "text-white"
             }`}
           >
-            <h1 className="text-3xl sm:text-4xl md:text3xl font-bold mb-6 text-center drop-shadow-lg">
-              Sign Language Animation
+            <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
+              Make Your Name Speak a New Language!
             </h1>
 
             <input
-              className="border p-3 rounded mb-4 text-white w-full max-w-xs text-center text-lg font-semibold shadow-md outline-none"
+              className="border p-2 rounded mb-4 text-white w-full max-w-[250px] text-center text-base font-semibold shadow-md outline-none"
               type="text"
               placeholder="Enter your name"
               value={name}
@@ -93,7 +93,7 @@ export default function FloatingSignLanguageButton({ accessibilityMode, setAcces
 
             <button
               onClick={handleShowSign}
-              className={`mt-2 font-bold px-6 py-3 rounded-full text-lg shadow-lg transition-transform transform hover:scale-105 ${
+              className={`mt-2 font-bold px-4 py-2 rounded-full text-base shadow-md transition-transform transform hover:scale-105 ${
                 accessibilityMode
                   ? "bg-[#00BFFF] text-black hover:bg-blue-400"
                   : "bg-yellow-400 text-black hover:bg-yellow-500"
@@ -102,46 +102,48 @@ export default function FloatingSignLanguageButton({ accessibilityMode, setAcces
               Show in Sign Language
             </button>
 
-            {/* Images */}
-            <div className="mt-10 flex flex-wrap justify-center gap-4 max-w-[90vw]">
-              <AnimatePresence>
-                {shownImages.map((letter, idx) => {
-                  const src = `/src/assets/sign-language/${letter}.gif`;
-                  return (
-                    <motion.img
-                      key={idx}
-                      src={src}
-                      alt={letter}
-                      className="w-20 h-20 sm:w-28 sm:h-28 object-contain drop-shadow-[0_0_25px_rgba(255,255,255,0.8)]"
-                      initial={
-                        idx === 0
-                          ? { opacity: 0, scale: 0.3, rotate: -10 }
-                          : { opacity: 0, x: -50, scale: 0.5 }
-                      }
-                      animate={
-                        idx === 0
-                          ? {
-                              opacity: [0, 1, 0.6, 1],
-                              scale: [0.3, 1.1, 0.9, 1],
-                              rotate: [-10, 10, -5, 0],
-                            }
-                          : { opacity: 1, x: 0, scale: 1 }
-                      }
-                      exit={{ opacity: 0 }}
-                      transition={{
-                        duration: idx === 0 ? 1 : 0.6,
-                        type: idx === 0 ? "tween" : "spring",
-                        bounce: 0.4,
-                        delay: idx * 0.05,
-                      }}
-                    />
-                  );
-                })}
-              </AnimatePresence>
+            {/* Images - Single Row Scrollable */}
+            <div className="mt-8 w-full overflow-x-auto">
+              <div className="flex justify-center gap-2 px-4 min-w-fit">
+                <AnimatePresence>
+                  {shownImages.map((letter, idx) => {
+                    const src = `/src/assets/sign-language/${letter}.gif`;
+                    return (
+                      <motion.img
+                        key={idx}
+                        src={src}
+                        alt={letter}
+                        className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0"
+                        initial={
+                          idx === 0
+                            ? { opacity: 0, scale: 0.3, rotate: -10 }
+                            : { opacity: 0, x: -50, scale: 0.5 }
+                        }
+                        animate={
+                          idx === 0
+                            ? {
+                                opacity: [0, 1, 0.6, 1],
+                                scale: [0.3, 1.1, 0.9, 1],
+                                rotate: [-10, 10, -5, 0],
+                              }
+                            : { opacity: 1, x: 0, scale: 1 }
+                        }
+                        exit={{ opacity: 0 }}
+                        transition={{
+                          duration: idx === 0 ? 1 : 0.6,
+                          type: idx === 0 ? "tween" : "spring",
+                          bounce: 0.4,
+                          delay: idx * 0.05,
+                        }}
+                      />
+                    );
+                  })}
+                </AnimatePresence>
+              </div>
             </div>
 
             {/* Formed Letters */}
-            <div className="flex mt-8 gap-2 text-3xl sm:text-4xl font-extrabold tracking-wide flex-wrap justify-center">
+            <div className="flex mt-6 gap-2 text-2xl sm:text-4xl font-extrabold tracking-wide flex-wrap justify-center">
               <AnimatePresence>
                 {formedLetters.map((char, idx) => (
                   <motion.span

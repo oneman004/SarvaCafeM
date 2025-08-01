@@ -73,7 +73,7 @@ export default function Landing() {
         }`}
       >
         <h1 className="text-4xl font-bold text-center mb-8">
-          Welcome to Sarva Cafe!
+          Welcome to Terra Cart!
         </h1>
         <p
           className={`text-center mb-6 ${

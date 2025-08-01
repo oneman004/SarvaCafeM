@@ -19,11 +19,53 @@ import tandoori_mushroomImg from "../assets/images/tandoori-mushroom.webp";
 import tandoori_soya_chaap_specialImg from "../assets/images/tandoori-soya-chaap.webp";
 import veg_manchurian_dryImg from "../assets/images/veg-manchurian-dry.webp";
 import tandoori_hariyali_seekhImg from "../assets/images/tandoori-hariyali-seekh.webp";
+//new ones
+import vegSandwichImg from "../assets/images/veg-sandwich.webp";
+import paneerJungleeSandwichImg from "../assets/images/paneer-junglee-sandwich.jpg";
+import mumbaiSandwichImg from "../assets/images/mumbai-sandwich.jpeg";
+import tandulachaWadaPavImg from "../assets/images/tandulacha-wada-pav.jpg";
+import glutenFreeDosaiImg from "../assets/images/gluten-free-dosai.webp";
+import kothimbirWadiImg from "../assets/images/kothimbir-wadi.webp";
+import bombayPavBhajiImg from "../assets/images/bombay-pav-bhaji.webp";
+import pizzaBombImg from "../assets/images/pizza-bomb.webp";
+import miniBatataWadaImg from "../assets/images/mini-batata-wada.webp";
+import appeChutneyImg from "../assets/images/appe-chutney.webp";
+import namasteMisalPavImg from "../assets/images/namaste-misal-pav-dahi.jpeg";
+import cholaKulchaImg from "../assets/images/chola-kulcha.avif";
+import rajmaChawalImg from "../assets/images/rajma-chawal.jpeg";
+import dalMakhniJeeraRiceImg from "../assets/images/dal-makhni-jeera-rice.jpeg";
+import vegKormaParathaImg from "../assets/images/veg-korma-malbori-paratha.jpeg";
+import dalKhichadiDahiImg from "../assets/images/dal-fry-rice-khichdi-dahi.jpg";
+import schezwanRiceManchurianImg from "../assets/images/schezwan-rice-manchurian.jpg";
+
 
 
 
 
 const menuItems = [
+
+     { name: "Veg Sandwich", price: 89, category: "Toasted Sandwiches", image: vegSandwichImg },
+  { name: "Paneer Junglee Sandwich", price: 89, category: "Toasted Sandwiches", image: paneerJungleeSandwichImg },
+  { name: "Mumbai Sandwich", price: 89, category: "Toasted Sandwiches", image: mumbaiSandwichImg },
+  { name: "Terra Wada Pav", price: 49, category: "Terra Cart Specials", image: tandulachaWadaPavImg },
+  { name: "Gluten Free Dosai", price: 89, category: "Terra Cart Specials", image: glutenFreeDosaiImg },
+  { name: "Kothimbir Wadi", price: 69, category: "Terra Cart Specials", image: kothimbirWadiImg },
+  { name: "Bombay Pav Bhaji", price: 99, category: "Terra Cart Specials", image: bombayPavBhajiImg },
+  { name: "Pizza Bomb", price: 79, category: "Terra Cart Specials", image: pizzaBombImg },
+  { name: "Mini Batata Wada", price: 49, category: "Terra Cart Specials", image: miniBatataWadaImg },
+  { name: "Appe & Chutney", price: 69, category: "Terra Cart Specials", image: appeChutneyImg },
+  { name: "namaste misal pav & dahi", price: 99, category: "mini-thali", image: namasteMisalPavImg },
+  { name: "chola kulcha", price: 99, category: "mini-thali", image: cholaKulchaImg },
+  { name: "rajma chawal", price: 99, category: "mini-thali", image: rajmaChawalImg },
+  { name: "dal makhni jeera rice", price: 99, category: "mini-thali", image: dalMakhniJeeraRiceImg },
+  { name: "veg korma & malbori paratha", price: 99, category: "mini-thali", image: vegKormaParathaImg },
+  { name: "dal fry rice / dal khichadi dahi", price: 89, category: "mini-thali", image: dalKhichadiDahiImg },
+  { name: "schezwan rice & manchurian", price: 99, category: "mini-thali", image: schezwanRiceManchurianImg },
+
+
+
+
+  /*
   // 🍟 FRIES
   { name: "Plain Fries", price: 100, category: "Fries", image: plainFriesImg },
 { name: "Peri Peri Fries", price: 120, category: "Fries", image: periFriesImg },
@@ -147,6 +189,6 @@ const menuItems = [
   { name: "Chaas", price: 55, category: "Beverages" },
   { name: "Nimbu Pani", price: 65, category: "Beverages" },
   { name: "Dahi", price: 35, category: "Beverages" },
+  */
 ];
-
 export default menuItems;
