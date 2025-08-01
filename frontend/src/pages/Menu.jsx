@@ -1,4 +1,3 @@
-// MenuPage.jsx
 import Header from "../components/Header";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";

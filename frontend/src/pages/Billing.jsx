@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { FiEye } from "react-icons/fi";
 import Header from "../components/Header";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 
@@ -9,6 +10,15 @@ const nodeApi = import.meta.env.VITE_NODE_API_URL;
 export default function Billing() {
   const navigate = useNavigate();
   const [order, setOrder] = useState(null);
+  const [accessibilityMode, setAccessibilityMode] = useState(
+    localStorage.getItem("accessibilityMode") === "true"
+  );
+
+  const toggleAccessibility = () => {
+    const newMode = !accessibilityMode;
+    setAccessibilityMode(newMode);
+    localStorage.setItem("accessibilityMode", newMode.toString());
+  };
 
   useEffect(() => {
     const orderId = localStorage.getItem("sarva_orderId");
@@ -32,33 +42,62 @@ export default function Billing() {
   const { items = [], subtotal, gst, total, tableNumber } = order;
 
   return (
-    <div className="min-h-screen relative text-[#4a2e1f]">
+    <div
+      className={`min-h-screen relative transition-all duration-300 ${
+        accessibilityMode ? "bg-black text-[#00BFFF]" : "text-[#4a2e1f]"
+      }`}
+    >
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src={restaurantBg}
           alt="Restaurant"
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover ${
+            accessibilityMode ? "brightness-50 grayscale" : ""
+          }`}
         />
-        <div className="absolute inset-0 bg-[#f3ddcb]/70 backdrop-blur-sm" />
+        <div
+          className={`absolute inset-0 backdrop-blur-sm ${
+            accessibilityMode ? "bg-black/50" : "bg-[#f3ddcb]/70"
+          }`}
+        />
       </div>
+
+      {/* Accessibility Toggle Button */}
+      <button
+        onClick={toggleAccessibility}
+        className={`fixed top-18 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
+          accessibilityMode
+            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
+            : "bg-black/60 text-white hover:bg-black/80"
+        }`}
+        title="Toggle Accessibility Mode"
+      >
+        <FiEye size={24} />
+      </button>
 
       {/* Header */}
       <Header />
 
       {/* Content */}
       <div className="relative z-10 flex items-start justify-center px-4 pt-24 pb-12">
-        <div className="bg-[#fef4ec] border border-[#e2c1ac] w-full max-w-md p-6 rounded-2xl shadow-xl backdrop-blur-sm">
+        <div
+          className={`w-full max-w-md p-6 rounded-2xl shadow-xl backdrop-blur-sm transition-all duration-300 ${
+            accessibilityMode
+              ? "bg-black border-2 border-[#00BFFF] text-[#00BFFF]"
+              : "bg-[#fef4ec] border border-[#e2c1ac]"
+          }`}
+        >
           {/* Cafe Title */}
           <h1 className="text-center text-xl font-bold mb-4">Sarva Cafe</h1>
 
           {/* Table Info */}
-          <h2 className="text-md font-semibold mb-4 text-[#5f3a2c]">
+          <h2 className="text-md font-semibold mb-4">
             Table - {tableNumber || "N/A"}
           </h2>
 
           {/* Order Items */}
-          <div className="space-y-2 text-sm mb-4 text-[#4a2e1f]">
+          <div className="space-y-2 text-sm mb-4">
             {items.map((item, idx) => (
               <div key={idx} className="flex justify-between">
                 <span>
@@ -70,7 +109,11 @@ export default function Billing() {
           </div>
 
           {/* Totals */}
-          <div className="mt-4 border-t border-[#e2c1ac] pt-4 text-sm text-[#4a2e1f]">
+          <div
+            className={`mt-4 border-t pt-4 text-sm ${
+              accessibilityMode ? "border-[#00BFFF]" : "border-[#e2c1ac]"
+            }`}
+          >
             <div className="flex justify-between mb-1">
               <span>Sub-Total</span>
               <span>₹{subtotal}</span>
@@ -88,7 +131,11 @@ export default function Billing() {
           {/* Proceed Button */}
           <button
             onClick={() => navigate("/payment")}
-            className="mt-6 w-full bg-[#d86d2a] py-2 rounded-2xl text-sm font-semibold text-white cursor-pointer hover:bg-[#c75b1a] transition"
+            className={`mt-6 w-full py-2 rounded-2xl text-sm font-semibold cursor-pointer transition ${
+              accessibilityMode
+                ? "bg-[#00BFFF] text-black hover:bg-blue-400"
+                : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
+            }`}
           >
             Proceed to Pay
           </button>

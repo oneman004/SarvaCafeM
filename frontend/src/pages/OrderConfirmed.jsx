@@ -1,21 +1,55 @@
 import { useNavigate } from "react-router-dom";
+import { useState } from "react";
+import { FiEye } from "react-icons/fi";
 import Header from "../components/Header";
-import restaurantBg from "../assets/images/restaurant-img.jpg"; // ✅ Background image
+import restaurantBg from "../assets/images/restaurant-img.jpg";
 
 export default function OrderConfirmed() {
   const navigate = useNavigate();
+  const [accessibilityMode, setAccessibilityMode] = useState(
+    localStorage.getItem("accessibilityMode") === "true"
+  );
+
+  const toggleAccessibility = () => {
+    const newMode = !accessibilityMode;
+    setAccessibilityMode(newMode);
+    localStorage.setItem("accessibilityMode", newMode.toString());
+  };
 
   return (
-    <div className="min-h-screen relative text-[#4a2e1f]">
+    <div
+      className={`min-h-screen relative transition-all duration-300 ${
+        accessibilityMode ? "bg-black text-[#00BFFF]" : "text-[#4a2e1f]"
+      }`}
+    >
       {/* Background Image */}
       <div className="absolute inset-0">
         <img
           src={restaurantBg}
           alt="Restaurant"
-          className="w-full h-full object-cover"
+          className={`w-full h-full object-cover ${
+            accessibilityMode ? "brightness-50 grayscale" : ""
+          }`}
         />
-        <div className="absolute inset-0 bg-[#f3ddcb]/70 backdrop-blur-sm" />
+        <div
+          className={`absolute inset-0 backdrop-blur-sm ${
+            accessibilityMode ? "bg-black/50" : "bg-[#f3ddcb]/70"
+          }`}
+        />
       </div>
+
+      {/* Accessibility Toggle Button */}
+      <button
+        onClick={toggleAccessibility}
+        className={`fixed top-18 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
+          accessibilityMode
+            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
+            : "bg-black/60 text-white hover:bg-black/80"
+        }`}
+        title="Toggle Accessibility Mode"
+      >
+        <FiEye size={24} />
+      </button>
 
       {/* Header */}
       <Header hideBackButton={true} hideGroupOrdering={true} />
@@ -23,22 +57,42 @@ export default function OrderConfirmed() {
       {/* Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 pt-24 pb-12">
         {/* Card */}
-        <div className="bg-[#fef4ec] border border-[#e2c1ac] w-full max-w-md p-6 rounded-2xl shadow-xl text-center backdrop-blur-sm mt-[-150px]">
-          <h1 className="text-2xl font-bold mb-3">Order Confirmed ✅</h1>
-          <p className="mb-6 text-[#5f3a2c]">Your food is being prepared.</p>
+        <div
+          className={`w-full max-w-md p-6 rounded-2xl shadow-xl text-center backdrop-blur-sm mt-[-150px] transition-all duration-300 ${
+            accessibilityMode
+              ? "bg-black border-2 border-[#00BFFF] text-[#00BFFF]"
+              : "bg-[#fef4ec] border border-[#e2c1ac]"
+          }`}
+        >
+          <h1 className="text-2xl font-bold mb-3">Order Confirmed !!</h1>
+          <p
+            className={`mb-6 ${
+              accessibilityMode ? "text-[#00BFFF]" : "text-[#5f3a2c]"
+            }`}
+          >
+            Your food is being prepared.
+          </p>
 
           {/* Buttons */}
           <div className="space-y-3">
             <button
               onClick={() => navigate("/menu")}
-              className="w-full bg-[#d86d2a] py-2 rounded-2xl text-sm font-semibold text-white cursor-pointer hover:bg-[#c75b1a] transition"
+              className={`w-full py-2 rounded-2xl text-sm font-semibold cursor-pointer transition ${
+                accessibilityMode
+                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
+                  : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
+              }`}
             >
               Order More
             </button>
 
             <button
               onClick={() => navigate("/billing")}
-              className="w-full bg-[#d86d2a] py-2 rounded-2xl text-sm font-semibold text-white cursor-pointer hover:bg-[#c75b1a] transition"
+              className={`w-full py-2 rounded-2xl text-sm font-semibold cursor-pointer transition ${
+                accessibilityMode
+                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
+                  : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
+              }`}
             >
               Billing
             </button>

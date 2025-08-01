@@ -7,14 +7,19 @@ import OrderConfirmed from "./pages/OrderConfirmed";
 import Billing from "./pages/Billing";
 import Payment from "./pages/Payment";
 import Takeaway from "./pages/Takeaway";
-import FloatingPDFButton from "./components/FloatingPDFButton";
 import SignLanguage from "./pages/SignLanguage";
-import FeedbackPage from './pages/FeedbackPage';
+import FeedbackPage from "./pages/FeedbackPage";
+
+import FloatingPDFButton from "./components/FloatingPDFButton";
+import FloatingSignLanguageButton from "./components/FloatingSignLanguageButton";
 
 export default function App() {
   return (
     <>
-      <FloatingPDFButton />
+     
+      <FloatingPDFButton/>
+      <FloatingSignLanguageButton/>
+
       <Routes>
         <Route path="/" element={<Landing />} />
         <Route path="/secondpage" element={<SecondPage />} />

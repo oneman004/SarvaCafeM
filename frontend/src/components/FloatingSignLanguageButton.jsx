@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSignLanguage } from "react-icons/fa";
+import restaurantBg from "../assets/images/restaurant-img.jpg";
 
-export default function FloatingSignLanguageButton({ accessibilityMode }) {
+export default function FloatingSignLanguageButton({ accessibilityMode, setAccessibilityMode }) {
   const [showModal, setShowModal] = useState(false);
   const [name, setName] = useState("");
   const [letters, setLetters] = useState([]);
@@ -43,15 +44,15 @@ export default function FloatingSignLanguageButton({ accessibilityMode }) {
   };
 
   const btnClass = accessibilityMode
-    ? "bg-[#00BFFF] hover:bg-[#0099cc] text-black"
-    : "bg-pink-600 hover:bg-pink-700 text-white";
+    ? "bg-[#00BFFF] hover:bg-blue-400 text-black"
+    : "bg-[#f28500] hover:bg-[#d77400] text-white";
 
   return (
     <>
       {/* Floating Button */}
       <button
         onClick={toggleModal}
-        className={`fixed bottom-24 right-6 ${btnClass} p-4 rounded-full shadow-lg transition-all z-50 cursor-pointer flex items-center gap-2`}
+        className={`fixed bottom-6 right-22 sm:right-[200px] ${btnClass} p-4 rounded-full shadow-lg transition-all z-40 cursor-pointer flex items-center gap-2`}
       >
         <FaSignLanguage className="text-xl" />
         <span className="font-medium hidden sm:inline">
@@ -61,14 +62,29 @@ export default function FloatingSignLanguageButton({ accessibilityMode }) {
 
       {/* Modal */}
       {showModal && (
-        <div className="fixed inset-0 z-40 bg-black bg-opacity-40 backdrop-blur-sm flex justify-center items-center overflow-auto">
-          <div className="relative w-full min-h-screen flex flex-col items-center justify-center bg-gradient-to-br from-purple-700 via-pink-600 to-red-500 p-6 text-white">
-            <h1 className="text-4xl md:text-5xl font-extrabold mb-6 drop-shadow-xl text-center">
-              ✨ Sign Language Animation ✨
+        <div className="fixed inset-0 z-30">
+          {/* Background Image Layer */}
+          <div
+            className={`absolute inset-0 bg-cover bg-center ${
+              accessibilityMode ? "brightness-50 grayscale" : ""
+            }`}
+            style={{ backgroundImage: `url(${restaurantBg})` }}
+          >
+            <div className="absolute inset-0 bg-black/30 backdrop-blur-lg"></div>
+          </div>
+
+          {/* Sign Language Content */}
+          <div
+            className={`relative z-40 min-h-screen w-full flex flex-col items-center justify-center px-4 py-6 sm:p-6 ${
+              accessibilityMode ? "text-[#00BFFF]" : "text-white"
+            }`}
+          >
+            <h1 className="text-3xl sm:text-4xl md:text3xl font-bold mb-6 text-center drop-shadow-lg">
+              Sign Language Animation
             </h1>
 
             <input
-              className="border p-3 rounded mb-4 text-black w-64 text-center text-lg font-semibold shadow-md outline-none"
+              className="border p-3 rounded mb-4 text-white w-full max-w-xs text-center text-lg font-semibold shadow-md outline-none"
               type="text"
               placeholder="Enter your name"
               value={name}
@@ -77,13 +93,17 @@ export default function FloatingSignLanguageButton({ accessibilityMode }) {
 
             <button
               onClick={handleShowSign}
-              className="bg-yellow-400 hover:bg-yellow-500 text-black font-bold px-6 py-3 rounded-full text-lg shadow-lg transition-transform transform hover:scale-105"
+              className={`mt-2 font-bold px-6 py-3 rounded-full text-lg shadow-lg transition-transform transform hover:scale-105 ${
+                accessibilityMode
+                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
+                  : "bg-yellow-400 text-black hover:bg-yellow-500"
+              }`}
             >
               Show in Sign Language
             </button>
 
             {/* Images */}
-            <div className="mt-12 flex flex-wrap justify-center gap-4 max-w-[90vw]">
+            <div className="mt-10 flex flex-wrap justify-center gap-4 max-w-[90vw]">
               <AnimatePresence>
                 {shownImages.map((letter, idx) => {
                   const src = `/src/assets/sign-language/${letter}.gif`;
@@ -121,7 +141,7 @@ export default function FloatingSignLanguageButton({ accessibilityMode }) {
             </div>
 
             {/* Formed Letters */}
-            <div className="flex mt-8 gap-2 text-4xl sm:text-5xl font-extrabold tracking-wide flex-wrap justify-center">
+            <div className="flex mt-8 gap-2 text-3xl sm:text-4xl font-extrabold tracking-wide flex-wrap justify-center">
               <AnimatePresence>
                 {formedLetters.map((char, idx) => (
                   <motion.span
@@ -141,11 +161,6 @@ export default function FloatingSignLanguageButton({ accessibilityMode }) {
                 ))}
               </AnimatePresence>
             </div>
-
-            {/* Footer */}
-            <p className="mt-10 text-sm opacity-80 text-center">
-              Made with ❤️ | Cool Sign Animations
-            </p>
           </div>
         </div>
       )}
