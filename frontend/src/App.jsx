@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Routes, Route } from "react-router-dom";
 import Landing from "./pages/Landing";
 import SecondPage from "./pages/SecondPage";
@@ -14,11 +15,20 @@ import FloatingPDFButton from "./components/FloatingPDFButton";
 import FloatingSignLanguageButton from "./components/FloatingSignLanguageButton";
 
 export default function App() {
+  const [activeModal, setActiveModal] = useState(null); // "pdf" | "sign" | null
+
   return (
     <>
-     
-      <FloatingPDFButton/>
-      <FloatingSignLanguageButton/>
+      <FloatingPDFButton
+        accessibilityMode={false}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+      />
+      <FloatingSignLanguageButton
+        accessibilityMode={false}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+      />
 
       <Routes>
         <Route path="/" element={<Landing />} />

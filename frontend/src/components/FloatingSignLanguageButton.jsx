@@ -3,13 +3,18 @@ import { motion, AnimatePresence } from "framer-motion";
 import { FaSignLanguage } from "react-icons/fa";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 
-export default function FloatingSignLanguageButton({ accessibilityMode, setAccessibilityMode }) {
-  const [showModal, setShowModal] = useState(false);
+export default function FloatingSignLanguageButton({
+  accessibilityMode,
+  setAccessibilityMode,
+  activeModal,
+  setActiveModal,
+}) {
   const [name, setName] = useState("");
   const [letters, setLetters] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [formedLetters, setFormedLetters] = useState([]);
   const [shownImages, setShownImages] = useState([]);
+  const showModal = activeModal === "sign";
 
   const handleShowSign = () => {
     if (!name.trim()) return;
@@ -35,12 +40,14 @@ export default function FloatingSignLanguageButton({ accessibilityMode, setAcces
   }, [currentIndex, letters]);
 
   const toggleModal = () => {
-    setShowModal((prev) => !prev);
-    setName("");
-    setLetters([]);
-    setFormedLetters([]);
-    setShownImages([]);
-    setCurrentIndex(0);
+    if (!showModal) {
+      setName("");
+      setLetters([]);
+      setFormedLetters([]);
+      setShownImages([]);
+      setCurrentIndex(0);
+    }
+    setActiveModal(showModal ? null : "sign");
   };
 
   const btnClass = accessibilityMode
@@ -49,16 +56,18 @@ export default function FloatingSignLanguageButton({ accessibilityMode, setAcces
 
   return (
     <>
-      {/* Floating Button */}
-      <button
-        onClick={toggleModal}
-        className={`fixed bottom-6 right-22 sm:right-[200px] ${btnClass} p-4 rounded-full shadow-lg transition-all z-40 cursor-pointer flex items-center gap-2`}
-      >
-        <FaSignLanguage className="text-xl" />
-        <span className="font-medium hidden sm:inline">
-          {showModal ? "Close Sign" : "Sign Name"}
-        </span>
-      </button>
+      {/* Floating Button (hidden if 'pdf' modal is open) */}
+      {activeModal !== "pdf" && (
+        <button
+          onClick={toggleModal}
+          className={`fixed bottom-6 right-22 sm:right-[200px] ${btnClass} p-4 rounded-full shadow-lg transition-all z-40 cursor-pointer flex items-center gap-2`}
+        >
+          <FaSignLanguage className="text-xl" />
+          <span className="font-medium hidden sm:inline">
+            {showModal ? "Close Sign" : "Sign Name"}
+          </span>
+        </button>
+      )}
 
       {/* Modal */}
       {showModal && (
@@ -102,7 +111,7 @@ export default function FloatingSignLanguageButton({ accessibilityMode, setAcces
               Show in Sign Language
             </button>
 
-            {/* Images - Single Row Scrollable */}
+            {/* Images */}
             <div className="mt-8 w-full overflow-x-auto">
               <div className="flex justify-center gap-2 px-4 min-w-fit">
                 <AnimatePresence>

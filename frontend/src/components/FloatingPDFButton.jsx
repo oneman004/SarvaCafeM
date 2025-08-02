@@ -1,29 +1,21 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   FaChevronLeft,
   FaChevronRight,
   FaRegHandPeace,
 } from "react-icons/fa";
 
-import page1 from "../assets/images/1.png";
-import page2 from "../assets/images/2.png";
-import page3 from "../assets/images/3.png";
-import page4 from "../assets/images/4.png";
-import page5 from "../assets/images/5.png";
-import page6 from "../assets/images/6.png";
-import page7 from "../assets/images/7.png";
-import page8 from "../assets/images/8.png";
-import page9 from "../assets/images/9.png";
-import page10 from "../assets/images/10.png";
+import m1 from "../assets/images/m1.png";
+import m2 from "../assets/images/m2.png";
 
-export default function FloatingPDFButton({ accessibilityMode }) {
-  const [showModal, setShowModal] = useState(false);
+export default function FloatingPDFButton({
+  accessibilityMode,
+  activeModal,
+  setActiveModal,
+}) {
   const [page, setPage] = useState(0);
-
-  const pages = [
-    page1, page2, page3, page4, page5,
-    page6, page7, page8, page9, page10,
-  ];
+  const pages = [m1, m2];
+  const showModal = activeModal === "pdf";
 
   const prevPage = () => {
     if (page > 0) setPage((p) => p - 1);
@@ -35,10 +27,9 @@ export default function FloatingPDFButton({ accessibilityMode }) {
 
   const toggleModal = () => {
     if (!showModal) setPage(0);
-    setShowModal((prev) => !prev);
+    setActiveModal(showModal ? null : "pdf");
   };
 
-  // Theme classes
   const mainBtnClass = accessibilityMode
     ? "bg-[#00BFFF] hover:bg-[#0099cc] text-black"
     : "bg-[#f28500] hover:bg-[#d77400] text-white";
@@ -49,16 +40,18 @@ export default function FloatingPDFButton({ accessibilityMode }) {
 
   return (
     <>
-      {/* Floating Button */}
-      <button
-        onClick={toggleModal}
-        className={`fixed bottom-6 right-6 ${mainBtnClass} p-4 rounded-full shadow-lg transition-all z-50 cursor-pointer flex items-center gap-2`}
-      >
-        <FaRegHandPeace className="text-xl" />
-        <span className="font-medium hidden sm:inline">
-          {showModal ? "Back" : "Sign Language"}
-        </span>
-      </button>
+      {/* Floating Button (hidden if 'sign' modal is open) */}
+      {activeModal !== "sign" && (
+        <button
+          onClick={toggleModal}
+          className={`fixed bottom-6 right-6 ${mainBtnClass} p-4 rounded-full shadow-lg transition-all z-50 cursor-pointer flex items-center gap-2`}
+        >
+          <FaRegHandPeace className="text-xl" />
+          <span className="font-medium hidden sm:inline">
+            {showModal ? "Back" : "Sign Language"}
+          </span>
+        </button>
+      )}
 
       {/* Modal */}
       {showModal && (

@@ -192,6 +192,12 @@ export default function MenuPage() {
     }
   };
 
+  const handleResetCart = () => {
+  setCart({});
+  localStorage.removeItem("sarva_cart");
+  };
+
+
   const processVoiceOrder = (text) => {
     const updatedCart = { ...cart };
     text.split(",").map((entry) => entry.trim()).forEach((entry) => {
@@ -241,7 +247,13 @@ export default function MenuPage() {
               >
                 {recording ? <FiMicOff /> : <FiMic />}
               </button>
-              {isProcessing && <p className="italic text-sm text-gray-600 animate-pulse">{processingText}</p>}
+              <p className="italic text-sm text-gray-600 animate-pulse">
+  {isProcessing
+    ? processingText
+    : recording
+    ? "Tap to Stop"
+    : "Tap to Order"}
+</p>
               {orderText && <p className="text-sm text-gray-700 mt-2">{aiOrdered} <span className="italic text-black">{orderText}</span></p>}
               {Object.keys(cart).length > 0 && (
                 <div className="mt-6 text-left">
@@ -252,13 +264,26 @@ export default function MenuPage() {
                     ))}
                   </ul>
                   <div className="flex flex-wrap gap-3 justify-center">
-                    <button onClick={handleContinue} className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white">
-                      {confirmBtn}
-                    </button>
-                    <button onClick={speakOrderSummary} className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white flex items-center gap-2">
-                      <HiSpeakerWave className="text-lg" /> {speakBtn}
-                    </button>
-                  </div>
+  <button
+    onClick={handleContinue}
+    className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white"
+  >
+    {confirmBtn}
+  </button>
+  <button
+    onClick={speakOrderSummary}
+    className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white flex items-center gap-2"
+  >
+    <HiSpeakerWave className="text-lg" /> {speakBtn}
+  </button>
+  <button
+    onClick={handleResetCart}
+    className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white"
+  >
+    Reset Order
+  </button>
+</div>
+
                 </div>
               )}
             </div>
