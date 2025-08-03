@@ -116,7 +116,7 @@ export default function FloatingSignLanguageButton({
               <div className="flex justify-center gap-2 px-4 min-w-fit">
                 <AnimatePresence>
                   {shownImages.map((letter, idx) => {
-                    const src = `/src/assets/sign-language/${letter}.gif`;
+                    const src = `/src/assets/sign-language/${letter}.jpg`;
                     return (
                       <motion.img
                         key={idx}
