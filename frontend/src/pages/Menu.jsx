@@ -238,7 +238,7 @@ export default function MenuPage() {
       <div className="relative z-10">
         <Header />
         <div className="max-w-6xl mx-auto px-4 py-8 mt-10">
-          <div className="flex flex-col md:flex-row gap-10">
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="md:w-[40%] bg-white bg-opacity-90 p-6 rounded-xl shadow-lg text-center">
               <h3 className="text-3xl font-bold mb-4 text-[#f28500]">{smartServe}</h3>
               <button
@@ -263,25 +263,30 @@ export default function MenuPage() {
                       <TranslatedSummaryItem key={idx} item={item} qty={qty} />
                     ))}
                   </ul>
-                  <div className="flex flex-wrap gap-3 justify-center">
-  <button
-    onClick={handleContinue}
-    className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white"
-  >
-    {confirmBtn}
-  </button>
-  <button
-    onClick={speakOrderSummary}
-    className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white flex items-center gap-2"
-  >
-    <HiSpeakerWave className="text-lg" /> {speakBtn}
-  </button>
-  <button
-    onClick={handleResetCart}
-    className="bg-[#f28500] hover:bg-[#d77400] px-4 py-2 rounded-lg text-white"
-  >
-    Reset Order
-  </button>
+                  <div className="flex flex-wrap gap-3 justify-center items-center">
+
+
+ <button
+  onClick={handleContinue}
+  className="bg-[#f28500] hover:bg-[#d77400] px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg text-white"
+>
+  {confirmBtn}
+</button>
+
+<button
+  onClick={speakOrderSummary}
+  className="bg-[#f28500] hover:bg-[#d77400] px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg text-white flex items-center gap-1 sm:gap-2"
+>
+  <HiSpeakerWave className="text-base sm:text-lg" /> {speakBtn}
+</button>
+
+<button
+  onClick={handleResetCart}
+  className="bg-[#f28500] hover:bg-[#d77400] px-3 py-1 sm:px-4 sm:py-2 text-sm sm:text-base rounded-lg text-white"
+>
+  Reset Order
+</button>
+
 </div>
 
                 </div>
