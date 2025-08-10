@@ -3,12 +3,17 @@ import { useState } from "react";
 import { FiEye } from "react-icons/fi";
 import Header from "../components/Header";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
+import translations from "../data/translations/orderConfirmed.json";
 
 export default function OrderConfirmed() {
   const navigate = useNavigate();
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
+
+  // ✅ Language from localStorage
+  const language = localStorage.getItem("language") || "en";
+  const t = (key) => translations[language]?.[key] || key;
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
@@ -64,13 +69,13 @@ export default function OrderConfirmed() {
               : "bg-[#fef4ec] border border-[#e2c1ac]"
           }`}
         >
-          <h1 className="text-2xl font-bold mb-3">Order Confirmed !!</h1>
+          <h1 className="text-2xl font-bold mb-3">{t("orderConfirmed")}</h1>
           <p
             className={`mb-6 ${
               accessibilityMode ? "text-[#00BFFF]" : "text-[#5f3a2c]"
             }`}
           >
-            Your food is being prepared.
+            {t("foodPreparing")}
           </p>
 
           {/* Buttons */}
@@ -83,7 +88,7 @@ export default function OrderConfirmed() {
                   : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
               }`}
             >
-              Order More
+              {t("orderMore")}
             </button>
 
             <button
@@ -94,7 +99,7 @@ export default function OrderConfirmed() {
                   : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
               }`}
             >
-              Billing
+              {t("billing")}
             </button>
           </div>
         </div>

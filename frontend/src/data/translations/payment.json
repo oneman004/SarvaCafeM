@@ -1,0 +1,30 @@
+{
+  "en": {
+    "choosePayment": "Choose Payment Method",
+    "upiQR": "UPI QR",
+    "cashCard": "Cash / Card",
+    "payOnline": "Pay Online",
+    "close": "Close"
+  },
+  "hi": {
+    "choosePayment": "भुगतान विधि चुनें",
+    "upiQR": "यूपीआई क्यूआर",
+    "cashCard": "नकद / कार्ड",
+    "payOnline": "ऑनलाइन भुगतान",
+    "close": "बंद करें"
+  },
+  "mr": {
+    "choosePayment": "पेमेंट पद्धत निवडा",
+    "upiQR": "यूपीआय QR",
+    "cashCard": "रोख / कार्ड",
+    "payOnline": "ऑनलाइन पेमेंट",
+    "close": "बंद करा"
+  },
+  "gu": {
+    "choosePayment": "ચુકવણી રીત પસંદ કરો",
+    "upiQR": "યુપીઆઇ QR",
+    "cashCard": "નગદ / કાર્ડ",
+    "payOnline": "ઓનલાઇન ચુકવણી",
+    "close": "બંધ કરો"
+  }
+}

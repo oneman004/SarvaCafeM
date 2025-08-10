@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { FiEye } from "react-icons/fi";
 import Header from "../components/Header";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
+import translations from "../data/translations/billing.json";
 
 // ✅ Import VITE env variable
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
@@ -14,6 +15,10 @@ export default function Billing() {
     localStorage.getItem("accessibilityMode") === "true"
   );
 
+  // ✅ Language from LocalStorage (fallback: en)
+  const language = localStorage.getItem("language") || "en";
+  const t = (key) => translations[language]?.[key] || key;
+
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
     setAccessibilityMode(newMode);
@@ -24,17 +29,16 @@ export default function Billing() {
     const orderId = localStorage.getItem("sarva_orderId");
     if (!orderId) return;
 
-    // ✅ Use env-based Node.js API URL
     fetch(`${nodeApi}/api/orders/${orderId}`)
       .then((res) => res.json())
       .then((data) => setOrder(data))
-      .catch(() => alert("❌ Failed to fetch order."));
-  }, []);
+      .catch(() => alert(t("fetchFailed")));
+  }, [language]);
 
   if (!order) {
     return (
       <div className="min-h-screen flex items-center justify-center text-[#4a2e1f]">
-        <p>Loading billing details...</p>
+        <p>{t("loading")}</p>
       </div>
     );
   }
@@ -51,7 +55,7 @@ export default function Billing() {
       <div className="absolute inset-0">
         <img
           src={restaurantBg}
-          alt="Restaurant"
+          alt={t("restaurantName")}
           className={`w-full h-full object-cover ${
             accessibilityMode ? "brightness-50 grayscale" : ""
           }`}
@@ -89,11 +93,13 @@ export default function Billing() {
           }`}
         >
           {/* Cafe Title */}
-          <h1 className="text-center text-xl font-bold mb-4">Sarva Cafe</h1>
+          <h1 className="text-center text-xl font-bold mb-4">
+            {t("restaurantName")}
+          </h1>
 
           {/* Table Info */}
           <h2 className="text-md font-semibold mb-4">
-            Table - {tableNumber || "N/A"}
+            {t("table")} - {tableNumber || "N/A"}
           </h2>
 
           {/* Order Items */}
@@ -115,15 +121,15 @@ export default function Billing() {
             }`}
           >
             <div className="flex justify-between mb-1">
-              <span>Sub-Total</span>
+              <span>{t("subtotal")}</span>
               <span>₹{subtotal}</span>
             </div>
             <div className="flex justify-between mb-2">
-              <span>Tax (5%)</span>
+              <span>{t("tax")}</span>
               <span>₹{gst}</span>
             </div>
             <div className="flex justify-between font-bold text-lg mt-2">
-              <span>Total</span>
+              <span>{t("total")}</span>
               <span>₹{total}</span>
             </div>
           </div>
@@ -137,7 +143,7 @@ export default function Billing() {
                 : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
             }`}
           >
-            Proceed to Pay
+            {t("proceedToPay")}
           </button>
         </div>
       </div>

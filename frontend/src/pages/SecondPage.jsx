@@ -1,8 +1,9 @@
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
-import { FiEye } from "react-icons/fi"; // 👈 Accessibility icon
+import { FiEye } from "react-icons/fi";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
+import translations from "../data/translations/secondpage.json";
 
 export default function SecondPage() {
   const navigate = useNavigate();
@@ -10,6 +11,9 @@ export default function SecondPage() {
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
+
+  // Get language from localStorage (default to English)
+  const [language] = useState(localStorage.getItem("language") || "en");
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -21,13 +25,14 @@ export default function SecondPage() {
     localStorage.setItem("accessibilityMode", newMode.toString());
   };
 
+  const t = translations[language] || translations.en; // fallback to English
+
   return (
     <div
       className={`relative min-h-screen transition-all duration-300 ${
         accessibilityMode ? "bg-black text-[#00BFFF]" : "text-white"
       }`}
     >
-      {/* 🔥 Local Background Image */}
       <div
         className={`absolute inset-0 bg-cover bg-center z-0 ${
           accessibilityMode ? "brightness-50 grayscale" : ""
@@ -45,12 +50,11 @@ export default function SecondPage() {
             ? "bg-[#00BFFF] text-black hover:bg-blue-400"
             : "bg-black/60 text-white hover:bg-black/80"
         }`}
-        title="Toggle Accessibility Mode"
+        title={t.toggleAccessibility}
       >
         <FiEye size={24} />
       </button>
 
-      {/* Content Over Image */}
       <div className="relative z-10 min-h-screen flex flex-col">
         {/* 🔙 Back Button */}
         <button
@@ -67,24 +71,24 @@ export default function SecondPage() {
         <div className="flex flex-col gap-6 items-center justify-center flex-1 mt-6">
           <button
             onClick={() => navigate("/menu")}
-            className={`w-60 px-10 py-5 rounded-xl text-2xl font-semibold transition cursor-pointer backdrop-blur-md ${
+            className={`w-60 px-10 py-5 rounded-xl text-lg font-semibold transition cursor-pointer backdrop-blur-md ${
               accessibilityMode
                 ? "bg-[#00BFFF] text-black hover:bg-blue-400 border-2 border-[#00BFFF]"
                 : "bg-white/10 text-white border border-white hover:bg-white/20"
             }`}
           >
-            Dine In
+            {t.dineIn}
           </button>
 
           <button
             onClick={() => navigate("/takeaway")}
-            className={`w-60 px-10 py-5 rounded-xl text-2xl font-semibold transition cursor-pointer backdrop-blur-md ${
+            className={`w-60 px-10 py-5 rounded-xl text-lg font-semibold transition cursor-pointer backdrop-blur-md ${
               accessibilityMode
                 ? "bg-[#00BFFF] text-black hover:bg-blue-400 border-2 border-[#00BFFF]"
                 : "bg-white/10 text-white border border-white hover:bg-white/20"
             }`}
           >
-            Take Away
+            {t.takeAway}
           </button>
         </div>
 

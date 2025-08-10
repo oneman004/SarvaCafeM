@@ -1,0 +1,22 @@
+{
+  "en": {
+    "dineIn": "Dine In",
+    "takeAway": "Take Away",
+    "toggleAccessibility": "Toggle Accessibility Mode"
+  },
+  "hi": {
+    "dineIn": "रेस्टोरेंट में खाना",
+    "takeAway": "पार्सल लें",
+    "toggleAccessibility": "सुगम्यता मोड बदलें"
+  },
+  "mr": {
+    "dineIn": "रेस्टॉरंटमध्ये जेवण",
+    "takeAway": "पार्सल घ्या",
+    "toggleAccessibility": "ॲक्सेसिबिलिटी मोड बदला"
+  },
+  "gu": {
+    "dineIn": "રેસ્ટોરન્ટમાં ભોજન",
+    "takeAway": "પાર્સલ લો",
+    "toggleAccessibility": "ઍક્સેસિબિલિટી મોડ બદલો"
+  }
+}

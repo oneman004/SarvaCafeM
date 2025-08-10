@@ -4,7 +4,8 @@ import { FaQrcode, FaMoneyBillWave, FaArrowLeft } from "react-icons/fa";
 import { MdPayments } from "react-icons/md";
 import { FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
-import qrCode from "../assets/images/qr-code.jpg"; // Make sure image exists here
+import qrCode from "../assets/images/qr-code.jpg";
+import translations from "../data/translations/payment.json";
 
 export default function Payment() {
   const navigate = useNavigate();
@@ -12,6 +13,10 @@ export default function Payment() {
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
+
+  // Multilingual support
+  const language = localStorage.getItem("language") || "en";
+  const t = key => translations[language]?.[key] || key;
 
   // Function to toggle accessibility mode
   const toggleAccessibility = () => {
@@ -88,7 +93,7 @@ export default function Payment() {
                     : "text-white bg-[#c96a2e] hover:bg-[#b6591f]"
                 }`}
               >
-                Close
+                {t("close")}
               </button>
             </motion.div>
           </motion.div>
@@ -111,7 +116,7 @@ export default function Payment() {
             accessibilityMode ? "text-[#00BFFF]" : "text-[#4a2d1f]"
           }`}
         >
-          Choose Payment Method
+          {t("choosePayment")}
         </h2>
 
         <div className="flex flex-col gap-5">
@@ -127,7 +132,7 @@ export default function Payment() {
             }`}
           >
             <FaQrcode size={20} />
-            UPI QR
+            {t("upiQR")}
           </motion.button>
 
           {/* Cash / Card */}
@@ -141,7 +146,7 @@ export default function Payment() {
             }`}
           >
             <FaMoneyBillWave size={20} />
-            Cash / Card
+            {t("cashCard")}
           </motion.button>
 
           {/* Pay Online */}
@@ -155,7 +160,7 @@ export default function Payment() {
             }`}
           >
             <MdPayments size={20} />
-            Pay Online
+            {t("payOnline")}
           </motion.button>
         </div>
       </motion.div>

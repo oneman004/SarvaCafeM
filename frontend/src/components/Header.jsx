@@ -3,9 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMic, FiMicOff, FiArrowLeft } from "react-icons/fi";
 import logo from "../assets/images/logo_new.png";
+import translations from "../data/translations/Header.json"; // <-- Your JSON file
 
 export default function Header() {
   const navigate = useNavigate();
+
+  // Language from localStorage (default: en)
+  const [language, setLanguage] = useState(localStorage.getItem("language") || "en");
+  const t = translations[language]; // Shortcut for current language text
+
   const [showCard, setShowCard] = useState(false);
   const [recording, setRecording] = useState(false);
   const [customRequest, setCustomRequest] = useState("");
@@ -17,16 +23,17 @@ export default function Header() {
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
 
-  // 💡 Listen to localStorage changes from other tabs/components
+  // Update when language/accessibility changes from other components
   useEffect(() => {
     const handleStorageChange = () => {
       setAccessibilityMode(localStorage.getItem("accessibilityMode") === "true");
+      setLanguage(localStorage.getItem("language") || "en");
     };
     window.addEventListener("storage", handleStorageChange);
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  // 🟠 Colors (Conditional)
+  // Color themes
   const bgHeader = accessibilityMode
     ? "bg-black text-white border-blue-400"
     : "bg-[#f5e3d5]/80 text-[#4a2e1f] border-[#e2c1ac]";
@@ -44,7 +51,7 @@ export default function Header() {
     : "bg-[#f3ddcb] border-[#e2c1ac] text-[#4a2e1f]";
 
   const handleFeatureClick = () => {
-    alert("Alert sent !");
+    alert(t.alertRequest);
   };
 
   const handleVoiceInput = async () => {
@@ -77,7 +84,7 @@ export default function Header() {
             const data = await res.json();
             setCustomRequest(data.order || "");
           } catch (err) {
-            alert("❌ Voice processing failed");
+            alert(t.voiceFail);
             console.error(err);
           }
           setIsProcessing(false);
@@ -86,7 +93,7 @@ export default function Header() {
         mediaRecorder.start();
         setRecording(true);
       } catch (err) {
-        alert("🎤 Microphone access error.");
+        alert(t.micError);
         console.error(err);
         setRecording(false);
       }
@@ -95,8 +102,8 @@ export default function Header() {
 
   return (
     <>
+      {/* Header */}
       <header className={`fixed top-0 left-0 w-full z-20 flex justify-between items-center px-4 py-2 shadow-md backdrop-blur-md border-b ${bgHeader}`}>
-        {/* Left Section */}
         <div className="flex items-center gap-2">
           <motion.button
             whileTap={{ scale: 0.9 }}
@@ -108,14 +115,13 @@ export default function Header() {
           <img src={logo} alt="Logo" className="h-10 w-auto object-contain" />
         </div>
 
-        {/* Right Buttons */}
         <div className="flex items-center gap-2 sm:gap-3 ml-auto">
           <motion.button
             whileTap={{ scale: 0.95 }}
             className={`px-3 py-1.5 text-xs sm:text-sm md:text-base rounded-md shadow transition cursor-pointer ${buttonBase}`}
-            onClick={() => alert("Group ordering feature coming soon!")}
+            onClick={() => alert(t.alertGroup)}
           >
-            Group Ordering
+            {t.groupOrdering}
           </motion.button>
 
           <motion.button
@@ -123,7 +129,7 @@ export default function Header() {
             className={`px-3 py-1.5 text-xs sm:text-sm md:text-base rounded-md shadow transition cursor-pointer ${buttonBase}`}
             onClick={() => setShowCard(true)}
           >
-            Table Service
+            {t.tableService}
           </motion.button>
         </div>
       </header>
@@ -148,11 +154,11 @@ export default function Header() {
                   >
                     <FiArrowLeft size={20} />
                   </button>
-                  <h4 className="text-lg font-semibold">🛎️ Quick Requests</h4>
+                  <h4 className="text-lg font-semibold">{t.quickRequests}</h4>
                 </div>
 
                 <div className="flex flex-col gap-2 mb-4">
-                  {["Water Bottle", "Salt", "Clean the Table", "Tissue", "Call Waiter", "Issue with Food"].map((item, idx) => (
+                  {t.requestOptions.map((item, idx) => (
                     <button
                       key={idx}
                       onClick={handleFeatureClick}
@@ -165,7 +171,7 @@ export default function Header() {
 
                 <div className={`p-3 rounded-lg backdrop-blur-md ${cardBg}`}>
                   <div className="flex justify-between items-center mb-2">
-                    <label className="text-sm font-semibold">Speak or type your request</label>
+                    <label className="text-sm font-semibold">{t.speakOrType}</label>
                     <button
                       onClick={handleVoiceInput}
                       className={`p-2 rounded-full text-white transition ${
@@ -178,14 +184,14 @@ export default function Header() {
 
                   <textarea
                     className={`w-full p-2 mt-2 rounded-md text-sm ${inputBg}`}
-                    placeholder="Type or speak your request..."
+                    placeholder={t.placeholder}
                     rows={2}
                     value={customRequest}
                     onChange={(e) => setCustomRequest(e.target.value)}
                   />
 
                   <button className={`w-full mt-3 py-2 px-4 rounded-md text-sm cursor-pointer shadow ${buttonBase}`} onClick={handleFeatureClick}>
-                    📨 Send to Waiter
+                    {t.sendToWaiter}
                   </button>
                 </div>
               </div>
