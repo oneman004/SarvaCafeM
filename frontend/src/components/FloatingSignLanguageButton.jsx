@@ -53,83 +53,57 @@ export default function FloatingSignLanguageButton({
 
   const t = (key) => translations?.[key] || key;
 
-  // FIXED: Combined color and text wrapping styles
-  const btnStyle = accessibilityMode
-    ? {
-        backgroundColor: "#00BFFF",
-        color: "black",
-        border: "none",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis", 
-        maxWidth: "160px"
-      }
-    : {
-        backgroundColor: "#f28500",
-        color: "white", 
-        border: "none",
-        whiteSpace: "nowrap",
-        overflow: "hidden",
-        textOverflow: "ellipsis",
-        maxWidth: "160px"
-      };
+  const bottomPositionSign = activeModal === 'pdf' 
+    ? '10rem'
+    : activeModal === 'sign' 
+    ? '8rem'
+    : '1.5rem';
 
-  const showBtnStyle = accessibilityMode
-    ? {
-        backgroundColor: "#00BFFF",
-        color: "black"
-      }
-    : {
-        backgroundColor: "#facc15",
-        color: "black"
-      };
-
-  const closeBtnStyle = accessibilityMode
-    ? {
-        backgroundColor: "#00BFFF",
-        color: "black"
-      }
-    : {
-        backgroundColor: "#f28500",
-        color: "white"
-      };
+  const btnClass = accessibilityMode
+    ? 'bg-[#00BFFF] hover:bg-blue-400 text-black'
+    : 'bg-[#f28500] hover:bg-[#d77400] text-white';
 
   return (
     <>
-      {/* Floating Button - FIXED: Inline styles for text wrapping */}
-      {activeModal !== "pdf" && (
+      {/* Hide button when ANY modal is active */}
+      {!activeModal && (
         <button
           onClick={toggleModal}
-          style={btnStyle}
-          className={`fixed right-22 sm:right-[200px] ${
-            activeModal ? "bottom-32" : "bottom-6"
-          } p-4 rounded-full shadow-lg transition-all duration-300 z-35 cursor-pointer flex items-center gap-2 hover:opacity-80`}
+          className={`fixed p-4 rounded-full shadow-lg transition-all duration-300 flex items-center gap-2 z-35
+            w-[60px] h-[60px] justify-center
+            sm:w-auto sm:h-auto sm:min-w-[160px] sm:justify-start sm:px-4 sm:py-3
+            ${btnClass}`}
+          style={{
+            right: '1.5rem',
+            bottom: bottomPositionSign
+          }}
         >
-          <FaSignLanguage className="text-xl" style={{flexShrink: 0}} />
-          <span 
-            className="font-medium hidden sm:inline text-sm"
-            style={{
-              whiteSpace: "nowrap",
-              overflow: "hidden",
-              textOverflow: "ellipsis", 
-              maxWidth: "100px"
-            }}
-          >
+          <FaSignLanguage className="text-xl flex-shrink-0" />
+          <span className="hidden sm:inline font-medium text-sm whitespace-nowrap">
             {showModal ? t("closeSign") : t("signName")}
           </span>
         </button>
       )}
 
-      {/* Modal remains the same... */}
+      <style jsx>{`
+        @media (min-width: 640px) {
+          button[style*="right: 1.5rem"] {
+            right: 12.5rem !important;
+          }
+        }
+      `}</style>
+
+      {/* Modal with completely opaque background */}
       {showModal && (
         <div className="fixed inset-0 z-55">
+          {/* Solid background overlay to hide everything underneath */}
           <div
             className={`absolute inset-0 bg-cover bg-center ${
               accessibilityMode ? "brightness-50 grayscale" : ""
             }`}
             style={{ backgroundImage: `url(${restaurantBg})` }}
           >
-            <div className="absolute inset-0 bg-black/30 backdrop-blur-lg"></div>
+            <div className="absolute inset-0 bg-black/80 backdrop-blur-lg"></div>
           </div>
 
           <div
@@ -155,7 +129,7 @@ export default function FloatingSignLanguageButton({
 
             <button
               onClick={handleShowSign}
-              style={showBtnStyle}
+              style={accessibilityMode ? {backgroundColor: "#00BFFF", color: "black"} : {backgroundColor: "#facc15", color: "black"}}
               className="mt-2 font-bold px-4 py-2 rounded-full text-base shadow-md transition-transform transform hover:scale-105"
             >
               {t("showInSignLanguage")}
@@ -220,10 +194,11 @@ export default function FloatingSignLanguageButton({
               </AnimatePresence>
             </div>
 
+            {/* FIXED: More rounded close button */}
             <button
               onClick={() => setActiveModal(null)}
-              style={closeBtnStyle}
-              className="absolute top-4 right-4 text-xl p-2 rounded-full cursor-pointer z-70 hover:opacity-80"
+              style={accessibilityMode ? {backgroundColor: "#00BFFF", color: "black"} : {backgroundColor: "#f28500", color: "white"}}
+              className="absolute top-4 right-4 w-10 h-10 rounded-full cursor-pointer z-70 hover:opacity-80 transition-all duration-300 flex items-center justify-center text-lg font-bold shadow-lg hover:scale-110"
               title={t("close")}
             >
               ✕
