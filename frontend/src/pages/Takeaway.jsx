@@ -1,8 +1,15 @@
 import React from 'react';
-import Header from '../components/Header'; // adjust path if needed
-import bgImage from '../assets/images/restaurant-img.jpg'; // adjust path if needed
+import Header from '../components/Header';
+import bgImage from '../assets/images/restaurant-img.jpg';
+import translations from '../data/translations/Takeaway.json';
 
 const Takeaway = () => {
+  // Get selected language from localStorage (default = "en")
+  const selectedLang = localStorage.getItem("language") || "en";
+
+  // Get translated text (fallback to English if not available)
+  const t = translations[selectedLang] || translations["en"];
+
   return (
     <div className="relative min-h-screen text-white">
       {/* Background */}
@@ -18,8 +25,8 @@ const Takeaway = () => {
       <div className="relative z-10">
         <Header />
         <div className="flex items-center justify-center h-[80vh] px-4 text-center">
-          <h1 className="text-3xl sm:text-5xl font-bold">
-            Takeaway Feature Coming Soon !!
+          <h1 className="text-2xl sm:text-2xl font-bold">
+            {t.title}
           </h1>
         </div>
       </div>
