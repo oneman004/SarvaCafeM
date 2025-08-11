@@ -4,16 +4,23 @@ import { FiEye } from "react-icons/fi";
 import Header from "../components/Header";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 import translations from "../data/translations/orderConfirmed.json";
+import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton";
+import FloatingPDFButton from "../components/FloatingPDFButton";
+import floatingButtonTranslations from "../data/translations/floatingButtons.json";
 
 export default function OrderConfirmed() {
   const navigate = useNavigate();
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
+  const [activeModal, setActiveModal] = useState(null);
 
   // ✅ Language from localStorage
   const language = localStorage.getItem("language") || "en";
   const t = (key) => translations[language]?.[key] || key;
+  
+  // ADDED: Floating button translations
+  const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
@@ -55,7 +62,7 @@ export default function OrderConfirmed() {
       >
         <FiEye size={24} />
       </button>
-
+      
       {/* Header */}
       <Header hideBackButton={true} hideGroupOrdering={true} />
 
@@ -104,6 +111,22 @@ export default function OrderConfirmed() {
           </div>
         </div>
       </div>
+
+      {/* Floating Buttons */}
+      <FloatingPDFButton
+        accessibilityMode={accessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
+
+      <FloatingSignLanguageButton
+        accessibilityMode={accessibilityMode}
+        setAccessibilityMode={setAccessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
     </div>
   );
 }

@@ -3,7 +3,12 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiEye } from "react-icons/fi";
 import FloatingPDFButton from "../components/FloatingPDFButton";
+import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton"; // Add this import
 import restaurantBg from "../assets/images/restaurant-img.jpg";
+// Add these imports at the top
+
+import floatingButtonTranslations from "../data/translations/floatingButtons.json";
+
 
 const languages = [
   { code: "en", label: "English" },
@@ -19,6 +24,9 @@ export default function Landing() {
   );
 
   const [activeModal, setActiveModal] = useState(null); // shared modal state
+  
+  const language = localStorage.getItem("language") || "en";
+  const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
 
   const handleLanguageSelect = (langCode) => {
     localStorage.setItem("language", langCode);
@@ -101,11 +109,19 @@ export default function Landing() {
         </div>
       </motion.div>
 
-      {/* Floating PDF Button with shared modal state */}
       <FloatingPDFButton
         accessibilityMode={accessibilityMode}
         activeModal={activeModal}
         setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
+      
+      <FloatingSignLanguageButton
+        accessibilityMode={accessibilityMode}
+        setAccessibilityMode={setAccessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
       />
     </div>
   );

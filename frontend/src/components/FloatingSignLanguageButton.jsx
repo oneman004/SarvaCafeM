@@ -8,6 +8,7 @@ export default function FloatingSignLanguageButton({
   setAccessibilityMode,
   activeModal,
   setActiveModal,
+  translations,
 }) {
   const [name, setName] = useState("");
   const [letters, setLetters] = useState([]);
@@ -50,29 +51,78 @@ export default function FloatingSignLanguageButton({
     setActiveModal(showModal ? null : "sign");
   };
 
-  const btnClass = accessibilityMode
-    ? "bg-[#00BFFF] hover:bg-blue-400 text-black"
-    : "bg-[#f28500] hover:bg-[#d77400] text-white";
+  const t = (key) => translations?.[key] || key;
+
+  // FIXED: Combined color and text wrapping styles
+  const btnStyle = accessibilityMode
+    ? {
+        backgroundColor: "#00BFFF",
+        color: "black",
+        border: "none",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis", 
+        maxWidth: "160px"
+      }
+    : {
+        backgroundColor: "#f28500",
+        color: "white", 
+        border: "none",
+        whiteSpace: "nowrap",
+        overflow: "hidden",
+        textOverflow: "ellipsis",
+        maxWidth: "160px"
+      };
+
+  const showBtnStyle = accessibilityMode
+    ? {
+        backgroundColor: "#00BFFF",
+        color: "black"
+      }
+    : {
+        backgroundColor: "#facc15",
+        color: "black"
+      };
+
+  const closeBtnStyle = accessibilityMode
+    ? {
+        backgroundColor: "#00BFFF",
+        color: "black"
+      }
+    : {
+        backgroundColor: "#f28500",
+        color: "white"
+      };
 
   return (
     <>
-      {/* Floating Button (hidden if 'pdf' modal is open) */}
+      {/* Floating Button - FIXED: Inline styles for text wrapping */}
       {activeModal !== "pdf" && (
         <button
           onClick={toggleModal}
-          className={`fixed bottom-6 right-22 sm:right-[200px] ${btnClass} p-4 rounded-full shadow-lg transition-all z-40 cursor-pointer flex items-center gap-2`}
+          style={btnStyle}
+          className={`fixed right-22 sm:right-[200px] ${
+            activeModal ? "bottom-32" : "bottom-6"
+          } p-4 rounded-full shadow-lg transition-all duration-300 z-35 cursor-pointer flex items-center gap-2 hover:opacity-80`}
         >
-          <FaSignLanguage className="text-xl" />
-          <span className="font-medium hidden sm:inline">
-            {showModal ? "Close Sign" : "Sign Name"}
+          <FaSignLanguage className="text-xl" style={{flexShrink: 0}} />
+          <span 
+            className="font-medium hidden sm:inline text-sm"
+            style={{
+              whiteSpace: "nowrap",
+              overflow: "hidden",
+              textOverflow: "ellipsis", 
+              maxWidth: "100px"
+            }}
+          >
+            {showModal ? t("closeSign") : t("signName")}
           </span>
         </button>
       )}
 
-      {/* Modal */}
+      {/* Modal remains the same... */}
       {showModal && (
-        <div className="fixed inset-0 z-30">
-          {/* Background Image Layer */}
+        <div className="fixed inset-0 z-55">
           <div
             className={`absolute inset-0 bg-cover bg-center ${
               accessibilityMode ? "brightness-50 grayscale" : ""
@@ -82,36 +132,35 @@ export default function FloatingSignLanguageButton({
             <div className="absolute inset-0 bg-black/30 backdrop-blur-lg"></div>
           </div>
 
-          {/* Sign Language Content */}
           <div
-            className={`relative z-40 min-h-screen w-full flex flex-col items-center justify-center px-4 py-6 sm:p-6 ${
+            className={`relative z-60 min-h-screen w-full flex flex-col items-center justify-center px-4 py-6 sm:p-6 ${
               accessibilityMode ? "text-[#00BFFF]" : "text-white"
             }`}
           >
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
-              Make Your Name Speak a New Language!
+              {t("makeNameSpeak")}
             </h1>
 
             <input
-              className="border p-2 rounded mb-4 text-white w-full max-w-[250px] text-center text-base font-semibold shadow-md outline-none"
+              className={`border p-2 rounded mb-4 w-full max-w-[250px] text-center text-base font-semibold shadow-md outline-none ${
+                accessibilityMode 
+                  ? "bg-black border-[#00BFFF] text-[#00BFFF] placeholder-[#00BFFF]" 
+                  : "bg-white/10 border-white text-white placeholder-gray-300"
+              }`}
               type="text"
-              placeholder="Enter your name"
+              placeholder={t("enterYourName")}
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
 
             <button
               onClick={handleShowSign}
-              className={`mt-2 font-bold px-4 py-2 rounded-full text-base shadow-md transition-transform transform hover:scale-105 ${
-                accessibilityMode
-                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                  : "bg-yellow-400 text-black hover:bg-yellow-500"
-              }`}
+              style={showBtnStyle}
+              className="mt-2 font-bold px-4 py-2 rounded-full text-base shadow-md transition-transform transform hover:scale-105"
             >
-              Show in Sign Language
+              {t("showInSignLanguage")}
             </button>
 
-            {/* Images */}
             <div className="mt-8 w-full overflow-x-auto">
               <div className="flex justify-center gap-2 px-4 min-w-fit">
                 <AnimatePresence>
@@ -151,7 +200,6 @@ export default function FloatingSignLanguageButton({
               </div>
             </div>
 
-            {/* Formed Letters */}
             <div className="flex mt-6 gap-2 text-2xl sm:text-4xl font-extrabold tracking-wide flex-wrap justify-center">
               <AnimatePresence>
                 {formedLetters.map((char, idx) => (
@@ -165,13 +213,21 @@ export default function FloatingSignLanguageButton({
                       bounce: 0.5,
                       delay: idx * 0.05,
                     }}
-                    className="drop-shadow-[0_0_15px_rgba(255,255,255,0.9)]"
                   >
                     {char}
                   </motion.span>
                 ))}
               </AnimatePresence>
             </div>
+
+            <button
+              onClick={() => setActiveModal(null)}
+              style={closeBtnStyle}
+              className="absolute top-4 right-4 text-xl p-2 rounded-full cursor-pointer z-70 hover:opacity-80"
+              title={t("close")}
+            >
+              ✕
+            </button>
           </div>
         </div>
       )}

@@ -2,8 +2,11 @@ import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
 import { FiEye } from "react-icons/fi";
+import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton";
+import FloatingPDFButton from "../components/FloatingPDFButton";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 import translations from "../data/translations/secondpage.json";
+import floatingButtonTranslations from "../data/translations/floatingButtons.json";
 
 export default function SecondPage() {
   const navigate = useNavigate();
@@ -12,8 +15,16 @@ export default function SecondPage() {
     localStorage.getItem("accessibilityMode") === "true"
   );
 
+  const [activeModal, setActiveModal] = useState(null);
+
   // Get language from localStorage (default to English)
   const [language] = useState(localStorage.getItem("language") || "en");
+  
+  // FIXED: Single t function declaration
+  const t = (key) => translations[language]?.[key] || key;
+  
+  // Floating button translations
+  const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
 
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: "smooth" });
@@ -24,8 +35,6 @@ export default function SecondPage() {
     setAccessibilityMode(newMode);
     localStorage.setItem("accessibilityMode", newMode.toString());
   };
-
-  const t = translations[language] || translations.en; // fallback to English
 
   return (
     <div
@@ -42,7 +51,7 @@ export default function SecondPage() {
         <div className="absolute inset-0 bg-black/30 backdrop-blur-xs"></div>
       </div>
 
-      {/* ♿ Accessibility Toggle Button */}
+      {/* Accessibility Toggle Button */}
       <button
         onClick={toggleAccessibility}
         className={`fixed top-6 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
@@ -50,13 +59,13 @@ export default function SecondPage() {
             ? "bg-[#00BFFF] text-black hover:bg-blue-400"
             : "bg-black/60 text-white hover:bg-black/80"
         }`}
-        title={t.toggleAccessibility}
+        title={t("toggleAccessibility")}
       >
         <FiEye size={24} />
       </button>
 
       <div className="relative z-10 min-h-screen flex flex-col">
-        {/* 🔙 Back Button */}
+        {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
           className={`absolute top-4 left-4 p-3 rounded-full backdrop-blur-md transition ${
@@ -77,7 +86,7 @@ export default function SecondPage() {
                 : "bg-white/10 text-white border border-white hover:bg-white/20"
             }`}
           >
-            {t.dineIn}
+            {t("dineIn")}
           </button>
 
           <button
@@ -88,12 +97,28 @@ export default function SecondPage() {
                 : "bg-white/10 text-white border border-white hover:bg-white/20"
             }`}
           >
-            {t.takeAway}
+            {t("takeAway")}
           </button>
         </div>
 
         <div className="h-8"></div>
       </div>
+
+      {/* Floating Buttons */}
+      <FloatingPDFButton
+        accessibilityMode={accessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
+
+      <FloatingSignLanguageButton
+        accessibilityMode={accessibilityMode}
+        setAccessibilityMode={setAccessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
     </div>
   );
 }
