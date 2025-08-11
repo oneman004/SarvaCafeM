@@ -4,6 +4,9 @@ import { FiEye } from "react-icons/fi";
 import Header from "../components/Header";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 import translations from "../data/translations/billing.json";
+import FloatingPDFButton from "../components/FloatingPDFButton";
+import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton";
+import floatingButtonTranslations from "../data/translations/floatingButtons.json";
 
 // ✅ Import VITE env variable
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
@@ -18,6 +21,9 @@ export default function Billing() {
   // ✅ Language from LocalStorage (fallback: en)
   const language = localStorage.getItem("language") || "en";
   const t = (key) => translations[language]?.[key] || key;
+  const [activeModal, setActiveModal] = useState(null);
+  
+  const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
@@ -147,6 +153,22 @@ export default function Billing() {
           </button>
         </div>
       </div>
+
+      {/* Floating Buttons */}
+      <FloatingPDFButton
+        accessibilityMode={accessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
+
+      <FloatingSignLanguageButton
+        accessibilityMode={accessibilityMode}
+        setAccessibilityMode={setAccessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
     </div>
   );
 }

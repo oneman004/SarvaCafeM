@@ -2,9 +2,12 @@ import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Header from "../components/Header";
 import { FiEye } from "react-icons/fi";
+import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton";
+import FloatingPDFButton from "../components/FloatingPDFButton";
 import bgImage from "../assets/images/restaurant-img.jpg";
 import logo from "../assets/images/logo_new.png";
 import translations from "../data/translations/orderSummary.json";
+import floatingButtonTranslations from "../data/translations/floatingButtons.json";
 
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
 
@@ -15,10 +18,14 @@ export default function OrderSummary() {
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
+  const [activeModal, setActiveModal] = useState(null);
 
   // Language from localStorage, fallback "en"
   const language = localStorage.getItem("language") || "en";
   const t = key => translations[language]?.[key] || key;
+  
+  // ADDED: Floating button translations
+  const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
@@ -283,6 +290,22 @@ export default function OrderSummary() {
           </div>
         </div>
       )}
+
+      {/* Floating Buttons */}
+      <FloatingPDFButton
+        accessibilityMode={accessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
+
+      <FloatingSignLanguageButton
+        accessibilityMode={accessibilityMode}
+        setAccessibilityMode={setAccessibilityMode}
+        activeModal={activeModal}
+        setActiveModal={setActiveModal}
+        translations={floatingButtonT}
+      />
     </div>
   );
 }
