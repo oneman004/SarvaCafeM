@@ -6,6 +6,7 @@ import { FiEye } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 import qrCode from "../assets/images/qr-code.jpg";
 import translations from "../data/translations/payment.json";
+import "./Payment.css"; // Import the CSS file
 
 export default function Payment() {
   const navigate = useNavigate();
@@ -27,18 +28,12 @@ export default function Payment() {
 
   return (
     <div
-      className={`relative min-h-screen flex items-center justify-center px-4 font-sans transition-all duration-300 ${
-        accessibilityMode ? "bg-black text-[#00BFFF]" : "bg-[#f6e6d1]"
-      }`}
+      className={`payment-container ${accessibilityMode ? "accessibility-mode" : ""}`}
     >
       {/* Back Button */}
       <button
         onClick={() => navigate(-1)}
-        className={`absolute top-6 left-6 p-2 rounded-full shadow-md transition cursor-pointer ${
-          accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-white text-[#c96a2e] hover:bg-[#fbece2]"
-        }`}
+        className={`back-button ${accessibilityMode ? "accessibility-mode" : ""}`}
       >
         <FaArrowLeft size={18} />
       </button>
@@ -46,11 +41,7 @@ export default function Payment() {
       {/* Accessibility Toggle Button */}
       <button
         onClick={toggleAccessibility}
-        className={`fixed top-6 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
-          accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-black/60 text-white hover:bg-black/80"
-        }`}
+        className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
         title="Toggle Accessibility Mode"
       >
         <FiEye size={24} />
@@ -63,35 +54,23 @@ export default function Payment() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.8 }}
-            className={`fixed inset-0 flex items-center justify-center z-50 ${
-              accessibilityMode
-                ? "bg-black/80 backdrop-blur-md"
-                : "bg-black/30 backdrop-blur-sm"
-            }`}
+            className={`qr-modal-overlay ${accessibilityMode ? "accessibility-mode" : ""}`}
           >
             <motion.div
               initial={{ y: 50, opacity: 0 }}
               animate={{ y: 0, opacity: 1 }}
               exit={{ y: 50, opacity: 0 }}
               transition={{ duration: 0.4 }}
-              className={`rounded-3xl shadow-xl p-6 w-[90%] max-w-sm flex flex-col items-center ${
-                accessibilityMode
-                  ? "bg-black border-2 border-[#00BFFF]"
-                  : "bg-[#fff6f1] border border-[#f5d3bc]"
-              }`}
+              className={`qr-modal-content ${accessibilityMode ? "accessibility-mode" : ""}`}
             >
               <img
                 src={qrCode}
                 alt="UPI QR Code"
-                className="w-64 h-64 object-cover rounded-xl mb-4 shadow-md border border-[#f2c7a4]"
+                className="qr-code-image"
               />
               <button
                 onClick={() => setShowQR(false)}
-                className={`mt-2 px-6 py-2 rounded-xl shadow transition font-semibold cursor-pointer ${
-                  accessibilityMode
-                    ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                    : "text-white bg-[#c96a2e] hover:bg-[#b6591f]"
-                }`}
+                className={`qr-close-button ${accessibilityMode ? "accessibility-mode" : ""}`}
               >
                 {t("close")}
               </button>
@@ -105,31 +84,21 @@ export default function Payment() {
         initial={{ y: 40, opacity: 0 }}
         animate={{ y: 0, opacity: 1 }}
         transition={{ duration: 0.6, ease: "easeOut" }}
-        className={`relative z-10 p-8 rounded-3xl w-full max-w-md transition-all duration-300 ${
-          accessibilityMode
-            ? "bg-black border-2 border-[#00BFFF]"
-            : "bg-[#fff4e9]/60 backdrop-blur-xl border border-[#f5d3bc] shadow-[0_10px_25px_rgba(190,140,100,0.2)]"
-        }`}
+        className={`payment-card ${accessibilityMode ? "accessibility-mode" : ""}`}
       >
         <h2
-          className={`text-2xl font-bold mb-6 text-center tracking-wide ${
-            accessibilityMode ? "text-[#00BFFF]" : "text-[#4a2d1f]"
-          }`}
+          className={`payment-title ${accessibilityMode ? "accessibility-mode" : ""}`}
         >
           {t("choosePayment")}
         </h2>
 
-        <div className="flex flex-col gap-5">
+        <div className="payment-buttons">
           {/* UPI QR */}
           <motion.button
             onClick={() => setShowQR(true)}
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className={`flex items-center justify-center gap-3 py-3 rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer text-lg font-medium ${
-              accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                : "bg-[#c96a2e] text-white"
-            }`}
+            className={`payment-button ${accessibilityMode ? "accessibility-mode" : ""}`}
           >
             <FaQrcode size={20} />
             {t("upiQR")}
@@ -139,11 +108,7 @@ export default function Payment() {
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className={`flex items-center justify-center gap-3 py-3 rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer text-lg font-medium ${
-              accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                : "bg-[#c96a2e] text-white"
-            }`}
+            className={`payment-button ${accessibilityMode ? "accessibility-mode" : ""}`}
           >
             <FaMoneyBillWave size={20} />
             {t("cashCard")}
@@ -153,17 +118,16 @@ export default function Payment() {
           <motion.button
             whileHover={{ scale: 1.03 }}
             whileTap={{ scale: 0.97 }}
-            className={`flex items-center justify-center gap-3 py-3 rounded-2xl shadow-md hover:shadow-lg transition-all cursor-pointer text-lg font-medium ${
-              accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                : "bg-[#c96a2e] text-white"
-            }`}
+            className={`payment-button ${accessibilityMode ? "accessibility-mode" : ""}`}
           >
             <MdPayments size={20} />
             {t("payOnline")}
           </motion.button>
         </div>
       </motion.div>
+
+
+      
     </div>
   );
 }

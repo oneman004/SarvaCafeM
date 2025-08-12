@@ -7,6 +7,7 @@ import translations from "../data/translations/orderConfirmed.json";
 import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton";
 import FloatingPDFButton from "../components/FloatingPDFButton";
 import floatingButtonTranslations from "../data/translations/floatingButtons.json";
+import "./OrderConfirmed.css"; // Import the CSS file
 
 export default function OrderConfirmed() {
   const navigate = useNavigate();
@@ -30,34 +31,24 @@ export default function OrderConfirmed() {
 
   return (
     <div
-      className={`min-h-screen relative transition-all duration-300 ${
-        accessibilityMode ? "bg-black text-[#00BFFF]" : "text-[#4a2e1f]"
-      }`}
+      className={`order-confirmed-container ${accessibilityMode ? "accessibility-mode" : ""}`}
     >
       {/* Background Image */}
-      <div className="absolute inset-0">
+      <div className="background-container">
         <img
           src={restaurantBg}
           alt="Restaurant"
-          className={`w-full h-full object-cover ${
-            accessibilityMode ? "brightness-50 grayscale" : ""
-          }`}
+          className={`background-image ${accessibilityMode ? "accessibility-mode" : ""}`}
         />
         <div
-          className={`absolute inset-0 backdrop-blur-sm ${
-            accessibilityMode ? "bg-black/50" : "bg-[#f3ddcb]/70"
-          }`}
+          className={`background-overlay ${accessibilityMode ? "accessibility-mode" : ""}`}
         />
       </div>
 
       {/* Accessibility Toggle Button */}
       <button
         onClick={toggleAccessibility}
-        className={`fixed top-18 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
-          accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-black/60 text-white hover:bg-black/80"
-        }`}
+        className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
         title="Toggle Accessibility Mode"
       >
         <FiEye size={24} />
@@ -67,44 +58,30 @@ export default function OrderConfirmed() {
       <Header hideBackButton={true} hideGroupOrdering={true} />
 
       {/* Content */}
-      <div className="relative z-10 min-h-screen flex items-center justify-center px-4 pt-24 pb-12">
+      <div className="main-content">
         {/* Card */}
         <div
-          className={`w-full max-w-md p-6 rounded-2xl shadow-xl text-center backdrop-blur-sm mt-[-150px] transition-all duration-300 ${
-            accessibilityMode
-              ? "bg-black border-2 border-[#00BFFF] text-[#00BFFF]"
-              : "bg-[#fef4ec] border border-[#e2c1ac]"
-          }`}
+          className={`confirmation-card ${accessibilityMode ? "accessibility-mode" : ""}`}
         >
-          <h1 className="text-2xl font-bold mb-3">{t("orderConfirmed")}</h1>
+          <h1 className="card-title">{t("orderConfirmed")}</h1>
           <p
-            className={`mb-6 ${
-              accessibilityMode ? "text-[#00BFFF]" : "text-[#5f3a2c]"
-            }`}
+            className={`card-description ${accessibilityMode ? "accessibility-mode" : ""}`}
           >
             {t("foodPreparing")}
           </p>
 
           {/* Buttons */}
-          <div className="space-y-3">
+          <div className="action-buttons">
             <button
               onClick={() => navigate("/menu")}
-              className={`w-full py-2 rounded-2xl text-sm font-semibold cursor-pointer transition ${
-                accessibilityMode
-                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                  : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
-              }`}
+              className={`action-button ${accessibilityMode ? "accessibility-mode" : ""}`}
             >
               {t("orderMore")}
             </button>
 
             <button
               onClick={() => navigate("/billing")}
-              className={`w-full py-2 rounded-2xl text-sm font-semibold cursor-pointer transition ${
-                accessibilityMode
-                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                  : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
-              }`}
+              className={`action-button ${accessibilityMode ? "accessibility-mode" : ""}`}
             >
               {t("billing")}
             </button>
