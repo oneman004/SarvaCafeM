@@ -8,9 +8,7 @@ import OrderConfirmed from "./pages/OrderConfirmed";
 import Billing from "./pages/Billing";
 import Payment from "./pages/Payment";
 import Takeaway from "./pages/Takeaway";
-import SignLanguage from "./pages/SignLanguage";
 import FeedbackPage from "./pages/FeedbackPage";
-
 import FloatingPDFButton from "./components/FloatingPDFButton";
 import FloatingSignLanguageButton from "./components/FloatingSignLanguageButton";
 
@@ -29,7 +27,6 @@ export default function App() {
         activeModal={activeModal}
         setActiveModal={setActiveModal}
       />
-
     */}
 
       <Routes>
@@ -41,7 +38,6 @@ export default function App() {
         <Route path="/billing" element={<Billing />} />
         <Route path="/payment" element={<Payment />} />
         <Route path="/takeaway" element={<Takeaway />} />
-        <Route path="/sign-language" element={<SignLanguage />} />
         <Route path="/feedback" element={<FeedbackPage />} />
       </Routes>
     </>
