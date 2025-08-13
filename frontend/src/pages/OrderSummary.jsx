@@ -213,7 +213,7 @@ export default function OrderSummary() {
       )}
 
       {/* Floating Buttons */}
-      <FloatingPDFButton
+     {/* <FloatingPDFButton
         accessibilityMode={accessibilityMode}
         activeModal={activeModal}
         setActiveModal={setActiveModal}
@@ -227,6 +227,7 @@ export default function OrderSummary() {
         setActiveModal={setActiveModal}
         translations={floatingButtonT}
       />
+      */}
     </div>
   );
 }
