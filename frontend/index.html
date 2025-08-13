@@ -9,6 +9,202 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
-   <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
+    <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
+    
+    <script>
+      const mainColor = '#ff6600';
+      
+      function applyStylesToMenuBtn(button) {
+        if (!button) return;
+        button.style.setProperty('outline', '5px solid ' + mainColor, 'important');
+        button.style.setProperty('background', mainColor, 'important');
+        button.style.setProperty('background', 'linear-gradient(96deg, ' + mainColor + ' 0, ' + mainColor + ' 100%)', 'important');
+        button.style.setProperty('right', '20px', 'important');
+        button.style.setProperty('left', 'auto', 'important');
+        button.style.setProperty('bottom', '20px', 'important');
+      }
+
+      function applyStylesToMenuHeader(header) {
+        if (!header) return;
+        header.style.setProperty('background-color', mainColor, 'important');
+      }
+
+      function addCloseButton() {
+        const menu = document.querySelector('.asw-menu');
+        const menuHeader = document.querySelector('.asw-menu-header');
+        
+        if (!menu || !menuHeader || document.querySelector('.asw-close-btn')) return;
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'asw-close-btn';
+        closeBtn.innerHTML = '×';
+        closeBtn.setAttribute('aria-label', 'Close accessibility menu');
+        
+        closeBtn.style.position = 'absolute';
+        closeBtn.style.top = '10px';
+        closeBtn.style.right = '10px';
+        closeBtn.style.background = 'transparent';
+        closeBtn.style.border = 'none';
+        closeBtn.style.fontSize = '24px';
+        closeBtn.style.color = 'white';
+        closeBtn.style.cursor = 'pointer';
+        closeBtn.style.width = '30px';
+        closeBtn.style.height = '30px';
+        closeBtn.style.display = 'flex';
+        closeBtn.style.alignItems = 'center';
+        closeBtn.style.justifyContent = 'center';
+        closeBtn.style.zIndex = '9999';
+        closeBtn.style.borderRadius = '50%';
+        closeBtn.style.transition = 'background-color 0.2s ease';
+        
+        closeBtn.addEventListener('mouseenter', function() {
+          closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+        });
+        
+        closeBtn.addEventListener('mouseleave', function() {
+          closeBtn.style.backgroundColor = 'transparent';
+        });
+        
+        // THE FIX: Use the widget's own close mechanism
+        closeBtn.addEventListener('click', function(e) {
+          e.preventDefault();
+          e.stopPropagation();
+          
+          // Method 1: Click the main button to toggle closed
+          const menuBtn = document.querySelector('.asw-menu-btn');
+          if (menuBtn) {
+            // Temporarily remove our event listener to avoid conflicts
+            const originalClick = menuBtn.onclick;
+            menuBtn.click();
+            
+            // If that doesn't work, try dispatching events the widget expects
+            if (menu.style.display !== 'none') {
+              const escEvent = new KeyboardEvent('keydown', {
+                key: 'Escape',
+                keyCode: 27,
+                which: 27,
+                bubbles: true
+              });
+              document.dispatchEvent(escEvent);
+            }
+          }
+        });
+        
+        menuHeader.style.position = 'relative';
+        menuHeader.appendChild(closeBtn);
+      }
+
+      function checkAndStyleElements() {
+        const menuBtn = document.querySelector('.asw-menu-btn');
+        const menuHeader = document.querySelector('.asw-menu-header');
+        const menu = document.querySelector('.asw-menu');
+        
+        if (menuBtn) applyStylesToMenuBtn(menuBtn);
+        if (menuHeader) applyStylesToMenuHeader(menuHeader);
+        if (menu) addCloseButton();
+        
+        if (menuBtn && menuHeader) {
+          observer.disconnect();
+        }
+      }
+
+      const observer = new MutationObserver(checkAndStyleElements);
+      observer.observe(document.body, {
+        childList: true,
+        subtree: true
+      });
+      
+      document.addEventListener("DOMContentLoaded", checkAndStyleElements);
+    </script>
+
+    <style>
+      :root {
+        --main-color: #ff6600;
+      }
+
+      .asw-menu-btn svg {
+        display: none !important;
+      }
+
+      .asw-menu-btn {
+        width: 80px !important;
+        height: 80px !important;
+        right: 20px !important;
+        left: auto !important;
+        bottom: 20px !important;
+      }
+
+      .asw-menu-btn::before {
+        content: "♿" !important;
+        font-size: 40px !important;
+        color: white !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        width: 100% !important;
+        height: 100% !important;
+      }
+
+      .asw-footer {
+        display: none !important;
+      }
+
+      .asw-menu-content {
+        max-height: 100% !important;
+        padding-bottom: 40px !important;
+      }
+
+      .asw-menu-header svg,
+      .asw-menu-header svg path {
+        fill: var(--main-color) !important;
+      }
+
+      /* Fix for reset button color */
+      .asw-menu .asw-footer button,
+      .asw-menu button[type="button"],
+      .asw-menu .asw-reset-btn,
+      button[style*="background-color: rgb(0, 123, 255)"] {
+        background-color: var(--main-color) !important;
+        background: var(--main-color) !important;
+        border-color: var(--main-color) !important;
+      }
+
+      .asw-menu-footer button,
+      .asw-footer button {
+        background-color: #ff6600 !important;
+        background: #ff6600 !important;
+        border: 1px solid #ff6600 !important;
+      }
+
+      /* Close button styles */
+      .asw-close-btn {
+        position: absolute !important;
+        top: 10px !important;
+        right: 10px !important;
+        background: transparent !important;
+        border: none !important;
+        font-size: 24px !important;
+        color: white !important;
+        cursor: pointer !important;
+        width: 30px !important;
+        height: 30px !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        z-index: 9999 !important;
+        border-radius: 50% !important;
+        transition: background-color 0.2s ease !important;
+      }
+
+      .asw-close-btn:hover {
+        background-color: rgba(255, 255, 255, 0.2) !important;
+      }
+
+      .asw-close-btn:focus {
+        outline: 2px solid white !important;
+        outline-offset: 2px !important;
+      }
+    </style>
+
   </body>
 </html>
