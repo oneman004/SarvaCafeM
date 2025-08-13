@@ -57,7 +57,7 @@
 /* Accessibility toggle button */
 .accessibility-toggle {
   position: fixed !important;
-  top: 60px 4 !important;  /* Change this value as needed */
+  top: 63px  !important;  /* Change this value as needed */
   right: 14px !important;
   z-index: 20;
   padding: 20px !important;
