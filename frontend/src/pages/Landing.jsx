@@ -3,12 +3,10 @@ import { useState } from "react";
 import { motion } from "framer-motion";
 import { FiEye } from "react-icons/fi";
 import FloatingPDFButton from "../components/FloatingPDFButton";
-import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton"; // Add this import
+import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
-// Add these imports at the top
-
 import floatingButtonTranslations from "../data/translations/floatingButtons.json";
-
+import "./Landing.css"; // Import the CSS file
 
 const languages = [
   { code: "en", label: "English" },
@@ -23,7 +21,7 @@ export default function Landing() {
     localStorage.getItem("accessibilityMode") === "true"
   );
 
-  const [activeModal, setActiveModal] = useState(null); // shared modal state
+  const [activeModal, setActiveModal] = useState(null);
   
   const language = localStorage.getItem("language") || "en";
   const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
@@ -41,15 +39,11 @@ export default function Landing() {
 
   return (
     <div
-      className={`relative min-h-screen flex items-center justify-center overflow-hidden transition-all duration-300 ${
-        accessibilityMode ? "bg-black text-[#00BFFF]" : "text-white"
-      }`}
+      className={`landing-container ${accessibilityMode ? "accessibility-mode" : ""}`}
     >
       {/* Background */}
       <div
-        className={`absolute inset-0 bg-cover bg-center z-0 ${
-          accessibilityMode ? "brightness-50 grayscale" : "brightness-75"
-        }`}
+        className={`background-image ${accessibilityMode ? "accessibility-mode" : ""}`}
         style={{
           backgroundImage: `url(${restaurantBg})`,
         }}
@@ -58,11 +52,7 @@ export default function Landing() {
       {/* Accessibility Toggle Button */}
       <button
         onClick={toggleAccessibility}
-        className={`fixed top-6 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
-          accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-black/60 text-white hover:bg-black/80"
-        }`}
+        className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
         title="Toggle Accessibility Mode"
       >
         <FiEye size={24} />
@@ -73,35 +63,23 @@ export default function Landing() {
         initial={{ opacity: 0, scale: 0.9, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
         transition={{ duration: 3 }}
-        className={`relative z-10 rounded-3xl p-10 w-[90%] max-w-xl shadow-2xl ${
-          accessibilityMode
-            ? "bg-black border-2 border-[#00BFFF] text-[#00BFFF]"
-            : "backdrop-blur-lg bg-white/10 border border-white/20 text-white"
-        }`}
+        className={`main-card ${accessibilityMode ? "accessibility-mode" : ""}`}
       >
-        <h1 className="text-4xl font-bold text-center mb-8">
+        <h1 className="main-title">
           Welcome to Terra Cart!
         </h1>
-        <p
-          className={`text-center mb-6 ${
-            accessibilityMode ? "text-[#00BFFF]" : "text-gray-200"
-          }`}
-        >
+        <p className={`subtitle ${accessibilityMode ? "accessibility-mode" : ""}`}>
           Please select your preferred language
         </p>
 
-        <div className="grid grid-cols-2 gap-4">
+        <div className="language-grid">
           {languages.map((lang) => (
             <motion.button
               whileTap={{ scale: 0.95 }}
               whileHover={{ scale: 1.05 }}
               key={lang.code}
               onClick={() => handleLanguageSelect(lang.code)}
-              className={`rounded-xl py-4 text-lg font-medium shadow transition duration-300 cursor-pointer ${
-                accessibilityMode
-                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                  : "bg-white/20 border border-white/30 backdrop-blur-md text-white hover:bg-white/30"
-              }`}
+              className={`language-button ${accessibilityMode ? "accessibility-mode" : ""}`}
             >
               {lang.label}
             </motion.button>

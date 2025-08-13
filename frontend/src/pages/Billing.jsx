@@ -7,6 +7,7 @@ import translations from "../data/translations/billing.json";
 import FloatingPDFButton from "../components/FloatingPDFButton";
 import FloatingSignLanguageButton from "../components/FloatingSignLanguageButton";
 import floatingButtonTranslations from "../data/translations/floatingButtons.json";
+import "./Billing.css"; // Import the CSS file
 
 // ✅ Import VITE env variable
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
@@ -43,7 +44,7 @@ export default function Billing() {
 
   if (!order) {
     return (
-      <div className="min-h-screen flex items-center justify-center text-[#4a2e1f]">
+      <div className="loading-container">
         <p>{t("loading")}</p>
       </div>
     );
@@ -53,34 +54,24 @@ export default function Billing() {
 
   return (
     <div
-      className={`min-h-screen relative transition-all duration-300 ${
-        accessibilityMode ? "bg-black text-[#00BFFF]" : "text-[#4a2e1f]"
-      }`}
+      className={`billing-container ${accessibilityMode ? "accessibility-mode" : ""}`}
     >
       {/* Background Image */}
-      <div className="absolute inset-0">
+      <div className="background-container">
         <img
           src={restaurantBg}
           alt={t("restaurantName")}
-          className={`w-full h-full object-cover ${
-            accessibilityMode ? "brightness-50 grayscale" : ""
-          }`}
+          className={`background-image ${accessibilityMode ? "accessibility-mode" : ""}`}
         />
         <div
-          className={`absolute inset-0 backdrop-blur-sm ${
-            accessibilityMode ? "bg-black/50" : "bg-[#f3ddcb]/70"
-          }`}
+          className={`background-overlay ${accessibilityMode ? "accessibility-mode" : ""}`}
         />
       </div>
 
       {/* Accessibility Toggle Button */}
       <button
         onClick={toggleAccessibility}
-        className={`fixed top-18 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
-          accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-black/60 text-white hover:bg-black/80"
-        }`}
+        className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
         title="Toggle Accessibility Mode"
       >
         <FiEye size={24} />
@@ -90,28 +81,24 @@ export default function Billing() {
       <Header />
 
       {/* Content */}
-      <div className="relative z-10 flex items-start justify-center px-4 pt-24 pb-12">
+      <div className="content-wrapper">
         <div
-          className={`w-full max-w-md p-6 rounded-2xl shadow-xl backdrop-blur-sm transition-all duration-300 ${
-            accessibilityMode
-              ? "bg-black border-2 border-[#00BFFF] text-[#00BFFF]"
-              : "bg-[#fef4ec] border border-[#e2c1ac]"
-          }`}
+          className={`billing-card ${accessibilityMode ? "accessibility-mode" : ""}`}
         >
           {/* Cafe Title */}
-          <h1 className="text-center text-xl font-bold mb-4">
+          <h1 className="restaurant-title">
             {t("restaurantName")}
           </h1>
 
           {/* Table Info */}
-          <h2 className="text-md font-semibold mb-4">
+          <h2 className="table-info">
             {t("table")} - {tableNumber || "N/A"}
           </h2>
 
           {/* Order Items */}
-          <div className="space-y-2 text-sm mb-4">
+          <div className="order-items">
             {items.map((item, idx) => (
-              <div key={idx} className="flex justify-between">
+              <div key={idx} className="order-item">
                 <span>
                   {item.name} × {item.quantity}
                 </span>
@@ -122,19 +109,17 @@ export default function Billing() {
 
           {/* Totals */}
           <div
-            className={`mt-4 border-t pt-4 text-sm ${
-              accessibilityMode ? "border-[#00BFFF]" : "border-[#e2c1ac]"
-            }`}
+            className={`totals-section ${accessibilityMode ? "accessibility-mode" : ""}`}
           >
-            <div className="flex justify-between mb-1">
+            <div className="total-row subtotal">
               <span>{t("subtotal")}</span>
               <span>₹{subtotal}</span>
             </div>
-            <div className="flex justify-between mb-2">
+            <div className="total-row tax">
               <span>{t("tax")}</span>
               <span>₹{gst}</span>
             </div>
-            <div className="flex justify-between font-bold text-lg mt-2">
+            <div className="total-row final-total">
               <span>{t("total")}</span>
               <span>₹{total}</span>
             </div>
@@ -143,11 +128,7 @@ export default function Billing() {
           {/* Proceed Button */}
           <button
             onClick={() => navigate("/payment")}
-            className={`mt-6 w-full py-2 rounded-2xl text-sm font-semibold cursor-pointer transition ${
-              accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]"
-            }`}
+            className={`proceed-button ${accessibilityMode ? "accessibility-mode" : ""}`}
           >
             {t("proceedToPay")}
           </button>

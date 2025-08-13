@@ -1,0 +1,172 @@
+/* Base styles */
+.landing-container {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  transition: all 0.3s ease;
+  color: white;
+}
+
+.landing-container.accessibility-mode {
+  background-color: black;
+  color: #00BFFF;
+}
+
+/* Background styles */
+.background-image {
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  filter: brightness(0.75);
+}
+
+.background-image.accessibility-mode {
+  filter: brightness(0.5) grayscale(1);
+}
+
+/* Accessibility toggle button */
+.accessibility-toggle {
+  position: fixed;
+  top: 1.5rem;
+  right: 1.5rem;
+  z-index: 20;
+  padding: 0.75rem;
+  border-radius: 50%;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  backdrop-filter: blur(16px);
+  transition: all 0.3s ease;
+  background-color: rgba(0, 0, 0, 0.6);
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+.accessibility-toggle:hover {
+  background-color: rgba(0, 0, 0, 0.8);
+}
+
+.accessibility-toggle.accessibility-mode {
+  background-color: #00BFFF;
+  color: black;
+}
+
+.accessibility-toggle.accessibility-mode:hover {
+  background-color: #60a5fa;
+}
+
+/* Main card */
+.main-card {
+  position: relative;
+  z-index: 10;
+  border-radius: 1.5rem;
+  padding: 2.5rem;
+  width: 90%;
+  max-width: 36rem;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(16px);
+  background-color: rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+}
+
+.main-card.accessibility-mode {
+  background-color: black;
+  border: 2px solid #00BFFF;
+  color: #00BFFF;
+}
+
+/* Typography */
+.main-title {
+  font-size: 2.25rem;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 2rem;
+  line-height: 1.1;
+}
+
+.subtitle {
+  text-align: center;
+  margin-bottom: 1.5rem;
+  color: rgb(229, 231, 235);
+}
+
+.subtitle.accessibility-mode {
+  color: #00BFFF;
+}
+
+/* Language grid */
+.language-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+}
+
+/* Language buttons */
+.language-button {
+  border-radius: 0.75rem;
+  padding: 1rem 0;
+  font-size: 1.125rem;
+  font-weight: 500;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  cursor: pointer;
+  border: none;
+  background-color: rgba(255, 255, 255, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(16px);
+  color: white;
+}
+
+.language-button:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.05);
+}
+
+.language-button:active {
+  transform: scale(0.95);
+}
+
+.language-button.accessibility-mode {
+  background-color: #00BFFF;
+  color: black;
+}
+
+.language-button.accessibility-mode:hover {
+  background-color: #60a5fa;
+}
+
+/* Responsive design */
+@media (max-width: 640px) {
+  .main-card {
+    width: 95%;
+    padding: 2rem;
+  }
+  
+  .main-title {
+    font-size: 1.875rem;
+  }
+  
+  .accessibility-toggle {
+    top: 1rem;
+    right: 1rem;
+    padding: 0.5rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .language-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .main-title {
+    font-size: 1.5rem;
+  }
+}

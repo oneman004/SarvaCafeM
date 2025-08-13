@@ -7,6 +7,7 @@ import FloatingPDFButton from "../components/FloatingPDFButton";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 import translations from "../data/translations/secondpage.json";
 import floatingButtonTranslations from "../data/translations/floatingButtons.json";
+import "./SecondPage.css";
 
 export default function SecondPage() {
   const navigate = useNavigate();
@@ -38,52 +39,52 @@ export default function SecondPage() {
 
   return (
     <div
-      className={`relative min-h-screen transition-all duration-300 ${
-        accessibilityMode ? "bg-black text-[#00BFFF]" : "text-white"
+      className={`main-container ${
+        accessibilityMode ? "accessibility-mode" : "normal-mode"
       }`}
     >
       <div
-        className={`absolute inset-0 bg-cover bg-center z-0 ${
-          accessibilityMode ? "brightness-50 grayscale" : ""
+        className={`background-wrapper ${
+          accessibilityMode ? "accessibility-background" : ""
         }`}
         style={{ backgroundImage: `url(${restaurantBg})` }}
       >
-        <div className="absolute inset-0 bg-black/30 backdrop-blur-xs"></div>
+        <div className="overlay"></div>
       </div>
 
       {/* Accessibility Toggle Button */}
       <button
         onClick={toggleAccessibility}
-        className={`fixed top-6 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
+        className={`accessibility-btn ${
           accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-black/60 text-white hover:bg-black/80"
+            ? "accessibility-btn-active"
+            : "accessibility-btn-normal"
         }`}
         title={t("toggleAccessibility")}
       >
         <FiEye size={24} />
       </button>
 
-      <div className="relative z-10 min-h-screen flex flex-col">
+      <div className="content-wrapper">
         {/* Back Button */}
         <button
           onClick={() => navigate(-1)}
-          className={`absolute top-4 left-4 p-3 rounded-full backdrop-blur-md transition ${
+          className={`back-btn ${
             accessibilityMode
-              ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-              : "bg-white/20 text-white hover:bg-white/30"
+              ? "back-btn-accessibility"
+              : "back-btn-normal"
           }`}
         >
           <IoArrowBack size={24} />
         </button>
 
-        <div className="flex flex-col gap-6 items-center justify-center flex-1 mt-6">
+        <div className="buttons-container">
           <button
             onClick={() => navigate("/menu")}
-            className={`w-60 px-10 py-5 rounded-xl text-lg font-semibold transition cursor-pointer backdrop-blur-md ${
+            className={`nav-btn ${
               accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400 border-2 border-[#00BFFF]"
-                : "bg-white/10 text-white border border-white hover:bg-white/20"
+                ? "nav-btn-accessibility"
+                : "nav-btn-normal"
             }`}
           >
             {t("dineIn")}
@@ -91,17 +92,17 @@ export default function SecondPage() {
 
           <button
             onClick={() => navigate("/takeaway")}
-            className={`w-60 px-10 py-5 rounded-xl text-lg font-semibold transition cursor-pointer backdrop-blur-md ${
+            className={`nav-btn ${
               accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400 border-2 border-[#00BFFF]"
-                : "bg-white/10 text-white border border-white hover:bg-white/20"
+                ? "nav-btn-accessibility"
+                : "nav-btn-normal"
             }`}
           >
             {t("takeAway")}
           </button>
         </div>
 
-        <div className="h-8"></div>
+        <div className="spacer"></div>
       </div>
 
       {/* Floating Buttons */}

@@ -8,6 +8,7 @@ import bgImage from "../assets/images/restaurant-img.jpg";
 import logo from "../assets/images/logo_new.png";
 import translations from "../data/translations/orderSummary.json";
 import floatingButtonTranslations from "../data/translations/floatingButtons.json";
+import "./OrderSummary.css";
 
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
 
@@ -20,12 +21,10 @@ export default function OrderSummary() {
   );
   const [activeModal, setActiveModal] = useState(null);
 
-  // Language from localStorage, fallback "en"
   const language = localStorage.getItem("language") || "en";
-  const t = key => translations[language]?.[key] || key;
-  
-  // ADDED: Floating button translations
-  const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
+  const t = (key) => translations[language]?.[key] || key;
+  const floatingButtonT =
+    floatingButtonTranslations[language] || floatingButtonTranslations.en;
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
@@ -38,18 +37,16 @@ export default function OrderSummary() {
     if (!orderId) return alert(t("noOrderFound"));
 
     fetch(`${nodeApi}/api/orders/${orderId}`)
-      .then(res => res.json())
-      .then(data => setOrder(data))
+      .then((res) => res.json())
+      .then((data) => setOrder(data))
       .catch(() => alert(t("fetchFailed")));
   }, [language]);
 
   if (!order) {
     return (
       <div
-        className={`min-h-screen flex items-center justify-center ${
-          accessibilityMode
-            ? "bg-black text-[#00BFFF]"
-            : "bg-[#fdf3e8] text-[#4a2e1f]"
+        className={`order-summary-page loading-screen ${
+          accessibilityMode ? "accessibility" : ""
         }`}
       >
         {t("loading")}
@@ -61,58 +58,38 @@ export default function OrderSummary() {
 
   return (
     <div
-      className={`min-h-screen relative transition-all duration-300 ${
-        accessibilityMode ? "bg-black text-[#00BFFF]" : "text-[#4a2e1f]"
-      }`}
+      className={`order-summary-page ${accessibilityMode ? "accessibility" : ""}`}
     >
       {/* Background */}
-      <div className="absolute inset-0">
+      <div className="background-container">
         <img
           src={bgImage}
           alt={t("restaurantName")}
-          className={`w-full h-full object-cover ${
-            accessibilityMode ? "brightness-50 grayscale" : ""
-          }`}
+          className="background-image"
         />
-        <div
-          className={`absolute inset-0 ${
-            accessibilityMode ? "bg-black/70" : "bg-[#f3ddcb]/70"
-          } backdrop-blur-sm`}
-        />
+        <div className="background-overlay" />
       </div>
 
       {/* Accessibility Toggle */}
       <button
         onClick={toggleAccessibility}
-        className={`fixed top-18 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
-          accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-black/60 text-white hover:bg-black/80"
-        }`}
+        className="accessibility-toggle"
         title="Toggle Accessibility Mode"
       >
         <FiEye size={24} />
       </button>
 
       {/* Content */}
-      <div className="relative z-10">
+      <div className="content-wrapper">
         <Header />
 
-        <div className="flex justify-center items-start px-4 pt-24 pb-10">
-          <div
-            className={`w-full max-w-md p-6 rounded-3xl shadow-xl border ${
-              accessibilityMode
-                ? "bg-black border-[#00BFFF] text-[#00BFFF]"
-                : "bg-[#f5e3d5] border-[#e2c1ac]"
-            }`}
-          >
-            <h2 className="text-xl font-semibold mb-4 text-center">
-              {t("orderSummary")}
-            </h2>
+        <div className="main-content">
+          <div className="summary-card">
+            <h2 className="summary-title">{t("orderSummary")}</h2>
 
-            <div className="space-y-1 mb-4 text-sm font-medium">
+            <div className="items-list">
               {order.items.map((item, index) => (
-                <div key={index} className="flex justify-between">
+                <div key={index} className="item-row">
                   <span>
                     {item.name} × {item.quantity}
                   </span>
@@ -121,72 +98,46 @@ export default function OrderSummary() {
               ))}
             </div>
 
-            <div
-              className={`text-sm mb-4 ${
-                accessibilityMode ? "text-[#00BFFF]" : "text-[#7b5241]"
-              }`}
-            >
-              <div className="flex justify-between">
+            <div className="summary-totals">
+              <div className="total-row">
                 <span>{t("totalItems")}</span>
                 <span>{totalItems}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="total-row">
                 <span>{t("subtotal")}</span>
                 <span>₹{order.subtotal}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="total-row">
                 <span>{t("gst")}</span>
                 <span>₹{order.gst}</span>
               </div>
-              <div className="flex justify-between font-semibold">
+              <div className="total-row total-bold">
                 <span>{t("total")}</span>
                 <span>₹{order.total}</span>
               </div>
             </div>
 
-            <hr
-              className={`${
-                accessibilityMode ? "border-[#00BFFF]" : "border-[#d8b39c]"
-              } mb-4`}
-            />
+            <hr className="divider" />
 
-            <div className="mb-4">
-              <label
-                className={`block mb-2 text-sm font-medium ${
-                  accessibilityMode ? "text-[#00BFFF]" : "text-[#7b5241]"
-                }`}
-              >
-                {t("cookingInstructions")}
-              </label>
+            <div className="instructions-section">
+              <label>{t("cookingInstructions")}</label>
               <textarea
                 rows={3}
                 placeholder={t("placeholderRequests")}
-                className={`w-full p-2 rounded-xl border resize-none text-sm ${
-                  accessibilityMode
-                    ? "bg-black border-[#00BFFF] text-[#00BFFF] placeholder-[#00BFFF]"
-                    : "bg-[#fbeadd] text-[#4a2e1f] placeholder-[#a88976] border-[#f2d1bd]"
-                }`}
+                className="instructions-textarea"
               />
             </div>
 
-            <div className="flex gap-3">
+            <div className="buttons-row">
               <button
                 onClick={() => navigate("/order-confirmed")}
-                className={`flex-1 py-2 rounded-xl text-sm font-semibold cursor-pointer transition ${
-                  accessibilityMode
-                    ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                    : "bg-[#d86d2a] hover:bg-[#c65e21] text-white"
-                }`}
+                className="primary-btn"
               >
                 {t("confirmOrder")}
               </button>
               <button
                 onClick={() => setShowBill(true)}
-                className={`flex-1 py-2 rounded-xl text-sm font-semibold cursor-pointer transition ${
-                  accessibilityMode
-                    ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                    : "bg-[#7b5241] hover:bg-[#6a4637] text-white"
-                }`}
+                className="secondary-btn"
               >
                 {t("viewBill")}
               </button>
@@ -197,26 +148,12 @@ export default function OrderSummary() {
 
       {/* Bill Popup Modal */}
       {showBill && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black/40 backdrop-blur-sm z-50">
-          <div
-            className={`p-6 rounded-3xl shadow-2xl w-full max-w-md border relative ${
-              accessibilityMode
-                ? "bg-black text-[#00BFFF] border-[#00BFFF]"
-                : "bg-[#f5e3d5] text-[#4a2e1f] border-[#e2c1ac]"
-            }`}
-          >
-            <div className="flex flex-col items-center mb-4">
-              <img
-                src={logo}
-                alt={t("restaurantName")}
-                className="w-20 h-20 mb-2 rounded-full shadow-md"
-              />
-              <h3 className="text-xl font-bold">{t("restaurantName")}</h3>
-              <p
-                className={`text-center text-sm mt-1 leading-snug ${
-                  accessibilityMode ? "text-[#00BFFF]" : "text-[#7b5241]"
-                }`}
-              >
+        <div className="bill-modal-overlay">
+          <div className="bill-modal">
+            <div className="modal-header">
+              <img src={logo} alt={t("restaurantName")} />
+              <h3>{t("restaurantName")}</h3>
+              <p>
                 {t("address").split("\n").map((line, i) => (
                   <span key={i}>
                     {line}
@@ -226,30 +163,22 @@ export default function OrderSummary() {
               </p>
             </div>
 
-            <hr
-              className={`my-3 ${
-                accessibilityMode ? "border-[#00BFFF]" : "border-[#d8b39c]"
-              }`}
-            />
+            <hr className="divider" />
 
-            <div
-              className={`mb-4 text-sm space-y-1 ${
-                accessibilityMode ? "text-[#00BFFF]" : "text-[#7b5241]"
-              }`}
-            >
-              <div className="flex justify-between">
+            <div className="modal-info">
+              <div className="info-row">
                 <span>{t("orderId")}</span>
                 <span>{order._id}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="info-row">
                 <span>{t("tableNumber")}</span>
                 <span>{order.tableNumber || "N/A"}</span>
               </div>
             </div>
 
-            <div className="mb-4 space-y-1 text-sm font-medium">
+            <div className="modal-items">
               {order.items.map((item, index) => (
-                <div key={index} className="flex justify-between">
+                <div key={index} className="item-row">
                   <span>
                     {item.name} × {item.quantity}
                   </span>
@@ -258,20 +187,16 @@ export default function OrderSummary() {
               ))}
             </div>
 
-            <div
-              className={`text-sm mb-4 ${
-                accessibilityMode ? "text-[#00BFFF]" : "text-[#7b5241]"
-              }`}
-            >
-              <div className="flex justify-between">
+            <div className="summary-totals">
+              <div className="total-row">
                 <span>{t("subtotal")}</span>
                 <span>₹{order.subtotal}</span>
               </div>
-              <div className="flex justify-between">
+              <div className="total-row">
                 <span>{t("gst")}</span>
                 <span>₹{order.gst}</span>
               </div>
-              <div className="flex justify-between font-semibold">
+              <div className="total-row total-bold">
                 <span>{t("total")}</span>
                 <span>₹{order.total}</span>
               </div>
@@ -279,11 +204,7 @@ export default function OrderSummary() {
 
             <button
               onClick={() => setShowBill(false)}
-              className={`mt-4 w-full py-2 rounded-xl text-sm font-semibold cursor-pointer transition ${
-                accessibilityMode
-                  ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                  : "bg-[#d86d2a] hover:bg-[#c65e21] text-white"
-              }`}
+              className="primary-btn"
             >
               {t("close")}
             </button>
