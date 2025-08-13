@@ -19,7 +19,7 @@ export default function App() {
 
   return (
     <>
-      <FloatingPDFButton
+    {/* <FloatingPDFButton
         accessibilityMode={false}
         activeModal={activeModal}
         setActiveModal={setActiveModal}
@@ -29,6 +29,8 @@ export default function App() {
         activeModal={activeModal}
         setActiveModal={setActiveModal}
       />
+
+    */}
 
       <Routes>
         <Route path="/" element={<Landing />} />

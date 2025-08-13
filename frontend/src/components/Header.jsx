@@ -19,6 +19,7 @@ export default function Header() {
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
+  const [activeTab, setActiveTab] = useState("table"); // default active tab
 
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
@@ -40,6 +41,9 @@ export default function Header() {
   const buttonBase = accessibilityMode
     ? "bg-[#00BFFF] text-black hover:bg-blue-400"
     : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]";
+  const inactiveTab = accessibilityMode
+    ? "bg-black text-white border-blue-400 hover:bg-[#222]"
+    : "bg-[#3a2a23] text-gray-300 hover:bg-[#5a3e30]";
   const popupBg = accessibilityMode
     ? "bg-black/90 text-white border-blue-400"
     : "bg-[#f5e3d5]/90 text-[#4a2e1f] border-[#e2c1ac]";
@@ -103,11 +107,17 @@ export default function Header() {
   return (
     <>
       {/* Header */}
-      <header className={`fixed top-0 left-0 w-full z-20 flex justify-between items-center px-4 py-2 shadow-md backdrop-blur-md border-b ${bgHeader}`}>
+      <header
+        className={`fixed top-0 left-0 w-full z-20 flex justify-between items-center px-4 py-2 shadow-md backdrop-blur-md border-b ${bgHeader}`}
+      >
         <div className="flex items-center gap-2">
           <motion.button
             whileTap={{ scale: 0.9 }}
-            className={`p-2 rounded-md border ${accessibilityMode ? "border-blue-400 text-white hover:bg-[#222]" : "border-[#e2c1ac] text-[#4a2e1f] hover:bg-[#f3ddcb]"}`}
+            className={`p-2 rounded-md border ${
+              accessibilityMode
+                ? "border-blue-400 text-white hover:bg-[#222]"
+                : "border-[#e2c1ac] text-[#4a2e1f] hover:bg-[#f3ddcb]"
+            }`}
             onClick={() => navigate(-1)}
           >
             <FiArrowLeft size={20} />
@@ -115,30 +125,66 @@ export default function Header() {
           <img src={logo} alt="Logo" className="h-10 w-auto object-contain" />
         </div>
 
-        <div className="flex items-center gap-2 sm:gap-3 ml-auto">
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            className={`px-3 py-1.5 text-xs sm:text-sm md:text-base rounded-md shadow transition cursor-pointer ${buttonBase}`}
-            onClick={() => alert(t.alertGroup)}
-          >
-            {t.groupOrdering}
-          </motion.button>
+        {/* Segmented Control Buttons */}
+<div className="flex items-center gap-2 sm:gap-3 ml-auto">
+  <div
+    className={`flex rounded-lg overflow-hidden border ${
+      accessibilityMode ? "border-blue-400" : "border-[#e2c1ac]"
+    }`}
+  >
+    {/* Sign Language */}
+    <button
+      className={`px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs md:text-base font-medium whitespace-nowrap transition-colors ${
+        activeTab === "signLanguage" ? buttonBase : inactiveTab
+      }`}
+      onClick={() => {
+        setActiveTab("signLanguage");
+        alert("Sign Language feature coming soon");
+      }}
+    >
+      Sign Language
+    </button>
 
-          <motion.button
-            whileTap={{ scale: 0.95 }}
-            className={`px-3 py-1.5 text-xs sm:text-sm md:text-base rounded-md shadow transition cursor-pointer ${buttonBase}`}
-            onClick={() => setShowCard(true)}
-          >
-            {t.tableService}
-          </motion.button>
-        </div>
+    {/* Table Service */}
+    <button
+      className={`px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs md:text-base font-medium whitespace-nowrap transition-colors ${
+        activeTab === "table" ? buttonBase : inactiveTab
+      }`}
+      onClick={() => {
+        setActiveTab("table");
+        setShowCard(true);
+      }}
+    >
+      {t.tableService}
+    </button>
+
+    {/* Sign Name */}
+    <button
+      className={`px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs md:text-base font-medium whitespace-nowrap transition-colors ${
+        activeTab === "signName" ? buttonBase : inactiveTab
+      }`}
+      onClick={() => {
+        setActiveTab("signName");
+        alert("Sign Name feature coming soon");
+      }}
+    >
+      Sign Name
+    </button>
+  </div>
+</div>
+
       </header>
 
       {/* Request Popup */}
       <AnimatePresence>
         {showCard && (
           <>
-            <motion.div className="fixed inset-0 backdrop-blur-sm bg-black/30 z-40" initial={{ opacity: 0 }} animate={{ opacity: 1 }} exit={{ opacity: 0 }} />
+            <motion.div
+              className="fixed inset-0 backdrop-blur-sm bg-black/30 z-40"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+            />
             <motion.div
               className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 z-50"
               initial={{ opacity: 0, scale: 0.7 }}
@@ -146,11 +192,17 @@ export default function Header() {
               exit={{ opacity: 0, scale: 0.7 }}
               transition={{ duration: 0.3 }}
             >
-              <div className={`w-[280px] rounded-2xl shadow-2xl p-4 backdrop-blur-xl max-h-[85vh] overflow-y-auto ${popupBg}`}>
+              <div
+                className={`w-[280px] rounded-2xl shadow-2xl p-4 backdrop-blur-xl max-h-[85vh] overflow-y-auto ${popupBg}`}
+              >
                 <div className="flex items-center gap-2 mb-4">
                   <button
                     onClick={() => setShowCard(false)}
-                    className={`transition cursor-pointer ${accessibilityMode ? "text-white hover:text-red-400" : "text-[#4a2e1f] hover:text-red-400"}`}
+                    className={`transition cursor-pointer ${
+                      accessibilityMode
+                        ? "text-white hover:text-red-400"
+                        : "text-[#4a2e1f] hover:text-red-400"
+                    }`}
                   >
                     <FiArrowLeft size={20} />
                   </button>
@@ -190,7 +242,10 @@ export default function Header() {
                     onChange={(e) => setCustomRequest(e.target.value)}
                   />
 
-                  <button className={`w-full mt-3 py-2 px-4 rounded-md text-sm cursor-pointer shadow ${buttonBase}`} onClick={handleFeatureClick}>
+                  <button
+                    className={`w-full mt-3 py-2 px-4 rounded-md text-sm cursor-pointer shadow ${buttonBase}`}
+                    onClick={handleFeatureClick}
+                  >
                     {t.sendToWaiter}
                   </button>
                 </div>

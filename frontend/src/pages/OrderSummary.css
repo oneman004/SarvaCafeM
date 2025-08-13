@@ -102,6 +102,7 @@
   padding: 1rem 1rem 1rem;    /* Reduced top padding from 6rem to 2rem */
   width: 100%;
   box-sizing: border-box;
+  margin-top: -4rem;
 }
 
 

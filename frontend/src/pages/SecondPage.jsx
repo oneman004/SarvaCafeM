@@ -105,7 +105,7 @@ export default function SecondPage() {
         <div className="spacer"></div>
       </div>
 
-      {/* Floating Buttons */}
+    {/*  
       <FloatingPDFButton
         accessibilityMode={accessibilityMode}
         activeModal={activeModal}
@@ -120,6 +120,7 @@ export default function SecondPage() {
         setActiveModal={setActiveModal}
         translations={floatingButtonT}
       />
+      */}
     </div>
   );
 }

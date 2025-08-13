@@ -87,7 +87,8 @@ export default function Landing() {
         </div>
       </motion.div>
 
-      <FloatingPDFButton
+     {/* 
+     <FloatingPDFButton
         accessibilityMode={accessibilityMode}
         activeModal={activeModal}
         setActiveModal={setActiveModal}
@@ -101,6 +102,7 @@ export default function Landing() {
         setActiveModal={setActiveModal}
         translations={floatingButtonT}
       />
+      */}
     </div>
   );
 }

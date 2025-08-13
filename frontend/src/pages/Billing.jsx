@@ -135,7 +135,7 @@ export default function Billing() {
         </div>
       </div>
 
-      {/* Floating Buttons */}
+      {/* 
       <FloatingPDFButton
         accessibilityMode={accessibilityMode}
         activeModal={activeModal}
@@ -150,6 +150,7 @@ export default function Billing() {
         setActiveModal={setActiveModal}
         translations={floatingButtonT}
       />
+      */}
     </div>
   );
 }
