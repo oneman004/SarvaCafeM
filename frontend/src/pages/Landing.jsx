@@ -49,25 +49,32 @@ export default function Landing() {
         }}
       ></div>
 
-      {/* Accessibility Toggle Button */}
-      <button
-        onClick={toggleAccessibility}
-        className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
-        title="Toggle Accessibility Mode"
+      {/* TITLE AT TOP */}
+      <h1
+        className="top-title"
+        style={{
+          position: "absolute",
+          top: "4rem",
+          left: "50%",
+          transform: "translateX(-50%)",
+          zIndex: 20,
+          color: accessibilityMode ? "#00BFFF" : "white",
+          fontSize: "2rem",
+          fontWeight: "bold",
+          textShadow: "0 2px 6px rgba(0,0,0,0.6)",
+          textAlign: "center"
+        }}
       >
-        <FiEye size={24} />
-      </button>
+        Welcome to Terra Cart!
+      </h1>
 
       {/* Card */}
       <motion.div
         initial={{ opacity: 0, scale: 0.9, y: 40 }}
         animate={{ opacity: 1, scale: 1, y: 0 }}
-        transition={{ duration: 3 }}
+        transition={{ duration: 0 }}
         className={`main-card ${accessibilityMode ? "accessibility-mode" : ""}`}
       >
-        <h1 className="main-title">
-          Welcome to Terra Cart!
-        </h1>
         <p className={`subtitle ${accessibilityMode ? "accessibility-mode" : ""}`}>
           Please select your preferred language
         </p>
@@ -86,23 +93,6 @@ export default function Landing() {
           ))}
         </div>
       </motion.div>
-
-     {/* 
-     <FloatingPDFButton
-        accessibilityMode={accessibilityMode}
-        activeModal={activeModal}
-        setActiveModal={setActiveModal}
-        translations={floatingButtonT}
-      />
-      
-      <FloatingSignLanguageButton
-        accessibilityMode={accessibilityMode}
-        setAccessibilityMode={setAccessibilityMode}
-        activeModal={activeModal}
-        setActiveModal={setActiveModal}
-        translations={floatingButtonT}
-      />
-      */}
     </div>
   );
 }

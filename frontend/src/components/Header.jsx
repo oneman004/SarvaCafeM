@@ -107,48 +107,58 @@ export default function Header() {
   return (
     <>
       {/* Header */}
-      <header
-        className={`fixed top-0 left-0 w-full z-20 flex justify-between items-center px-4 py-2 shadow-md backdrop-blur-md border-b ${bgHeader}`}
-      >
-        <div className="flex items-center gap-2">
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            className={`p-2 rounded-md border ${
-              accessibilityMode
-                ? "border-blue-400 text-white hover:bg-[#222]"
-                : "border-[#e2c1ac] text-[#4a2e1f] hover:bg-[#f3ddcb]"
-            }`}
-            onClick={() => navigate(-1)}
-          >
-            <FiArrowLeft size={20} />
-          </motion.button>
-          <img src={logo} alt="Logo" className="h-10 w-auto object-contain" />
-        </div>
+     <header
+  className={`fixed top-0 left-0 w-full z-20 flex flex-col items-center shadow-md backdrop-blur-md border-b ${bgHeader}`}
+>
+  {/* First Row - Back Button + Centered Logo */}
+  <div className="w-full flex items-center justify-center relative">
+    {/* Back Button */}
+    <button
+      onClick={() => navigate(-1)}
+      className={`absolute left-4 p-1 rounded-full transition ${
+        accessibilityMode
+          ? "text-white hover:text-blue-400"
+          : "text-[#4a2e1f] hover:text-[#d86d2a]"
+      }`}
+    >
+      <FiArrowLeft size={22} />
+    </button>
 
-        {/* Segmented Control Buttons */}
-<div className="flex items-center gap-2 sm:gap-3 ml-auto">
+    {/* Logo */}
+    <img src={logo} alt="Logo" className="h-10 object-contain" />
+  </div>
+
+  {/* Second Row - Full-width Buttons with separators */}
   <div
-    className={`flex rounded-lg overflow-hidden border ${
+    className={`w-full flex border-t ${
       accessibilityMode ? "border-blue-400" : "border-[#e2c1ac]"
     }`}
   >
-    {/* Sign Language */}
+    {/* Sign Menu */}
     <button
-      className={`px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs md:text-base font-medium whitespace-nowrap transition-colors ${
-        activeTab === "signLanguage" ? buttonBase : inactiveTab
+      className={`flex-1 py-2 text-xs sm:text-sm md:text-base font-medium transition-colors border-r ${
+        accessibilityMode
+          ? `border-blue-400 ${
+              activeTab === "signLanguage" ? buttonBase : inactiveTab
+            }`
+          : `border-[#e2c1ac] ${
+              activeTab === "signLanguage" ? buttonBase : inactiveTab
+            }`
       }`}
       onClick={() => {
         setActiveTab("signLanguage");
-        alert("Sign Language feature coming soon");
+        navigate("/sign-language");
       }}
     >
-      Sign Language
+      Sign Menu
     </button>
 
     {/* Table Service */}
     <button
-      className={`px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs md:text-base font-medium whitespace-nowrap transition-colors ${
-        activeTab === "table" ? buttonBase : inactiveTab
+      className={`flex-1 py-2 text-xs sm:text-sm md:text-base font-medium transition-colors border-r ${
+        accessibilityMode
+          ? `border-blue-400 ${activeTab === "table" ? buttonBase : inactiveTab}`
+          : `border-[#e2c1ac] ${activeTab === "table" ? buttonBase : inactiveTab}`
       }`}
       onClick={() => {
         setActiveTab("table");
@@ -160,20 +170,20 @@ export default function Header() {
 
     {/* Sign Name */}
     <button
-      className={`px-2 sm:px-3 md:px-4 py-1 sm:py-1.5 text-[10px] sm:text-xs md:text-base font-medium whitespace-nowrap transition-colors ${
+      className={`flex-1 py-2 text-xs sm:text-sm md:text-base font-medium transition-colors ${
         activeTab === "signName" ? buttonBase : inactiveTab
       }`}
       onClick={() => {
         setActiveTab("signName");
-        alert("Sign Name feature coming soon");
+        navigate("/sign-name");
       }}
     >
       Sign Name
     </button>
   </div>
-</div>
+</header>
 
-      </header>
+
 
       {/* Request Popup */}
       <AnimatePresence>

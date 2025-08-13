@@ -273,7 +273,7 @@ export default function MenuPage() {
 
       <div className={`absolute inset-0 ${accessibilityMode ? "bg-black/50 backdrop-blur-sm" : "bg-[#f3ddcb]/60 backdrop-blur-sm"}`}></div>
 
-      {/* Accessibility Toggle */}
+      {/* Accessibility Toggle 
       <button
         onClick={toggleAccessibility}
         className={`fixed top-18 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
@@ -286,11 +286,12 @@ export default function MenuPage() {
       >
         <FiEye size={24} />
       </button>
+      */}
 
       <div className="relative z-10">
         <Header accessibilityMode={accessibilityMode} />
 
-        <div className="max-w-6xl mx-auto px-4 py-8 mt-10">
+        <div className="max-w-6xl mx-auto px-4 py-8 mt-13">
           <div className="flex flex-col md:flex-row gap-4">
             {/* Left Panel - Smart Serve */}
             <div className={`md:w-[40%] p-6 rounded-xl shadow-lg text-center transition ${

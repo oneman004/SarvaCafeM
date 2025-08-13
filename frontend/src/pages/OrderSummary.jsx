@@ -70,7 +70,7 @@ export default function OrderSummary() {
         <div className="background-overlay" />
       </div>
 
-      {/* Accessibility Toggle */}
+      {/* Accessibility Toggle
       <button
         onClick={toggleAccessibility}
         className="accessibility-toggle"
@@ -78,6 +78,7 @@ export default function OrderSummary() {
       >
         <FiEye size={24} />
       </button>
+      */}
 
       {/* Content */}
       <div className="content-wrapper">

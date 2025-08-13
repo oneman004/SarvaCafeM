@@ -38,7 +38,7 @@ export default function Payment() {
         <FaArrowLeft size={18} />
       </button>
 
-      {/* Accessibility Toggle Button */}
+      {/* Accessibility Toggle Button 
       <button
         onClick={toggleAccessibility}
         className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
@@ -46,6 +46,7 @@ export default function Payment() {
       >
         <FiEye size={24} />
       </button>
+      */}
 
       {/* QR Popup */}
       <AnimatePresence>

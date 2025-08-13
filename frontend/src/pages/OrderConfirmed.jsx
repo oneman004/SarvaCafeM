@@ -45,7 +45,7 @@ export default function OrderConfirmed() {
         />
       </div>
 
-      {/* Accessibility Toggle Button */}
+      {/* Accessibility Toggle Button 
       <button
         onClick={toggleAccessibility}
         className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
@@ -53,6 +53,7 @@ export default function OrderConfirmed() {
       >
         <FiEye size={24} />
       </button>
+      */}
       
       {/* Header */}
       <Header hideBackButton={true} hideGroupOrdering={true} />

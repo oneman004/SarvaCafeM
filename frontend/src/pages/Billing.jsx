@@ -68,7 +68,7 @@ export default function Billing() {
         />
       </div>
 
-      {/* Accessibility Toggle Button */}
+      {/* Accessibility Toggle Button 
       <button
         onClick={toggleAccessibility}
         className={`accessibility-toggle ${accessibilityMode ? "accessibility-mode" : ""}`}
@@ -76,6 +76,7 @@ export default function Billing() {
       >
         <FiEye size={24} />
       </button>
+      */}
 
       {/* Header */}
       <Header />

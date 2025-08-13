@@ -52,7 +52,7 @@ export default function SecondPage() {
         <div className="overlay"></div>
       </div>
 
-      {/* Accessibility Toggle Button */}
+      {/* Accessibility Toggle Button 
       <button
         onClick={toggleAccessibility}
         className={`accessibility-btn ${
@@ -64,6 +64,8 @@ export default function SecondPage() {
       >
         <FiEye size={24} />
       </button>
+      */
+      }
 
       <div className="content-wrapper">
         {/* Back Button */}

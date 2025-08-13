@@ -11,6 +11,8 @@ import Takeaway from "./pages/Takeaway";
 import FeedbackPage from "./pages/FeedbackPage";
 import FloatingPDFButton from "./components/FloatingPDFButton";
 import FloatingSignLanguageButton from "./components/FloatingSignLanguageButton";
+import SignLanguage from "./pages/SignLanguage";
+import SignName from "./pages/SignName";
 
 export default function App() {
   const [activeModal, setActiveModal] = useState(null); // "pdf" | "sign" | null
@@ -39,6 +41,8 @@ export default function App() {
         <Route path="/payment" element={<Payment />} />
         <Route path="/takeaway" element={<Takeaway />} />
         <Route path="/feedback" element={<FeedbackPage />} />
+        <Route path="/sign-name" element={<SignName />} /> 
+        <Route path="/sign-language" element={<SignLanguage />} />
       </Routes>
     </>
   );
