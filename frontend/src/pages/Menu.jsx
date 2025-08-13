@@ -1,3 +1,4 @@
+// MenuPage.jsx
 import Header from "../components/Header";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
@@ -7,6 +8,7 @@ import menuItems from "../data/menuData";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { motion } from "framer-motion";
+import './MenuPage.css';
 
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
 const flaskApi = import.meta.env.VITE_FLASK_API_URL;
@@ -25,50 +27,36 @@ const TranslatedItem = ({ item, onAdd, onRemove, count, accessibilityMode }) => 
       initial={{ opacity: 0, scale: 0.95 }}
       animate={{ opacity: 1, scale: 1 }}
       transition={{ duration: 0.5 }}
-      className={`relative rounded-xl overflow-hidden shadow-md group cursor-pointer w-full h-[180px] ${
-        accessibilityMode ? "border-2 border-[#00BFFF] bg-black/60" : ""
-      }`}
+      className="item-card group"
     >
-      <div className="w-full h-full overflow-hidden">
+      <div className="item-image-container">
         <img
           src={item.image || "/defaultImg.jpg"}
           alt={item.name}
-          className={`w-full h-full object-cover rounded-xl transition-transform duration-300 group-hover:scale-105 ${
-            accessibilityMode ? "grayscale brightness-50" : ""
-          }`}
+          className="item-image"
         />
       </div>
 
-      <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/30 to-transparent z-10"></div>
+      <div className="item-gradient"></div>
 
-      <div className="absolute bottom-0 w-full p-3 z-20 flex justify-between items-center">
-        <div className="text-left">
-          <h4 className={`font-bold text-sm sm:text-base drop-shadow ${
-            accessibilityMode ? "text-[#00BFFF]" : "text-white"
-          }`}>{translatedName}</h4>
-          <p className={`${accessibilityMode ? "text-[#00BFFF]" : "text-white"}`}>₹{item.price}</p>
+      <div className="item-footer">
+        <div className="item-info">
+          <h4 className="item-name">{translatedName}</h4>
+          <p className="item-price">₹{item.price}</p>
         </div>
 
-        <div className="flex items-center gap-2">
+        <div className="item-controls">
           <button
             aria-label={`Remove one ${item.name}`}
-            className={`px-2 py-1 rounded-full font-bold text-xs ${
-              accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                : "bg-[#f28500] hover:bg-[#d77400] text-white"
-            }`}
+            className="quantity-button"
             onClick={() => onRemove(item.name)}
           >-</button>
 
-          <span className={`font-semibold text-sm ${accessibilityMode ? "text-[#00BFFF]" : "text-white"}`}>{count}</span>
+          <span className="item-count">{count}</span>
 
           <button
             aria-label={`Add one ${item.name}`}
-            className={`px-2 py-1 rounded-full font-bold text-xs ${
-              accessibilityMode
-                ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-                : "bg-[#f28500] hover:bg-[#d77400] text-white"
-            }`}
+            className="quantity-button"
             onClick={() => onAdd(item.name)}
           >+</button>
         </div>
@@ -79,7 +67,7 @@ const TranslatedItem = ({ item, onAdd, onRemove, count, accessibilityMode }) => 
 
 const TranslatedSummaryItem = ({ item, qty, accessibilityMode }) => {
   const [translatedItem] = useAITranslation(item);
-  return <li className={`${accessibilityMode ? "text-[#00BFFF]" : "text-gray-700"}`}>{qty} x {translatedItem}</li>;
+  return <li className="summary-item">{qty} x {translatedItem}</li>;
 };
 
 export default function MenuPage() {
@@ -260,18 +248,14 @@ export default function MenuPage() {
   };
 
   return (
-    <div className={`relative min-h-screen overflow-x-hidden overflow-y-auto transition-all duration-300 ${
-      accessibilityMode ? "bg-black text-[#00BFFF]" : "text-[#4b2e28]"
-    }`}>
+    <div className={`menu-root ${accessibilityMode ? "accessibility-mode" : ""}`}>
       {/* Background image + overlay */}
       <div
-        className={`absolute inset-0 bg-cover bg-center bg-no-repeat blur-md opacity-30 ${
-          accessibilityMode ? "grayscale brightness-50" : ""
-        }`}
+        className="background-image"
         style={{ backgroundImage: `url(${restaurantBg})` }}
       ></div>
 
-      <div className={`absolute inset-0 ${accessibilityMode ? "bg-black/50 backdrop-blur-sm" : "bg-[#f3ddcb]/60 backdrop-blur-sm"}`}></div>
+      <div className="overlay"></div>
 
       {/* Accessibility Toggle 
       <button
@@ -288,71 +272,61 @@ export default function MenuPage() {
       </button>
       */}
 
-      <div className="relative z-10">
+      <div className="content-wrapper">
         <Header accessibilityMode={accessibilityMode} />
 
-        <div className="max-w-6xl mx-auto px-4 py-8 mt-13">
-          <div className="flex flex-col md:flex-row gap-4">
+        <div className="main-container">
+          <div className="panels-container">
             {/* Left Panel - Smart Serve */}
-            <div className={`md:w-[40%] p-6 rounded-xl shadow-lg text-center transition ${
-              accessibilityMode
-                ? "bg-black/80 border-2 border-[#00BFFF] text-[#00BFFF]"
-                : "bg-white bg-opacity-90"
-            }`}>
-              <h3 className={`text-3xl font-bold mb-4 ${accessibilityMode ? "text-[#00BFFF]" : "text-[#f28500]"}`}>{smartServe}</h3>
+            <div className="left-panel">
+              <h3 className="smart-serve-title">{smartServe}</h3>
 
               <button
                 onClick={handleVoiceOrder}
-                className={`mx-auto mb-4 p-4 rounded-full ${recording ? "bg-red-600 animate-pulse" : accessibilityMode ? "bg-[#00BFFF] text-black" : "bg-[#f28500] text-white"} text-3xl`}
+                className={`voice-button ${recording ? "recording" : ""}`}
                 aria-pressed={recording}
                 aria-label="Record voice order"
               >
                 {recording ? <FiMicOff /> : <FiMic />}
               </button>
 
-              <p className={`italic text-sm mb-2 ${accessibilityMode ? "text-[#00BFFF]" : "text-gray-600"}`}>
+              <p className="instruction-text">
                 {isProcessing ? processingText : recording ? "Tap to Stop" : "Tap to Order"}
               </p>
 
               {orderText && (
-                <p className={`text-sm mt-2 ${accessibilityMode ? "text-[#00BFFF]" : "text-gray-700"}`}>
-                  {aiOrdered} <span className="italic">{orderText}</span>
+                <p className="ai-ordered-text">
+                  {aiOrdered} <span className="order-text-italic">{orderText}</span>
                 </p>
               )}
 
               {Object.keys(cart).length > 0 && (
-                <div className="mt-6 text-left">
-                  <h4 className={`text-lg font-bold mb-2 ${accessibilityMode ? "text-[#00BFFF]" : "text-[#4b2e28]"}`}>{orderSummary}</h4>
-                  <ul className={`mb-4 list-disc list-inside text-sm ${accessibilityMode ? "text-[#00BFFF]" : "text-gray-700"}`}>
+                <div className="order-summary-section">
+                  <h4 className="order-summary-title">{orderSummary}</h4>
+                  <ul className="summary-list">
                     {Object.entries(cart).map(([item, qty], idx) => (
                       <TranslatedSummaryItem key={idx} item={item} qty={qty} accessibilityMode={accessibilityMode} />
                     ))}
                   </ul>
 
-                  <div className="flex flex-wrap gap-3 justify-center items-center">
+                  <div className="button-group">
                     <button
                       onClick={handleContinue}
-                      className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${
-                        accessibilityMode ? "bg-[#00BFFF] text-black hover:bg-blue-400" : "bg-[#f28500] hover:bg-[#d77400] text-white"
-                      }`}
+                      className="confirm-button"
                     >
                       {confirmBtn}
                     </button>
 
                     <button
                       onClick={speakOrderSummary}
-                      className={`px-3 py-2 rounded-lg text-sm font-semibold flex items-center gap-2 transition ${
-                        accessibilityMode ? "bg-[#00BFFF] text-black hover:bg-blue-400" : "bg-[#f28500] hover:bg-[#d77400] text-white"
-                      }`}
+                      className="speak-button"
                     >
-                      <HiSpeakerWave className="text-base sm:text-lg" /> {speakBtn}
+                      <HiSpeakerWave className="speaker-icon" /> {speakBtn}
                     </button>
 
                     <button
                       onClick={handleResetCart}
-                      className={`px-3 py-2 rounded-lg text-sm font-semibold transition ${
-                        accessibilityMode ? "bg-[#00BFFF] text-black hover:bg-blue-400" : "bg-[#f28500] hover:bg-[#d77400] text-white"
-                      }`}
+                      className="reset-button"
                     >
                       Reset Order
                     </button>
@@ -362,25 +336,19 @@ export default function MenuPage() {
             </div>
 
             {/* Right Panel - Manual / Menu */}
-            <div className={`md:w-[60%] p-6 rounded-xl shadow-lg transition ${
-              accessibilityMode ? "bg-black/70 border-2 border-[#00BFFF]" : "bg-white bg-opacity-90"
-            }`}>
-              <h3 className={`text-xl font-bold mb-4 ${accessibilityMode ? "text-[#00BFFF]" : "text-[#4b2e28]"}`}>{manualEntry}</h3>
+            <div className="right-panel">
+              <h3 className="manual-entry-title">{manualEntry}</h3>
 
               <input
                 type="text"
                 placeholder="Search item..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className={`px-4 py-2 rounded-lg w-full mb-4 transition ${
-                  accessibilityMode
-                    ? "bg-black/60 text-[#00BFFF] border-2 border-[#00BFFF] placeholder:text-[#00BFFF]/60"
-                    : "bg-[#fdf6ee] text-[#4b2e28] border border-[#e6d3c6]"
-                }`}
+                className="search-input"
               />
 
               {searchQuery.trim() ? (
-                <div className="grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[180px]">
+                <div className="search-results">
                   {menuItems
                     .filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
                     .map((item, idx) => (
@@ -395,25 +363,21 @@ export default function MenuPage() {
                     ))}
                 </div>
               ) : (
-                <div className="flex flex-col gap-4">
+                <div className="category-container">
                   {Object.entries(groupedMenu).map(([category, items]) => {
                     // NOTE: useAITranslation used inside render in your original code — kept for parity
                     const [translatedCategory] = useAITranslation(category);
                     return (
-                      <div key={category} className={`rounded-lg shadow-sm transition ${
-                        accessibilityMode ? "bg-black/60 border-2 border-[#00BFFF]" : "bg-[#fdf6ee]"
-                      }`}>
+                      <div key={category} className="category-wrapper">
                         <button
                           onClick={() => setOpenCategory(openCategory === category ? null : category)}
-                          className={`w-full px-4 py-2 text-left text-lg font-semibold flex justify-between items-center transition ${
-                            accessibilityMode ? "text-[#00BFFF]" : "text-[#4b2e28]"
-                          }`}
+                          className="category-button"
                         >
                           {translatedCategory} <span>{openCategory === category ? "▲" : "▼"}</span>
                         </button>
 
                         {openCategory === category && (
-                          <div className="p-4 grid gap-4 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 auto-rows-[180px]">
+                          <div className="category-items">
                             {items.map((item, idx) => (
                               <TranslatedItem
                                 key={idx}

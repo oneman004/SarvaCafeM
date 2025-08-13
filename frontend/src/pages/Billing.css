@@ -3,9 +3,10 @@
   min-height: 100vh;
   position: relative;
   transition: all 0.3s ease;
-  color: #4a2e1f;
+  color: #333333; /* Adjusted text color */
 }
 
+/* Accessibility mode overrides */
 .billing-container.accessibility-mode {
   background-color: black;
   color: #00BFFF;
@@ -17,41 +18,14 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: #4a2e1f;
+  color: #333333; /* Adjusted text color */
 }
 
-/* Background image container */
-.background-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.background-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.background-image.accessibility-mode {
-  filter: brightness(0.5) grayscale(1);
-}
-
-/* Background overlay */
+/* Remove background image and overlay for pure white background */
+.background-container,
+.background-image,
 .background-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  backdrop-filter: blur(4px);
-  background-color: rgba(243, 221, 203, 0.7);
-}
-
-.background-overlay.accessibility-mode {
-  background-color: rgba(0, 0, 0, 0.5);
+  display: none; /* Hide background image and overlay */
 }
 
 /* Accessibility toggle button */
@@ -104,8 +78,8 @@
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
   backdrop-filter: blur(4px);
   transition: all 0.3s ease;
-  background-color: #fef4ec;
-  border: 1px solid #e2c1ac;
+  background-color: #ffffff; /* White background */
+  border: 1px solid #cccccc; /* Light gray border */
 }
 
 .billing-card.accessibility-mode {
@@ -121,6 +95,11 @@
   font-weight: bold;
   margin-bottom: 16px;
   line-height: 1.2;
+  color: #FC8019; /* Accent color */
+}
+
+.accessibility-mode .restaurant-title {
+  color: #00BFFF;
 }
 
 /* Table info */
@@ -128,6 +107,11 @@
   font-size: 1rem;
   font-weight: 600;
   margin-bottom: 16px;
+  color: #444444; /* Dark text */
+}
+
+.accessibility-mode .table-info {
+  color: #00BFFF;
 }
 
 /* Order items container */
@@ -140,6 +124,11 @@
   justify-content: space-between;
   font-size: 0.875rem;
   margin-bottom: 8px;
+  color: #444444; /* Dark text */
+}
+
+.accessibility-mode .order-item {
+  color: #00BFFF;
 }
 
 .order-item:last-child {
@@ -149,13 +138,15 @@
 /* Totals section */
 .totals-section {
   margin-top: 16px;
-  border-top: 1px solid #e2c1ac;
+  border-top: 1px solid #cccccc; /* Light gray divider */
   padding-top: 16px;
   font-size: 0.875rem;
+  color: #444444; /* Dark text */
 }
 
 .totals-section.accessibility-mode {
   border-top-color: #00BFFF;
+  color: #00BFFF;
 }
 
 .total-row {
@@ -190,12 +181,12 @@
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
-  background-color: #d86d2a;
-  color: white;
+  background-color: #FC8019; /* Accent color */
+  color: white; /* White text */
 }
 
 .proceed-button:hover {
-  background-color: #c75b1a;
+  background-color: #e16f19; /* Darker hover */
   transform: translateY(-1px);
 }
 

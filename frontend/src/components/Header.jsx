@@ -3,14 +3,15 @@ import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMic, FiMicOff, FiArrowLeft } from "react-icons/fi";
 import logo from "../assets/images/logo_new.png";
-import translations from "../data/translations/Header.json"; // <-- Your JSON file
+import translations from "../data/translations/Header.json";
+import NavigationTabs from "./NavigationTabs"; // Import the new component
 
-export default function Header() {
+export default function Header({ showNavigationTabs = true }) { // Add prop with default value
   const navigate = useNavigate();
 
   // Language from localStorage (default: en)
   const [language, setLanguage] = useState(localStorage.getItem("language") || "en");
-  const t = translations[language]; // Shortcut for current language text
+  const t = translations[language];
 
   const [showCard, setShowCard] = useState(false);
   const [recording, setRecording] = useState(false);
@@ -19,7 +20,7 @@ export default function Header() {
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
-  const [activeTab, setActiveTab] = useState("table"); // default active tab
+  const [activeTab, setActiveTab] = useState("table");
 
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
@@ -41,9 +42,6 @@ export default function Header() {
   const buttonBase = accessibilityMode
     ? "bg-[#00BFFF] text-black hover:bg-blue-400"
     : "bg-[#d86d2a] text-white hover:bg-[#c75b1a]";
-  const inactiveTab = accessibilityMode
-    ? "bg-black text-white border-blue-400 hover:bg-[#222]"
-    : "bg-[#3a2a23] text-gray-300 hover:bg-[#5a3e30]";
   const popupBg = accessibilityMode
     ? "bg-black/90 text-white border-blue-400"
     : "bg-[#f5e3d5]/90 text-[#4a2e1f] border-[#e2c1ac]";
@@ -107,85 +105,40 @@ export default function Header() {
   return (
     <>
       {/* Header */}
-     <header
-  className={`fixed top-0 left-0 w-full z-20 flex flex-col items-center shadow-md backdrop-blur-md border-b ${bgHeader}`}
->
-  {/* First Row - Back Button + Centered Logo */}
-  <div className="w-full flex items-center justify-center relative">
-    {/* Back Button */}
-    <button
-      onClick={() => navigate(-1)}
-      className={`absolute left-4 p-1 rounded-full transition ${
-        accessibilityMode
-          ? "text-white hover:text-blue-400"
-          : "text-[#4a2e1f] hover:text-[#d86d2a]"
-      }`}
-    >
-      <FiArrowLeft size={22} />
-    </button>
+      <header
+        className={`fixed top-0 left-0 w-full z-20 flex flex-col items-center shadow-md backdrop-blur-md border-b ${bgHeader}`}
+      >
+        {/* First Row - Back Button + Centered Logo */}
+        <div className="w-full flex items-center justify-center relative">
+          {/* Back Button */}
+          <button
+            onClick={() => navigate(-1)}
+            className={`absolute left-4 p-1 rounded-full transition ${
+              accessibilityMode
+                ? "text-white hover:text-blue-400"
+                : "text-[#4a2e1f] hover:text-[#d86d2a]"
+            }`}
+          >
+            <FiArrowLeft size={22} />
+          </button>
 
-    {/* Logo */}
-    <img src={logo} alt="Logo" className="h-10 object-contain" />
-  </div>
+          {/* Logo */}
+          <img src={logo} alt="Logo" className="h-10 object-contain" />
+        </div>
 
-  {/* Second Row - Full-width Buttons with separators */}
-  <div
-    className={`w-full flex border-t ${
-      accessibilityMode ? "border-blue-400" : "border-[#e2c1ac]"
-    }`}
-  >
-    {/* Sign Menu */}
-    <button
-      className={`flex-1 py-2 text-xs sm:text-sm md:text-base font-medium transition-colors border-r ${
-        accessibilityMode
-          ? `border-blue-400 ${
-              activeTab === "signLanguage" ? buttonBase : inactiveTab
-            }`
-          : `border-[#e2c1ac] ${
-              activeTab === "signLanguage" ? buttonBase : inactiveTab
-            }`
-      }`}
-      onClick={() => {
-        setActiveTab("signLanguage");
-        navigate("/sign-language");
-      }}
-    >
-      Sign Menu
-    </button>
+        {/* Conditionally render NavigationTabs */}
+        {showNavigationTabs && (
+          <NavigationTabs
+            activeTab={activeTab}
+            setActiveTab={setActiveTab}
+            setShowCard={setShowCard}
+            language={language}
+            accessibilityMode={accessibilityMode}
+          />
+        )}
+      </header>
 
-    {/* Table Service */}
-    <button
-      className={`flex-1 py-2 text-xs sm:text-sm md:text-base font-medium transition-colors border-r ${
-        accessibilityMode
-          ? `border-blue-400 ${activeTab === "table" ? buttonBase : inactiveTab}`
-          : `border-[#e2c1ac] ${activeTab === "table" ? buttonBase : inactiveTab}`
-      }`}
-      onClick={() => {
-        setActiveTab("table");
-        setShowCard(true);
-      }}
-    >
-      {t.tableService}
-    </button>
-
-    {/* Sign Name */}
-    <button
-      className={`flex-1 py-2 text-xs sm:text-sm md:text-base font-medium transition-colors ${
-        activeTab === "signName" ? buttonBase : inactiveTab
-      }`}
-      onClick={() => {
-        setActiveTab("signName");
-        navigate("/sign-name");
-      }}
-    >
-      Sign Name
-    </button>
-  </div>
-</header>
-
-
-
-      {/* Request Popup */}
+      {/* Request Popup - Rest of your popup code remains the same */}
       <AnimatePresence>
         {showCard && (
           <>

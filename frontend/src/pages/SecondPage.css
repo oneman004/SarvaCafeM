@@ -1,11 +1,13 @@
+/* Base styles */
 .main-container {
   position: relative;
   min-height: 100vh;
   transition: all 0.3s ease;
+  background-color: white; /* Added for white background */
 }
 
 .normal-mode {
-  color: white;
+  color: #333; /* Changed for readability on white background */
 }
 
 .accessibility-mode {
@@ -13,6 +15,7 @@
   color: #00BFFF;
 }
 
+/* Background styles */
 .background-wrapper {
   position: absolute;
   top: 0;
@@ -22,12 +25,15 @@
   background-size: cover;
   background-position: center;
   z-index: 0;
+  display: none; /* Hidden for normal white background */
 }
 
-.accessibility-background {
-  filter: brightness(0.5) grayscale(100%);
+.accessibility-mode .background-wrapper {
+  display: block; /* Show in accessibility mode */
+  filter: brightness(0.5) grayscale(100%); /* Moved filter here for accessibility */
 }
 
+/* Overlay styles */
 .overlay {
   position: absolute;
   top: 0;
@@ -36,8 +42,14 @@
   left: 0;
   background-color: rgba(0, 0, 0, 0.3);
   backdrop-filter: blur(1px);
+  display: none; /* Hidden for normal white background */
 }
 
+.accessibility-mode .overlay {
+  display: block; /* Show in accessibility mode */
+}
+
+/* Accessibility toggle button */
 .accessibility-btn {
   position: fixed;
   top: 1.5rem;
@@ -53,12 +65,12 @@
 }
 
 .accessibility-btn-normal {
-  background-color: rgba(0, 0, 0, 0.6);
+  background-color: #FC8019; /* Changed to orange */
   color: white;
 }
 
 .accessibility-btn-normal:hover {
-  background-color: rgba(0, 0, 0, 0.8);
+  background-color: #e6721a; /* Darker orange on hover */
 }
 
 .accessibility-btn-active {
@@ -70,6 +82,7 @@
   background-color: #60a5fa;
 }
 
+/* Content wrapper */
 .content-wrapper {
   position: relative;
   z-index: 10;
@@ -77,6 +90,8 @@
   display: flex;
   flex-direction: column;
 }
+
+/* Back button */
 .back-btn {
   position: absolute;
   top: 1rem;
@@ -90,18 +105,17 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 30; /* Add higher z-index */
-  pointer-events: auto; /* Ensure it's clickable */
+  z-index: 30;
+  pointer-events: auto;
 }
 
-
 .back-btn-normal {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #FC8019; /* Changed to orange */
   color: white;
 }
 
 .back-btn-normal:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: #e6721a; /* Darker orange on hover */
 }
 
 .back-btn-accessibility {
@@ -112,6 +126,8 @@
 .back-btn-accessibility:hover {
   background-color: #60a5fa;
 }
+
+/* Buttons container */
 .buttons-container {
   display: flex;
   flex-direction: column;
@@ -119,7 +135,7 @@
   align-items: center;
   justify-content: center;
   flex: 1;
-  margin-top: 0;
+  margin-top: -151px !important;
   min-height: 100vh;
   position: absolute;
   top: 0;
@@ -129,12 +145,12 @@
   padding-top: 0;
 }
 
-
+/* Navigation buttons (treated as cards) */
 .nav-btn {
   width: 15rem;
   padding: 1.25rem 2.5rem;
   border-radius: 0.75rem;
-  font-size: 1.125rem;
+  font-size: 1.5rem;
   font-weight: 600;
   transition: all 0.3s ease;
   cursor: pointer;
@@ -146,13 +162,13 @@
 }
 
 .nav-btn-normal {
-  background-color: rgba(255, 255, 255, 0.1);
-  color: white;
-  border: 1px solid white;
+  background-color: #FC8019; /* Changed to orange */
+  color: white; /* Ensured white text */
+  border: 1px solid #FC8019; /* Updated border to match */
 }
 
 .nav-btn-normal:hover {
-  background-color: rgba(255, 255, 255, 0.2);
+  background-color: #e6721a; /* Darker orange on hover */
 }
 
 .nav-btn-accessibility {
@@ -165,6 +181,7 @@
   background-color: #60a5fa;
 }
 
+/* Spacer */
 .spacer {
   height: 2rem;
 }

@@ -3,46 +3,20 @@
   min-height: 100vh;
   position: relative;
   transition: all 0.3s ease;
-  color: #4a2e1f;
+  color: #333333; /* Adjusted text color */
 }
 
+/* Accessibility mode overrides */
 .order-confirmed-container.accessibility-mode {
   background-color: black;
   color: #00BFFF;
 }
 
-/* Background container */
-.background-container {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-}
-
-.background-image {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.background-image.accessibility-mode {
-  filter: brightness(0.5) grayscale(1);
-}
-
-/* Background overlay */
+/* Remove background image and overlay for pure white background */
+.background-container,
+.background-image,
 .background-overlay {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  backdrop-filter: blur(4px);
-  background-color: rgba(243, 221, 203, 0.7);
-}
-
-.background-overlay.accessibility-mode {
-  background-color: rgba(0, 0, 0, 0.5);
+  display: none; /* Hide background image and overlay */
 }
 
 /* Accessibility toggle button */
@@ -98,8 +72,8 @@
   backdrop-filter: blur(4px);
   margin-top: -150px;
   transition: all 0.3s ease;
-  background-color: #fef4ec;
-  border: 1px solid #e2c1ac;
+  background-color: #ffffff; /* White background */
+  border: 1px solid #cccccc; /* Light gray border */
 }
 
 .confirmation-card.accessibility-mode {
@@ -114,12 +88,17 @@
   font-weight: bold;
   margin-bottom: 12px;
   line-height: 1.2;
+  color: #FC8019; /* Accent color */
+}
+
+.accessibility-mode .card-title {
+  color: #00BFFF;
 }
 
 /* Card description */
 .card-description {
   margin-bottom: 24px;
-  color: #5f3a2c;
+  color: #444444; /* Dark text */
 }
 
 .card-description.accessibility-mode {
@@ -143,12 +122,12 @@
   cursor: pointer;
   transition: all 0.3s ease;
   border: none;
-  background-color: #d86d2a;
-  color: white;
+  background-color: #FC8019; /* Accent color */
+  color: white; /* White text */
 }
 
 .action-button:hover {
-  background-color: #c75b1a;
+  background-color: #e16f19; /* Darker hover */
   transform: translateY(-1px);
 }
 
@@ -231,7 +210,7 @@
 
 /* Focus states for accessibility */
 .action-button:focus {
-  outline: 2px solid #d86d2a;
+  outline: 2px solid #FC8019; /* Adjusted to accent color */
   outline-offset: 2px;
 }
 

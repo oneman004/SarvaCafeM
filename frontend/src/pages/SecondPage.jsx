@@ -1,3 +1,4 @@
+import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import { IoArrowBack } from "react-icons/io5";
@@ -43,6 +44,7 @@ export default function SecondPage() {
         accessibilityMode ? "accessibility-mode" : "normal-mode"
       }`}
     >
+       <Header showNavigationTabs={false} />
       <div
         className={`background-wrapper ${
           accessibilityMode ? "accessibility-background" : ""
@@ -69,7 +71,7 @@ export default function SecondPage() {
 
       <div className="content-wrapper">
         {/* Back Button */}
-        <button
+        {/* <button
           onClick={() => navigate(-1)}
           className={`back-btn ${
             accessibilityMode
@@ -78,7 +80,7 @@ export default function SecondPage() {
           }`}
         >
           <IoArrowBack size={24} />
-        </button>
+        </button> */}
 
         <div className="buttons-container">
           <button

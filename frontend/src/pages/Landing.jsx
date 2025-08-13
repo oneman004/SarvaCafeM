@@ -1,3 +1,4 @@
+import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { motion } from "framer-motion";
@@ -40,7 +41,8 @@ export default function Landing() {
   return (
     <div
       className={`landing-container ${accessibilityMode ? "accessibility-mode" : ""}`}
-    >
+    >  
+     <Header showNavigationTabs={false} />
       {/* Background */}
       <div
         className={`background-image ${accessibilityMode ? "accessibility-mode" : ""}`}
@@ -54,14 +56,14 @@ export default function Landing() {
         className="top-title"
         style={{
           position: "absolute",
-          top: "4rem",
+          top: "8rem",
           left: "50%",
           transform: "translateX(-50%)",
           zIndex: 20,
-          color: accessibilityMode ? "#00BFFF" : "white",
-          fontSize: "2rem",
+          color: "#FC8019",
+          fontSize: "2.5rem",
           fontWeight: "bold",
-          textShadow: "0 2px 6px rgba(0,0,0,0.6)",
+        
           textAlign: "center"
         }}
       >
