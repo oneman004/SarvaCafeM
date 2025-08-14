@@ -12,7 +12,8 @@
     <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
     
     <script>
-      const mainColor = '#ff6600';
+      const mainColor = '#E5E4E2'; // Changed to light beige
+      const buttonColor = '#FFFFFF'; // White for buttons
       
       function applyStylesToMenuBtn(button) {
         if (!button) return;
@@ -22,11 +23,13 @@
         button.style.setProperty('right', '20px', 'important');
         button.style.setProperty('left', 'auto', 'important');
         button.style.setProperty('bottom', '20px', 'important');
+        
       }
 
       function applyStylesToMenuHeader(header) {
         if (!header) return;
         header.style.setProperty('background-color', mainColor, 'important');
+      
       }
 
       function addCloseButton() {
@@ -46,7 +49,7 @@
         closeBtn.style.background = 'transparent';
         closeBtn.style.border = 'none';
         closeBtn.style.fontSize = '24px';
-        closeBtn.style.color = 'white';
+        closeBtn.style.color = '#333333'; // Changed to dark color for better contrast
         closeBtn.style.cursor = 'pointer';
         closeBtn.style.width = '30px';
         closeBtn.style.height = '30px';
@@ -58,26 +61,22 @@
         closeBtn.style.transition = 'background-color 0.2s ease';
         
         closeBtn.addEventListener('mouseenter', function() {
-          closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+          closeBtn.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'; // Changed for better contrast
         });
         
         closeBtn.addEventListener('mouseleave', function() {
           closeBtn.style.backgroundColor = 'transparent';
         });
         
-        // THE FIX: Use the widget's own close mechanism
         closeBtn.addEventListener('click', function(e) {
           e.preventDefault();
           e.stopPropagation();
           
-          // Method 1: Click the main button to toggle closed
           const menuBtn = document.querySelector('.asw-menu-btn');
           if (menuBtn) {
-            // Temporarily remove our event listener to avoid conflicts
             const originalClick = menuBtn.onclick;
             menuBtn.click();
             
-            // If that doesn't work, try dispatching events the widget expects
             if (menu.style.display !== 'none') {
               const escEvent = new KeyboardEvent('keydown', {
                 key: 'Escape',
@@ -119,7 +118,9 @@
 
     <style>
       :root {
-        --main-color: #ff6600;
+        --main-color: #E5E4E2; /* Light beige background */
+        --button-color: #FFFFFF; /* White buttons */
+        --button-text: #000000; /* Black text */
       }
 
       .asw-menu-btn svg {
@@ -132,17 +133,28 @@
         right: 20px !important;
         left: auto !important;
         bottom: 20px !important;
+        background: var(--main-color) !important;
       }
 
       .asw-menu-btn::before {
         content: "♿" !important;
         font-size: 40px !important;
-        color: white !important;
+        color: #333333 !important; /* Changed to dark color for better contrast */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
         width: 100% !important;
         height: 100% !important;
+      }
+
+      /* Menu header with light beige background */
+      .asw-menu-header {
+        background-color: var(--main-color) !important;
+      }
+
+      /* Menu content with light beige background */
+      .asw-menu {
+        background-color: var(--main-color) !important;
       }
 
       .asw-footer {
@@ -152,28 +164,39 @@
       .asw-menu-content {
         max-height: 100% !important;
         padding-bottom: 40px !important;
+        background-color: var(--main-color) !important;
       }
 
       .asw-menu-header svg,
       .asw-menu-header svg path {
-        fill: var(--main-color) !important;
+        fill: #333333 !important; /* Changed to dark color for better contrast */
       }
 
-      /* Fix for reset button color */
+      /* White buttons with black text */
       .asw-menu .asw-footer button,
       .asw-menu button[type="button"],
       .asw-menu .asw-reset-btn,
+      .asw-menu button,
       button[style*="background-color: rgb(0, 123, 255)"] {
-        background-color: var(--main-color) !important;
-        background: var(--main-color) !important;
-        border-color: var(--main-color) !important;
+        background-color: var(--button-color) !important;
+        background: var(--button-color) !important;
+        border-color: var(--button-color) !important;
+        color: var(--button-text) !important;
+        border: 1px solid #E5E7EB !important;
+      }
+
+      /* Hover effect for buttons */
+      .asw-menu button:hover {
+        background-color: #F3F4F6 !important;
+        background: #F3F4F6 !important;
       }
 
       .asw-menu-footer button,
       .asw-footer button {
-        background-color: #ff6600 !important;
-        background: #ff6600 !important;
-        border: 1px solid #ff6600 !important;
+        background-color: var(--button-color) !important;
+        background: var(--button-color) !important;
+        border: 1px solid #E5E7EB !important;
+        color: var(--button-text) !important;
       }
 
       /* Close button styles */
@@ -184,7 +207,7 @@
         background: transparent !important;
         border: none !important;
         font-size: 24px !important;
-        color: white !important;
+        color: #333333 !important; /* Changed to dark color for better contrast */
         cursor: pointer !important;
         width: 30px !important;
         height: 30px !important;
@@ -197,14 +220,28 @@
       }
 
       .asw-close-btn:hover {
-        background-color: rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(0, 0, 0, 0.1) !important; /* Changed for better contrast */
       }
 
       .asw-close-btn:focus {
-        outline: 2px solid white !important;
+        outline: 2px solid #333333 !important; /* Changed to dark color */
         outline-offset: 2px !important;
       }
-    </style>
 
+      /* Additional styling for menu text to ensure readability */
+      .asw-menu * {
+        color: #333333 !important; /* Changed to dark color for better readability */
+      }
+
+      /* Override button text color specifically */
+      .asw-menu button * {
+        color: var(--button-text) !important;
+      }
+
+      /* Specific styling for menu title - NEW ADDITION */
+      .asw-menu-title.asw-translate {
+        color: #000000 !important; /* Black color for menu title */
+      }
+    </style>
   </body>
 </html>
