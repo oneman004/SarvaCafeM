@@ -12,7 +12,7 @@
     <script src="https://website-widgets.pages.dev/dist/sienna.min.js" defer></script>
     
     <script>
-      const mainColor = '#6B7280'; // Changed to grey
+      const mainColor = '#E5E4E2'; // Changed to light beige
       const buttonColor = '#FFFFFF'; // White for buttons
       
       function applyStylesToMenuBtn(button) {
@@ -49,7 +49,7 @@
         closeBtn.style.background = 'transparent';
         closeBtn.style.border = 'none';
         closeBtn.style.fontSize = '24px';
-        closeBtn.style.color = 'white';
+        closeBtn.style.color = '#333333'; // Changed to dark color for better contrast
         closeBtn.style.cursor = 'pointer';
         closeBtn.style.width = '30px';
         closeBtn.style.height = '30px';
@@ -61,7 +61,7 @@
         closeBtn.style.transition = 'background-color 0.2s ease';
         
         closeBtn.addEventListener('mouseenter', function() {
-          closeBtn.style.backgroundColor = 'rgba(255, 255, 255, 0.2)';
+          closeBtn.style.backgroundColor = 'rgba(0, 0, 0, 0.1)'; // Changed for better contrast
         });
         
         closeBtn.addEventListener('mouseleave', function() {
@@ -118,7 +118,7 @@
 
     <style>
       :root {
-        --main-color: #6B7280; /* Grey background */
+        --main-color: #E5E4E2; /* Light beige background */
         --button-color: #FFFFFF; /* White buttons */
         --button-text: #000000; /* Black text */
       }
@@ -139,7 +139,7 @@
       .asw-menu-btn::before {
         content: "♿" !important;
         font-size: 40px !important;
-        color: white !important;
+        color: #333333 !important; /* Changed to dark color for better contrast */
         display: flex !important;
         align-items: center !important;
         justify-content: center !important;
@@ -147,12 +147,12 @@
         height: 100% !important;
       }
 
-      /* Menu header with grey background */
+      /* Menu header with light beige background */
       .asw-menu-header {
         background-color: var(--main-color) !important;
       }
 
-      /* Menu content with grey background */
+      /* Menu content with light beige background */
       .asw-menu {
         background-color: var(--main-color) !important;
       }
@@ -169,7 +169,7 @@
 
       .asw-menu-header svg,
       .asw-menu-header svg path {
-        fill: white !important;
+        fill: #333333 !important; /* Changed to dark color for better contrast */
       }
 
       /* White buttons with black text */
@@ -207,7 +207,7 @@
         background: transparent !important;
         border: none !important;
         font-size: 24px !important;
-        color: white !important;
+        color: #333333 !important; /* Changed to dark color for better contrast */
         cursor: pointer !important;
         width: 30px !important;
         height: 30px !important;
@@ -220,22 +220,27 @@
       }
 
       .asw-close-btn:hover {
-        background-color: rgba(255, 255, 255, 0.2) !important;
+        background-color: rgba(0, 0, 0, 0.1) !important; /* Changed for better contrast */
       }
 
       .asw-close-btn:focus {
-        outline: 2px solid white !important;
+        outline: 2px solid #333333 !important; /* Changed to dark color */
         outline-offset: 2px !important;
       }
 
       /* Additional styling for menu text to ensure readability */
       .asw-menu * {
-        color: white !important;
+        color: #333333 !important; /* Changed to dark color for better readability */
       }
 
       /* Override button text color specifically */
       .asw-menu button * {
         color: var(--button-text) !important;
+      }
+
+      /* Specific styling for menu title - NEW ADDITION */
+      .asw-menu-title.asw-translate {
+        color: #000000 !important; /* Black color for menu title */
       }
     </style>
   </body>

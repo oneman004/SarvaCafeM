@@ -7,8 +7,8 @@
   justify-content: center;
   overflow: hidden;
   transition: all 0.3s ease;
-  background-color: white; /* Changed to white background */
-  color: #fc8019; /* Changed to orange text */
+  background-color: white; /* White background */
+  color: #fc8019; /* Orange text */
 }
 
 .landing-container.accessibility-mode {
@@ -16,7 +16,6 @@
   color: #00bfff;
 }
 
-/* Added background image styles without shadow 
 /* Background styles */
 .background-image {
   position: absolute;
@@ -34,20 +33,62 @@
   filter: brightness(0.5) grayscale(1);
 }
 
-/* Added specific class for welcome text to ensure orange color */
 /* Welcome text styling */
-.welcome-text {
-  color: #fc8019 !important;
-  font-size: 1.5rem;
-  font-weight: 600;
-  text-align: center;
-  margin-bottom: 1rem;
-  position: relative;
-  z-index: 5;
+/* Container wrapper */
+.welcome-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  padding: 2rem 1rem;
 }
 
-.welcome-text.accessibility-mode {
-  color: #00bfff !important;
+@media (min-width: 640px) {
+  .welcome-container {
+    padding: 3rem 1rem;
+  }
+}
+
+/* Welcome box */
+.welcome-box {
+  padding: 1.5rem 2rem;
+  border-radius: 1rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  background-color: #FC8019;
+}
+
+@media (min-width: 640px) {
+  .welcome-box {
+    padding: 2rem 3rem;
+  }
+}
+
+/* Welcome text */
+.welcome-text {
+  font-size: 1.5rem;
+  font-weight: 700;
+  text-align: center;
+  color: white;
+}
+
+@media (min-width: 640px) {
+  .welcome-text {
+    font-size: 1.875rem;
+  }
+}
+
+@media (min-width: 768px) {
+  .welcome-text {
+    font-size: 2.25rem;
+  }
+}
+
+/* Accessibility mode variations */
+.accessibility-mode .welcome-box {
+  background-color: #06b6d4;
+}
+
+.accessibility-mode .welcome-text {
+  color: black;
 }
 
 /* Accessibility toggle button */
@@ -61,7 +102,7 @@
   box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
   backdrop-filter: blur(16px);
   transition: all 0.3s ease;
-  background-color: #fc8019; /* Changed to orange */
+  background-color: #fc8019; /* Orange */
   color: white;
   border: none;
   cursor: pointer;
@@ -81,18 +122,19 @@
 }
 
 /* Main card */
-.main-card {
-  position: relative;
+.main-card .main-card {
+  position: fixed;
+  top: 9 rem;
   z-index: 10;
   border-radius: 1.5rem;
   padding: 2.5rem;
   width: 90%;
   max-width: 36rem;
-  box-shadow: 0 25px 50px -12px rgba(252, 128, 25, 0.25); /* Orange shadow */
+  /* box-shadow: 0 25px 50px -12px rgba(252, 128, 25, 0.25); */
   backdrop-filter: blur(16px);
-  background-color: #fc8019; /* Changed to orange background */
-  border: 1px solid #e6721a; /* Orange border */
-  color: white; /* White text on orange card */
+  background-color: white;
+  /* border: 1px solid #e6721a; */
+  color: white;
 }
 
 .main-card.accessibility-mode {
@@ -108,27 +150,28 @@
   text-align: center;
   margin-bottom: 2rem;
   line-height: 1.1;
-  color: white; /* White text in card */
+  color: #1b1212;
 }
 
 .subtitle {
   text-align: center;
   margin-bottom: 1.5rem;
-  color: rgba(255, 255, 255, 0.9); /* Light white for subtitle in card */
+  color: #1b1212;
+  font-size: 1.2rem;
 }
 
 .subtitle.accessibility-mode {
   color: #00bfff;
 }
 
-/* Language grid */
+/* Language grid - Updated for vertical alignment */
 .language-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: 1fr; /* Single column for vertical alignment */
   gap: 1rem;
 }
 
-/* Language buttons */
+/* Language buttons - Updated with orange color */
 .language-button {
   border-radius: 0.75rem;
   padding: 1rem 0;
@@ -138,14 +181,14 @@
   transition: all 0.3s ease;
   cursor: pointer;
   border: none;
-  background-color: rgba(255, 255, 255, 0.2); /* Semi-transparent white buttons */
-  border: 1px solid rgba(255, 255, 255, 0.3);
+  background-color: #fc8019; /* Solid orange background */
+  border: 1px solid #e6721a; /* Orange border */
   backdrop-filter: blur(16px);
-  color: white; /* White text on buttons */
+  color: white; /* White text */
 }
 
 .language-button:hover {
-  background-color: rgba(255, 255, 255, 0.3);
+  background-color: #e6721a; /* Darker orange on hover */
   transform: scale(1.05);
 }
 
@@ -173,18 +216,14 @@
     width: 95%;
     padding: 2rem;
   }
-
   .main-title {
     font-size: 1.875rem;
   }
-
   .accessibility-toggle {
     top: 1rem;
     right: 1rem;
     padding: 0.5rem;
   }
-
-  /* Added responsive styling for welcome text */
   .welcome-text {
     font-size: 1.25rem;
   }
@@ -192,14 +231,11 @@
 
 @media (max-width: 480px) {
   .language-grid {
-    grid-template-columns: repeat(2, 1fr);
+    grid-template-columns: 1fr; /* Keep single column on mobile */
   }
-
   .main-title {
     font-size: 1.5rem;
   }
-
-  /* Added mobile responsive styling for welcome text */
   .welcome-text {
     font-size: 1.125rem;
   }

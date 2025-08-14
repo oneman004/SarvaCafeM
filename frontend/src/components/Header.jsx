@@ -1,18 +1,17 @@
 import { useState, useRef, useEffect } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom"; // Import useLocation
 import { motion, AnimatePresence } from "framer-motion";
 import { FiMic, FiMicOff, FiArrowLeft } from "react-icons/fi";
 import logo from "../assets/images/logo_new.png";
 import translations from "../data/translations/Header.json";
-import NavigationTabs from "./NavigationTabs"; // Import the new component
+import NavigationTabs from "./NavigationTabs";
 
-export default function Header({ showNavigationTabs = true }) { // Add prop with default value
+export default function Header({ showNavigationTabs = true }) {
   const navigate = useNavigate();
+  const location = useLocation(); // Get the current location object
 
-  // Language from localStorage (default: en)
   const [language, setLanguage] = useState(localStorage.getItem("language") || "en");
   const t = translations[language];
-
   const [showCard, setShowCard] = useState(false);
   const [recording, setRecording] = useState(false);
   const [customRequest, setCustomRequest] = useState("");
@@ -21,11 +20,9 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
     localStorage.getItem("accessibilityMode") === "true"
   );
   const [activeTab, setActiveTab] = useState("table");
-
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
 
-  // Update when language/accessibility changes from other components
   useEffect(() => {
     const handleStorageChange = () => {
       setAccessibilityMode(localStorage.getItem("accessibilityMode") === "true");
@@ -35,7 +32,6 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
     return () => window.removeEventListener("storage", handleStorageChange);
   }, []);
 
-  // Color themes
   const bgHeader = accessibilityMode
     ? "bg-black text-white border-blue-400"
     : "bg-[#f5e3d5]/80 text-[#4a2e1f] border-[#e2c1ac]";
@@ -68,21 +64,17 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
         const mediaRecorder = new MediaRecorder(stream);
         const audioChunks = [];
         mediaRecorderRef.current = mediaRecorder;
-
         mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
-
         mediaRecorder.onstop = async () => {
           const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
           const formData = new FormData();
           formData.append("audio", audioBlob, "voice.wav");
-
           setIsProcessing(true);
           try {
             const res = await fetch("http://localhost:5050/speech-to-text", {
               method: "POST",
               body: formData,
             });
-
             const data = await res.json();
             setCustomRequest(data.order || "");
           } catch (err) {
@@ -91,7 +83,6 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
           }
           setIsProcessing(false);
         };
-
         mediaRecorder.start();
         setRecording(true);
       } catch (err) {
@@ -106,26 +97,29 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
     <>
       {/* Header */}
       <header
-        className={`fixed top-0 left-0 w-full z-20 flex flex-col items-center shadow-md backdrop-blur-md border-b ${bgHeader}`}
+        className={`fixed top-0 left-0 w-full z-20 flex flex-col items-center shadow-md backdrop-blur-md border-b h-20 ${bgHeader}`}
       >
         {/* First Row - Back Button + Centered Logo */}
-        <div className="w-full flex items-center justify-center relative">
-          {/* Back Button */}
-          <button
-            onClick={() => navigate(-1)}
-            className={`absolute left-4 p-1 rounded-full transition ${
-              accessibilityMode
-                ? "text-white hover:text-blue-400"
-                : "text-[#4a2e1f] hover:text-[#d86d2a]"
-            }`}
-          >
-            <FiArrowLeft size={22} />
-          </button>
+        <div className="w-full flex items-center justify-center relative h-20">
+          
+          {/* Conditionally render the Back Button */}
+          {location.pathname !== '/' && (
+            <button
+              onClick={() => navigate(-1)}
+              className={`absolute left-4 p-2 rounded-full transition ${
+                accessibilityMode
+                  ? "text-white hover:text-blue-400"
+                  : "text-[#4a2e1f] hover:text-[#d86d2a]"
+              }`}
+            >
+              <FiArrowLeft size={28} />
+            </button>
+          )}
 
           {/* Logo */}
-          <img src={logo} alt="Logo" className="h-10 object-contain" />
+          <img src={logo} alt="Logo" className="h-12 object-contain" />
         </div>
-
+        
         {/* Conditionally render NavigationTabs */}
         {showNavigationTabs && (
           <NavigationTabs
@@ -138,9 +132,10 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
         )}
       </header>
 
-      {/* Request Popup - Rest of your popup code remains the same */}
+      {/* Request Popup */}
       <AnimatePresence>
         {showCard && (
+          // The rest of your popup code remains unchanged
           <>
             <motion.div
               className="fixed inset-0 backdrop-blur-sm bg-black/30 z-40"
@@ -171,7 +166,6 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
                   </button>
                   <h4 className="text-lg font-semibold">{t.quickRequests}</h4>
                 </div>
-
                 <div className="flex flex-col gap-2 mb-4">
                   {t.requestOptions.map((item, idx) => (
                     <button
@@ -183,7 +177,6 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
                     </button>
                   ))}
                 </div>
-
                 <div className={`p-3 rounded-lg backdrop-blur-md ${cardBg}`}>
                   <div className="flex justify-between items-center mb-2">
                     <label className="text-sm font-semibold">{t.speakOrType}</label>
@@ -196,7 +189,6 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
                       {recording ? <FiMicOff /> : <FiMic />}
                     </button>
                   </div>
-
                   <textarea
                     className={`w-full p-2 mt-2 rounded-md text-sm ${inputBg}`}
                     placeholder={t.placeholder}
@@ -204,7 +196,6 @@ export default function Header({ showNavigationTabs = true }) { // Add prop with
                     value={customRequest}
                     onChange={(e) => setCustomRequest(e.target.value)}
                   />
-
                   <button
                     className={`w-full mt-3 py-2 px-4 rounded-md text-sm cursor-pointer shadow ${buttonBase}`}
                     onClick={handleFeatureClick}
