@@ -95,10 +95,11 @@ export default function Header({ showNavigationTabs = true }) {
 
   return (
     <>
-      {/* Header */}
-      <header
-        className={`fixed top-0 left-0 w-full z-20 flex flex-col items-center shadow-md backdrop-blur-md border-b h-20 ${bgHeader}`}
-      >
+      
+<header
+  className={`w-full flex flex-col items-center shadow-md backdrop-blur-md border-b h-20 ${bgHeader}`}
+>
+
         {/* First Row - Back Button + Centered Logo */}
         <div className="w-full flex items-center justify-center relative h-20">
           
