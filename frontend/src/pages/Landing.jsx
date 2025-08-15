@@ -38,7 +38,7 @@ export default function Landing() {
     <div className={accessibilityMode ? "bg-white" : "bg-gray-100"}>
       
       {/* 1. The Header is now a normal element at the top and will scroll with the page. */}
-      <Header showNavigationTabs={false} />
+     <Header showNavigationTabs={false} isFixed={false} />
 
       {/* 2. This new container holds all the content BELOW the header. */}
       <div className="relative">
