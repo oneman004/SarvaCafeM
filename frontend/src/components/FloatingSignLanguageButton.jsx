@@ -1,8 +1,8 @@
+
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { FaSignLanguage } from "react-icons/fa";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
-
 export default function FloatingSignLanguageButton({
   accessibilityMode,
   setAccessibilityMode,
@@ -16,7 +16,6 @@ export default function FloatingSignLanguageButton({
   const [formedLetters, setFormedLetters] = useState([]);
   const [shownImages, setShownImages] = useState([]);
   const showModal = activeModal === "sign";
-
   const handleShowSign = () => {
     if (!name.trim()) return;
     const chars = name
@@ -28,7 +27,6 @@ export default function FloatingSignLanguageButton({
     setShownImages([]);
     setCurrentIndex(0);
   };
-
   useEffect(() => {
     if (letters.length > 0 && currentIndex < letters.length) {
       const timer = setTimeout(() => {
@@ -39,7 +37,6 @@ export default function FloatingSignLanguageButton({
       return () => clearTimeout(timer);
     }
   }, [currentIndex, letters]);
-
   const toggleModal = () => {
     if (!showModal) {
       setName("");
@@ -50,19 +47,15 @@ export default function FloatingSignLanguageButton({
     }
     setActiveModal(showModal ? null : "sign");
   };
-
   const t = (key) => translations?.[key] || key;
-
   const bottomPositionSign = activeModal === 'pdf' 
     ? '10rem'
     : activeModal === 'sign' 
     ? '8rem'
     : '1.5rem';
-
   const btnClass = accessibilityMode
     ? 'bg-[#00BFFF] hover:bg-blue-400 text-black'
     : 'bg-[#f28500] hover:bg-[#d77400] text-white';
-
   return (
     <>
       {/* Hide button when ANY modal is active */}
@@ -84,7 +77,6 @@ export default function FloatingSignLanguageButton({
           </span>
         </button>
       )}
-
       <style jsx>{`
         @media (min-width: 640px) {
           button[style*="right: 1.5rem"] {
@@ -92,7 +84,6 @@ export default function FloatingSignLanguageButton({
           }
         }
       `}</style>
-
       {/* Modal with completely opaque background */}
       {showModal && (
         <div className="fixed inset-0 z-55">
@@ -105,7 +96,6 @@ export default function FloatingSignLanguageButton({
           >
             <div className="absolute inset-0 bg-black/80 backdrop-blur-lg"></div>
           </div>
-
           <div
             className={`relative z-60 min-h-screen w-full flex flex-col items-center justify-center px-4 py-6 sm:p-6 ${
               accessibilityMode ? "text-[#00BFFF]" : "text-white"
@@ -114,7 +104,6 @@ export default function FloatingSignLanguageButton({
             <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
               {t("makeNameSpeak")}
             </h1>
-
             <input
               className={`border p-2 rounded mb-4 w-full max-w-[250px] text-center text-base font-semibold shadow-md outline-none ${
                 accessibilityMode 
@@ -126,7 +115,6 @@ export default function FloatingSignLanguageButton({
               value={name}
               onChange={(e) => setName(e.target.value)}
             />
-
             <button
               onClick={handleShowSign}
               style={accessibilityMode ? {backgroundColor: "#00BFFF", color: "black"} : {backgroundColor: "#facc15", color: "black"}}
@@ -134,7 +122,6 @@ export default function FloatingSignLanguageButton({
             >
               {t("showInSignLanguage")}
             </button>
-
             <div className="mt-8 w-full overflow-x-auto">
               <div className="flex justify-center gap-2 px-4 min-w-fit">
                 <AnimatePresence>
@@ -173,7 +160,6 @@ export default function FloatingSignLanguageButton({
                 </AnimatePresence>
               </div>
             </div>
-
             <div className="flex mt-6 gap-2 text-2xl sm:text-4xl font-extrabold tracking-wide flex-wrap justify-center">
               <AnimatePresence>
                 {formedLetters.map((char, idx) => (
@@ -193,7 +179,6 @@ export default function FloatingSignLanguageButton({
                 ))}
               </AnimatePresence>
             </div>
-
             {/* FIXED: More rounded close button */}
             <button
               onClick={() => setActiveModal(null)}
