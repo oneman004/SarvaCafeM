@@ -152,8 +152,8 @@ export default function OrderSummary() {
         <div className="bill-modal-overlay">
           <div className="bill-modal">
             <div className="modal-header">
-              <img src={logo} alt={t("restaurantName")} />
-              <h3>{t("restaurantName")}</h3>
+              
+              <h3>Terra Cart</h3>
               <p>
                 {t("address").split("\n").map((line, i) => (
                   <span key={i}>
