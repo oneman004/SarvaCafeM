@@ -1,18 +1,25 @@
-import express from "express";
-import {
+const express = require("express");
+const {
   createOrder,
+  addKot,
+  finalizeOrder,
   getOrders,
   getOrderById,
   updateOrderStatus,
-  deleteOrder,
-} from "../controllers/orderController.js";
+  deleteOrder
+} = require("../controllers/orderController");
 
 const router = express.Router();
 
-router.post("/", createOrder); // Create new order
-router.get("/", getOrders); // Get all orders
-router.get("/:id", getOrderById); // Get order by ID
-router.put("/:id", updateOrderStatus); // Update order status
-router.delete("/:id", deleteOrder); // Delete order
+/* ---------- main flow ---------- */
+router.post("/", createOrder);            // first Confirm
+router.post("/:id/kot", addKot);          // Order More → Confirm
+router.post("/:id/finalize", finalizeOrder);
 
-export default router;
+/* ---------- optional helpers ---------- */
+router.get("/", getOrders);
+router.get("/:id", getOrderById);
+router.patch("/:id/status", updateOrderStatus);
+router.delete("/:id", deleteOrder);
+
+module.exports = router;

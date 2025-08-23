@@ -1,19 +1,17 @@
-// MenuPage.jsx
 import Header from "../components/Header";
 import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { FiMic, FiMicOff, FiEye } from "react-icons/fi";
+import { FiMic, FiMicOff } from "react-icons/fi";
 import { useAITranslation } from "../hooks/useAITranslation";
 import menuItems from "../data/menuData";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 import { HiSpeakerWave } from "react-icons/hi2";
 import { motion } from "framer-motion";
-import './MenuPage.css';
-
+import "./MenuPage.css";
+import { buildOrderPayload } from "../utils/orderUtils";
 
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
 const flaskApi = import.meta.env.VITE_FLASK_API_URL;
-
 
 const groupedMenu = menuItems.reduce((acc, item) => {
   acc[item.category] = acc[item.category] || [];
@@ -21,10 +19,8 @@ const groupedMenu = menuItems.reduce((acc, item) => {
   return acc;
 }, {});
 
-
-const TranslatedItem = ({ item, onAdd, onRemove, count, accessibilityMode }) => {
+const TranslatedItem = ({ item, onAdd, onRemove, count }) => {
   const [translatedName] = useAITranslation(item.name);
-
 
   return (
     <motion.div
@@ -41,9 +37,7 @@ const TranslatedItem = ({ item, onAdd, onRemove, count, accessibilityMode }) => 
         />
       </div>
 
-
       <div className="item-gradient"></div>
-
 
       <div className="item-footer">
         <div className="item-info">
@@ -51,41 +45,39 @@ const TranslatedItem = ({ item, onAdd, onRemove, count, accessibilityMode }) => 
           <p className="item-price">₹{item.price}</p>
         </div>
 
-
         <div className="item-controls">
           <button
             aria-label={`Remove one ${item.name}`}
             className="quantity-button"
             onClick={() => onRemove(item.name)}
-          >-</button>
-
+          >
+            -
+          </button>
 
           <span className="item-count">{count}</span>
-
 
           <button
             aria-label={`Add one ${item.name}`}
             className="quantity-button"
             onClick={() => onAdd(item.name)}
-          >+</button>
+          >
+            +
+          </button>
         </div>
       </div>
     </motion.div>
   );
 };
 
-
-const TranslatedSummaryItem = ({ item, qty, accessibilityMode }) => {
+const TranslatedSummaryItem = ({ item, qty }) => {
   const [translatedItem] = useAITranslation(item);
   return <li className="summary-item">{qty} x {translatedItem}</li>;
 };
-
 
 export default function MenuPage() {
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
-
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
@@ -93,17 +85,14 @@ export default function MenuPage() {
     localStorage.setItem("accessibilityMode", newMode.toString());
   };
 
-
   const [cart, setCart] = useState(() => {
     const saved = localStorage.getItem("sarva_cart");
     return saved ? JSON.parse(saved) : {};
   });
 
-
   useEffect(() => {
     localStorage.setItem("sarva_cart", JSON.stringify(cart));
   }, [cart]);
-
 
   const [recording, setRecording] = useState(false);
   const [orderText, setOrderText] = useState("");
@@ -114,7 +103,6 @@ export default function MenuPage() {
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
 
-
   const [manualEntry] = useAITranslation("Manual Entry");
   const [smartServe] = useAITranslation("Smart Serve");
   const [aiOrdered] = useAITranslation("AI Ordered:");
@@ -124,11 +112,9 @@ export default function MenuPage() {
   const [processingText] = useAITranslation("Processing your voice...");
   const [cartEmptyText] = useAITranslation("Cart is empty");
 
-
   const handleAdd = (name) => {
     setCart((prev) => ({ ...prev, [name]: (prev[name] || 0) + 1 }));
   };
-
 
   const handleRemove = (name) => {
     setCart((prev) => {
@@ -141,52 +127,43 @@ export default function MenuPage() {
     });
   };
 
-
+  // Create or update the same order before navigating to summary (KOT workflow)
   const handleContinue = async () => {
     if (Object.keys(cart).length === 0) return alert(cartEmptyText);
 
-
-    const itemsArray = Object.entries(cart).map(([name, quantity]) => {
-      const item = menuItems.find((i) => i.name === name);
-      return { name, quantity, price: item?.price || 0 };
-    });
-
-
-    const subtotal = itemsArray.reduce((acc, item) => acc + item.price * item.quantity, 0);
-    const gst = parseFloat((subtotal * 0.05).toFixed(2));
-    const total = parseFloat((subtotal + gst).toFixed(2));
-
-
-    const orderPayload = {
-      tableNumber: 1,
-      items: itemsArray,
-      subtotal,
-      gst,
-      total,
-    };
-
+    const orderPayload = buildOrderPayload(cart, "1"); // tableNumber "1"
 
     try {
-      const res = await fetch(`${nodeApi}/api/orders`, {
-        method: "POST",
+      const existingId = localStorage.getItem("sarva_orderId");
+      // EDIT 1: use /kot when an order exists
+      const url = existingId
+        ? `${nodeApi}/api/orders/${existingId}/kot`
+        : `${nodeApi}/api/orders`;
+      // EDIT 2: always POST (a KOT is an append, not a replace)
+      const method = "POST";
+
+      const res = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(orderPayload),
       });
 
-
       const data = await res.json();
-      if (data._id) {
+      if (res.ok && data?._id) {
         localStorage.setItem("sarva_orderId", data._id);
+        // Optional: clear only the UI cart so the sheet resets visually
+        setCart({});
+        localStorage.removeItem("sarva_cart");
+        // Keep original flow: go to Order Summary
         navigate("/order-summary");
       } else {
-        alert("❌ Failed to place order.");
+        alert("❌ Failed to save order.");
       }
     } catch (err) {
       alert("❌ Server Error");
       console.error(err);
     }
   };
-
 
   const handleVoiceOrder = async () => {
     setOrderText("");
@@ -202,14 +179,12 @@ export default function MenuPage() {
         const audioChunks = [];
         mediaRecorderRef.current = mediaRecorder;
 
-
         mediaRecorder.ondataavailable = (event) => audioChunks.push(event.data);
         mediaRecorder.onstop = async () => {
           const audioBlob = new Blob(audioChunks, { type: "audio/wav" });
           const formData = new FormData();
           formData.append("audio", audioBlob, "voice.wav");
           setIsProcessing(true);
-
 
           try {
             const res = await fetch(`${flaskApi}/speech-to-text`, {
@@ -229,7 +204,6 @@ export default function MenuPage() {
           setIsProcessing(false);
         };
 
-
         mediaRecorder.start();
         setRecording(true);
       } catch {
@@ -239,31 +213,32 @@ export default function MenuPage() {
     }
   };
 
-
   const handleResetCart = () => {
     setCart({});
     localStorage.removeItem("sarva_cart");
   };
 
-
   const processVoiceOrder = (text) => {
     const updatedCart = { ...cart };
-    text.split(",").map((entry) => entry.trim()).forEach((entry) => {
-      const match = entry.match(/(\d+)\s+(.*)/);
-      if (match) {
-        const qty = parseInt(match[1]);
-        const itemName = match[2];
-        const matchedItem = menuItems.find(
-          (item) => item.name.toLowerCase() === itemName.toLowerCase()
-        );
-        if (matchedItem) {
-          updatedCart[matchedItem.name] = (updatedCart[matchedItem.name] || 0) + qty;
+    text
+      .split(",")
+      .map((entry) => entry.trim())
+      .forEach((entry) => {
+        const match = entry.match(/(\d+)\s+(.*)/);
+        if (match) {
+          const qty = parseInt(match[1], 10);
+          const itemName = match[10];
+          const matchedItem = menuItems.find(
+            (item) => item.name.toLowerCase() === itemName.toLowerCase()
+          );
+          if (matchedItem) {
+            updatedCart[matchedItem.name] =
+              (updatedCart[matchedItem.name] || 0) + qty;
+          }
         }
-      }
-    });
+      });
     setCart(updatedCart);
   };
-
 
   const speakOrderSummary = () => {
     if (Object.keys(cart).length === 0) return alert(cartEmptyText);
@@ -278,7 +253,6 @@ export default function MenuPage() {
     synth.speak(utter);
   };
 
-
   return (
     <div className={`menu-root ${accessibilityMode ? "accessibility-mode" : ""}`}>
       {/* Background image + overlay */}
@@ -287,36 +261,16 @@ export default function MenuPage() {
         style={{ backgroundImage: `url(${restaurantBg})` }}
       ></div>
 
-
       <div className="overlay"></div>
-
-
-      {/* Accessibility Toggle 
-      <button
-        onClick={toggleAccessibility}
-        className={`fixed top-18 right-6 z-20 p-3 rounded-full shadow-lg backdrop-blur transition ${
-          accessibilityMode
-            ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-            : "bg-black/60 text-white hover:bg-black/80"
-        }`}
-        title="Toggle Accessibility Mode"
-        aria-pressed={accessibilityMode}
-      >
-        <FiEye size={24} />
-      </button>
-      */}
-
 
       <div className="content-wrapper">
         <Header accessibilityMode={accessibilityMode} />
-
 
         <div className="main-container">
           <div className="panels-container">
             {/* Left Panel - Smart Serve */}
             <div className="left-panel">
               <h3 className="smart-serve-title">{smartServe}</h3>
-
 
               <button
                 onClick={handleVoiceOrder}
@@ -327,11 +281,9 @@ export default function MenuPage() {
                 {recording ? <FiMicOff /> : <FiMic />}
               </button>
 
-
               <p className="instruction-text">
                 {isProcessing ? processingText : recording ? "Tap to Stop" : "Tap to Order"}
               </p>
-
 
               {orderText && (
                 <p className="ai-ordered-text">
@@ -339,38 +291,25 @@ export default function MenuPage() {
                 </p>
               )}
 
-
               {Object.keys(cart).length > 0 && (
                 <div className="order-summary-section">
                   <h4 className="order-summary-title">{orderSummary}</h4>
                   <ul className="summary-list">
                     {Object.entries(cart).map(([item, qty], idx) => (
-                      <TranslatedSummaryItem key={idx} item={item} qty={qty} accessibilityMode={accessibilityMode} />
+                      <TranslatedSummaryItem key={idx} item={item} qty={qty} />
                     ))}
                   </ul>
 
-
                   <div className="button-group">
-                    <button
-                      onClick={handleContinue}
-                      className="confirm-button"
-                    >
+                    <button onClick={handleContinue} className="confirm-button">
                       {confirmBtn}
                     </button>
 
-
-                    <button
-                      onClick={speakOrderSummary}
-                      className="speak-button"
-                    >
+                    <button onClick={speakOrderSummary} className="speak-button">
                       <HiSpeakerWave className="speaker-icon" /> {speakBtn}
                     </button>
 
-
-                    <button
-                      onClick={handleResetCart}
-                      className="reset-button"
-                    >
+                    <button onClick={handleResetCart} className="reset-button">
                       Reset Order
                     </button>
                   </div>
@@ -378,11 +317,9 @@ export default function MenuPage() {
               )}
             </div>
 
-
             {/* Right Panel - Manual / Menu */}
             <div className="right-panel">
               <h3 className="manual-entry-title">{manualEntry}</h3>
-
 
               <input
                 type="text"
@@ -392,11 +329,12 @@ export default function MenuPage() {
                 className="search-input"
               />
 
-
               {searchQuery.trim() ? (
                 <div className="search-results">
                   {menuItems
-                    .filter((item) => item.name.toLowerCase().includes(searchQuery.toLowerCase()))
+                    .filter((item) =>
+                      item.name.toLowerCase().includes(searchQuery.toLowerCase())
+                    )
                     .map((item, idx) => (
                       <TranslatedItem
                         key={idx}
@@ -404,24 +342,24 @@ export default function MenuPage() {
                         onAdd={handleAdd}
                         onRemove={handleRemove}
                         count={cart[item.name] || 0}
-                        accessibilityMode={accessibilityMode}
                       />
                     ))}
                 </div>
               ) : (
                 <div className="category-container">
                   {Object.entries(groupedMenu).map(([category, items]) => {
-                    // NOTE: useAITranslation used inside render in your original code — kept for parity
                     const [translatedCategory] = useAITranslation(category);
                     return (
                       <div key={category} className="category-wrapper">
                         <button
-                          onClick={() => setOpenCategory(openCategory === category ? null : category)}
+                          onClick={() =>
+                            setOpenCategory(openCategory === category ? null : category)
+                          }
                           className="category-button"
                         >
-                          {translatedCategory} <span>{openCategory === category ? "▲" : "▼"}</span>
+                          {translatedCategory}{" "}
+                          <span>{openCategory === category ? "▲" : "▼"}</span>
                         </button>
-
 
                         {openCategory === category && (
                           <div className="category-items">
@@ -432,7 +370,6 @@ export default function MenuPage() {
                                 onAdd={handleAdd}
                                 onRemove={handleRemove}
                                 count={cart[item.name] || 0}
-                                accessibilityMode={accessibilityMode}
                               />
                             ))}
                           </div>
