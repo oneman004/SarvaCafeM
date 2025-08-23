@@ -3,8 +3,11 @@ const dotenv = require("dotenv");
 const cors = require("cors");
 const connectDB = require("./config/db");
 
-dotenv.config(); // ✅ Load environment variables
-connectDB();     // ✅ Connect to MongoDB
+// Load env vars
+dotenv.config();
+
+// Connect to MongoDB
+connectDB();
 
 const app = express();
 
@@ -14,9 +17,9 @@ app.use(express.json());
 
 // 🔗 API Routes
 app.use("/api/users", require("./routes/userRoutes"));
-app.use("/api/orders", require("./routes/orderRoutes"));
+app.use("/api/orders", require("./routes/orderRoutes")); // uses controller inside routes
 
-// ✅ Health check
+// ✅ Health check route
 app.get("/", (req, res) => {
   res.status(200).send("Sarva Cafe Node.js Backend is Live 🚀");
 });
