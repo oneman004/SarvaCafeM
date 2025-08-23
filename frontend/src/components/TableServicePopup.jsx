@@ -368,7 +368,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               e.currentTarget.style.backgroundColor = "#dc2626";
             }}
           >
-            🚨 URGENT - Call Waiter
+            🚨 URGENT - Call Manager
           </button>
         </div>
 
