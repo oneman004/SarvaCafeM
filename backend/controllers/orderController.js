@@ -1,4 +1,3 @@
-// controllers/orderController.js
 const mongoose = require("mongoose");
 const Order = require("../models/orderModel");
 
@@ -6,13 +5,11 @@ const Order = require("../models/orderModel");
 const toPaise = (n) => Math.round(Number(n) * 100);
 const toRupees = (p) => Number((p / 100).toFixed(2));
 
-/* ------------------------------- helpers ---------------------------------- */
 function buildKot(items) {
-  // items: [{ name, quantity, price }]  price in rupees from client – ideally fetch server-side
   const lines = items.map(it => ({
     name: it.name,
     quantity: Number(it.quantity),
-    price: toPaise(it.price), // store as paise
+    price: toPaise(it.price),
   }));
 
   const subtotalP = lines.reduce((s, it) => s + it.price * it.quantity, 0);
@@ -27,7 +24,6 @@ function buildKot(items) {
   };
 }
 
-// Allowed status transitions
 const transitions = {
   Pending:   new Set(["Confirmed", "Cancelled"]),
   Confirmed: new Set(["Finalized", "Cancelled"]),
@@ -36,7 +32,6 @@ const transitions = {
   Cancelled: new Set([]),
 };
 
-/* -------------------------- create first order ---------------------------- */
 const createOrder = async (req, res) => {
   try {
     const { tableNumber, items } = req.body;
@@ -45,12 +40,15 @@ const createOrder = async (req, res) => {
     }
 
     const kot = buildKot(items);
-
     const order = await Order.create({
       tableNumber: String(tableNumber),
       kotLines: [kot],
       status: "Confirmed",
     });
+
+    // Emit socket event for new order
+    const io = req.app.get("io");
+    io.emit("newOrder", order);
 
     return res.status(201).json(order);
   } catch (err) {
@@ -58,7 +56,6 @@ const createOrder = async (req, res) => {
   }
 };
 
-/* ----------------------------- add another KOT ---------------------------- */
 const addKot = async (req, res) => {
   try {
     const { items } = req.body;
@@ -74,13 +71,17 @@ const addKot = async (req, res) => {
 
     order.kotLines.push(buildKot(items));
     await order.save();
+
+    // Emit socket event for updated order
+    const io = req.app.get("io");
+    io.emit("orderUpdated", order);
+
     return res.json(order);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
-/* ------------------------------ finalize order ---------------------------- */
 const finalizeOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -91,13 +92,17 @@ const finalizeOrder = async (req, res) => {
 
     order.status = "Finalized";
     await order.save();
+
+    // Emit socket event for finalized order
+    const io = req.app.get("io");
+    io.emit("orderUpdated", order);
+
     return res.json(order);
   } catch (err) {
     return res.status(500).json({ message: err.message });
   }
 };
 
-/* ------------------------------- utilities -------------------------------- */
 const getOrders = async (_req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 }).lean();
@@ -135,6 +140,11 @@ const updateOrderStatus = async (req, res) => {
     order.status = status;
     if (status === "Paid") order.paidAt = new Date();
     await order.save();
+
+    // Emit socket event for updated order
+    const io = req.app.get("io");
+    io.emit("orderUpdated", order);
+
     return res.json(order);
   } catch (err) {
     return res.status(500).json({ message: err.message });
@@ -145,6 +155,11 @@ const deleteOrder = async (req, res) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
+
+    // Emit socket event for deleted order
+    const io = req.app.get("io");
+    io.emit("orderDeleted", { id: req.params.id });
+
     return res.json({ message: "Order deleted" });
   } catch (err) {
     return res.status(500).json({ message: err.message });

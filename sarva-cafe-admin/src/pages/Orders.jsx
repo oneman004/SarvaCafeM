@@ -1,29 +1,61 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from "react";
+import io from "socket.io-client";
 
-// Dummy data for initial state
-const initialOrders = [
-  { id: '#1234', customer: 'Table 5', date: '2025-07-24', total: '₹850', status: 'Completed' },
-  { id: '#1235', customer: 'Table 2', date: '2025-07-24', total: '₹1200', status: 'Completed' },
-  { id: '#1236', customer: 'Table 1', date: '2025-07-24', total: '₹450', status: 'Pending' },
-  { id: '#1237', customer: 'Table 8', date: '2025-07-24', total: '₹2100', status: 'In Progress' },
-];
+const socket = io("http://localhost:5000"); // Use your backend URL here
 
 const Orders = () => {
-  const [orders, setOrders] = useState(initialOrders);
+  const [orders, setOrders] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [currentOrder, setCurrentOrder] = useState(null);
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState("");
 
   const getStatusClass = (status) => {
     switch (status) {
-      case 'Completed': return 'bg-green-100 text-green-800';
-      case 'Pending': return 'bg-yellow-100 text-yellow-800';
-      case 'In Progress': return 'bg-blue-100 text-blue-800';
-      default: return 'bg-gray-100 text-gray-800';
+      case "Completed":
+        return "bg-green-100 text-green-800";
+      case "Pending":
+        return "bg-yellow-100 text-yellow-800";
+      case "In Progress":
+        return "bg-blue-100 text-blue-800";
+      default:
+        return "bg-gray-100 text-gray-800";
     }
   };
 
-  // ✅ When Add Order is clicked, go to your second page
+  useEffect(() => {
+    // Fetch initial orders with full backend URL
+    fetch("http://localhost:5000/api/orders")
+      .then((res) => {
+        if (!res.ok) throw new Error("Network response was not ok");
+        return res.json();
+      })
+      .then((data) => {
+        console.log("Fetched orders from backend:", data);
+        setOrders(data);
+      })
+      .catch((err) => console.error("Failed to fetch orders:", err));
+
+    socket.on("newOrder", (order) => {
+      setOrders((prev) => [order, ...prev]);
+    });
+
+    socket.on("orderUpdated", (updatedOrder) => {
+      setOrders((prev) =>
+        prev.map((order) => (order._id === updatedOrder._id ? updatedOrder : order))
+      );
+    });
+
+    socket.on("orderDeleted", ({ id }) => {
+      setOrders((prev) => prev.filter((order) => order._id !== id));
+    });
+
+    return () => {
+      socket.off("newOrder");
+      socket.off("orderUpdated");
+      socket.off("orderDeleted");
+    };
+  }, []);
+
   const handleAdd = () => {
     window.location.href = "https://sarva-cafe-m.vercel.app/";
   };
@@ -34,8 +66,12 @@ const Orders = () => {
   };
 
   const handleDelete = (orderId) => {
-    if (window.confirm('Are you sure you want to delete this order?')) {
-      setOrders(orders.filter(order => order.id !== orderId));
+    if (window.confirm("Are you sure you want to delete this order?")) {
+      fetch(`http://localhost:5000/api/orders/${orderId}`, { method: "DELETE" })
+        .then(() => {
+          setOrders((prev) => prev.filter((order) => order._id !== orderId));
+        })
+        .catch((err) => console.error("Delete failed:", err));
     }
   };
 
@@ -44,28 +80,32 @@ const Orders = () => {
     const form = e.target;
     const updatedOrder = {
       ...currentOrder,
-      customer: form.customer.value,
-      total: `₹${form.total.value}`,
+      tableNumber: form.customer.value,
       status: form.status.value,
     };
 
-    if (orders.some(o => o.id === updatedOrder.id)) {
-      setOrders(orders.map(order => (order.id === updatedOrder.id ? updatedOrder : order)));
-    } else {
-      const newOrder = {
-        ...updatedOrder,
-        id: `#${Date.now().toString().slice(-4)}`,
-        date: new Date().toISOString().slice(0, 10),
-      };
-      setOrders([...orders, newOrder]);
-    }
+    const method = updatedOrder._id ? "PATCH" : "POST";
+    const url = updatedOrder._id
+      ? `http://localhost:5000/api/orders/${updatedOrder._id}/status`
+      : "http://localhost:5000/api/orders";
 
-    setIsModalOpen(false);
-    setCurrentOrder(null);
+    fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(updatedOrder),
+    })
+      .then((res) => res.json())
+      .then(() => {
+        setIsModalOpen(false);
+        setCurrentOrder(null);
+      })
+      .catch((err) => {
+        console.error("Save failed:", err);
+      });
   };
 
-  const filteredOrders = orders.filter(order =>
-    order.id.toLowerCase().includes(searchTerm.toLowerCase())
+  const filteredOrders = orders.filter((order) =>
+    order._id.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -94,20 +134,23 @@ const Orders = () => {
           <thead className="bg-gray-50">
             <tr>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Total</th>
+              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Table Number</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
               <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-200">
-            {filteredOrders.map(order => (
-              <tr key={order.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order.id}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{order.customer}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{order.date}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{order.total}</td>
+            {filteredOrders.length === 0 && (
+              <tr>
+                <td colSpan="4" className="px-6 py-4 text-center text-gray-500">
+                  No orders found.
+                </td>
+              </tr>
+            )}
+            {filteredOrders.map((order) => (
+              <tr key={order._id}>
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{order._id}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-600">{order.tableNumber}</td>
                 <td className="px-6 py-4 whitespace-nowrap">
                   <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${getStatusClass(order.status)}`}>
                     {order.status}
@@ -115,43 +158,25 @@ const Orders = () => {
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                   <button onClick={() => handleEdit(order)} className="text-indigo-600 hover:text-indigo-900 mr-4">Edit</button>
-                  <button onClick={() => handleDelete(order.id)} className="text-red-600 hover:text-red-900">Delete</button>
+                  <button onClick={() => handleDelete(order._id)} className="text-red-600 hover:text-red-900">Delete</button>
                 </td>
               </tr>
             ))}
-            {filteredOrders.length === 0 && (
-              <tr>
-                <td colSpan="6" className="px-6 py-4 text-center text-gray-500">
-                  No orders found.
-                </td>
-              </tr>
-            )}
           </tbody>
         </table>
       </div>
 
-      {/* ✨ If you don’t want modal anymore, you can remove below block */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full flex items-center justify-center">
           <div className="bg-white p-8 rounded-lg shadow-xl w-full max-w-md">
-            <h2 className="text-2xl font-bold mb-6">{currentOrder.id ? 'Edit Order' : 'Add New Order'}</h2>
+            <h2 className="text-2xl font-bold mb-6">Edit Order</h2>
             <form onSubmit={handleSave}>
               <div className="mb-4">
-                <label htmlFor="customer" className="block text-gray-700 text-sm font-bold mb-2">Customer</label>
+                <label htmlFor="customer" className="block text-gray-700 text-sm font-bold mb-2">Table Number</label>
                 <input
                   type="text"
                   name="customer"
-                  defaultValue={currentOrder.customer}
-                  className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  required
-                />
-              </div>
-              <div className="mb-4">
-                <label htmlFor="total" className="block text-gray-700 text-sm font-bold mb-2">Total (₹)</label>
-                <input
-                  type="number"
-                  name="total"
-                  defaultValue={currentOrder.total.replace('₹', '')}
+                  defaultValue={currentOrder?.tableNumber || ""}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                   required
                 />
@@ -160,12 +185,14 @@ const Orders = () => {
                 <label htmlFor="status" className="block text-gray-700 text-sm font-bold mb-2">Status</label>
                 <select
                   name="status"
-                  defaultValue={currentOrder.status}
+                  defaultValue={currentOrder?.status || "Pending"}
                   className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
                 >
                   <option>Pending</option>
-                  <option>In Progress</option>
-                  <option>Completed</option>
+                  <option>Confirmed</option>
+                  <option>Finalized</option>
+                  <option>Paid</option>
+                  <option>Cancelled</option>
                 </select>
               </div>
               <div className="flex items-center justify-end">

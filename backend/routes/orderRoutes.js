@@ -12,8 +12,8 @@ const {
 const router = express.Router();
 
 /* ---------- main flow ---------- */
-router.post("/", createOrder);            // first Confirm
-router.post("/:id/kot", addKot);          // Order More → Confirm
+router.post("/", createOrder);             // first Confirm
+router.post("/:id/kot", addKot);           // Order More → Confirm
 router.post("/:id/finalize", finalizeOrder);
 
 /* ---------- optional helpers ---------- */
