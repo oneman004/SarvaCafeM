@@ -147,7 +147,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               margin: 0,
             }}
           >
-            🍽️ Table Service
+            🍽️ Assistance
           </h3>
           <button
             onClick={() => {

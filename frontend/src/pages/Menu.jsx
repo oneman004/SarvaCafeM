@@ -103,7 +103,7 @@ export default function MenuPage() {
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
 
-  const [manualEntry] = useAITranslation("Manual Entry");
+  const [menu] = useAITranslation("Menu");
   const [smartServe] = useAITranslation("Smart Serve");
   const [aiOrdered] = useAITranslation("AI Ordered:");
   const [orderSummary] = useAITranslation("Order Summary:");
@@ -268,6 +268,7 @@ export default function MenuPage() {
 
         <div className="main-container">
           <div className="panels-container">
+          
             {/* Left Panel - Smart Serve */}
             <div className="left-panel">
               <h3 className="smart-serve-title">{smartServe}</h3>
@@ -316,10 +317,11 @@ export default function MenuPage() {
                 </div>
               )}
             </div>
+          
 
             {/* Right Panel - Manual / Menu */}
             <div className="right-panel">
-              <h3 className="manual-entry-title">{manualEntry}</h3>
+              <h3 className="manual-entry-title">{menu}</h3>
 
               <input
                 type="text"

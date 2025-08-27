@@ -103,14 +103,19 @@
 }
 
 /* Table info */
+.order-info{
+  font-size: 0.85rem;
+  font-weight: 400;
+  color: #444444; /* Dark text */
+}
 .table-info {
-  font-size: 1rem;
-  font-weight: 600;
-  margin-bottom: 16px;
+  font-size: 0.85rem;
+  font-weight: 400;
+  margin-bottom: 10px;
   color: #444444; /* Dark text */
 }
 
-.accessibility-mode .table-info {
+.accessibility-mode .order-info .table-info {
   color: #00BFFF;
 }
 
@@ -229,10 +234,10 @@
   }
   
   .restaurant-title {
-    font-size: 1rem;
+    font-size: 1.25rem;
   }
   
-  .table-info {
+  .table-info .order-info {
     font-size: 0.875rem;
   }
   

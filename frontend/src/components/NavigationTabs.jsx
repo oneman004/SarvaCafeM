@@ -51,7 +51,7 @@ export default function NavigationTabs({
             setShowCard(true); // Use internal state
           }}
         >
-          {t.tableService || "Table Service"}
+          {t.tableService || "Assistance"}
         </button>
 
         {/* Sign Name */}

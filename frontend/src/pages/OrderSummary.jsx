@@ -105,32 +105,74 @@ export default function OrderSummary() {
       </div>
 
       {/* Bill Popup Modal */}
-      {showBill && (
-        <div className="bill-modal-overlay">
-          <div className="bill-modal">
-            <h3>Terra Cart</h3>
+{showBill && (
+  <div className="bill-modal-overlay">
+    <div className="bill-modal">
+      {/* Terra Cart Brand */}
+      <h3>Terra Cart</h3>
+      <div className="bill-address">
+        <strong>G- Namaste Restaurant</strong>
+        Opp. Akash Petrol Pump, Kalananagar, Nashik<br />
+        Maharashtra 422004<br />
+      </div>
 
-            <div className="modal-items">
-              {combinedItems.map(it => (
-                <div key={it.name} className="item-row">
-                  <span>{it.name} × {it.quantity}</span>
-                  <span>₹{it.price * it.quantity}</span>
-                </div>
-              ))}
-            </div>
-
-            <div className="summary-totals">
-              <div className="total-row"><span>{t("subtotal")}</span><span>₹{totals.subtotal.toFixed(2)}</span></div>
-              <div className="total-row"><span>{t("gst")}</span><span>₹{totals.gst.toFixed(2)}</span></div>
-              <div className="total-row total-bold"><span>{t("total")}</span><span>₹{totals.totalAmount.toFixed(2)}</span></div>
-            </div>
-
-            <button onClick={() => setShowBill(false)} className="primary-btn">
-              {t("close")}
-            </button>
-          </div>
+      {/* Order Details */}
+      <div className="bill-details">
+        <div className="detail-row">
+          <span>Order ID:</span>
+          <span>{order._id || "—"}</span>
         </div>
-      )}
+        <div className="detail-row">
+          <span>Date:</span>
+          <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+        </div>
+        <div className="detail-row">
+          <span>Time:</span>
+          <span>{new Date(order.createdAt).toLocaleTimeString()}</span>
+        </div>
+        {order.tableNumber && (
+          <div className="detail-row">
+            <span>Table:</span>
+            <span>{order.tableNumber}</span>
+          </div>
+        )}
+      </div>
+
+      {/* Items */}
+      <div className="modal-items">
+  {combinedItems.map(it => (
+    <div key={it.name} className="item-row">
+      <span>{it.name} × {it.quantity}</span>
+      <span>₹{(((it.price || 0) / 100) * (it.quantity || 0)).toFixed(2)}</span>
+    </div>
+  ))}
+</div>
+
+
+      {/* Totals */}
+      <div className="summary-totals">
+        <div className="total-row">
+          <span>{t("subtotal")}</span>
+          <span>₹{totals.subtotal.toFixed(2)}</span>
+        </div>
+        <div className="total-row">
+          <span>{t("gst")}</span>
+          <span>₹{totals.gst.toFixed(2)}</span>
+        </div>
+        <div className="total-row total-bold">
+          <span>{t("total")}</span>
+          <span>₹{totals.totalAmount.toFixed(2)}</span>
+        </div>
+      </div>
+
+      {/* Close button */}
+      <button onClick={() => setShowBill(false)} className="close-btn">
+        {t("close")}
+      </button>
+    </div>
+  </div>
+)}
+
     </div>
   );
 }

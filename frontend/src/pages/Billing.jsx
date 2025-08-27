@@ -148,6 +148,11 @@ export default function Billing() {
             {t("restaurantName")}
           </h1>
 
+          {/* Order ID */}
+<h2 className="order-info">
+  {t("orderId")}: {order._id || order.id || localStorage.getItem("sarva_orderId") || "N/A"}
+</h2>
+
           {/* Table Info */}
           <h2 className="table-info">
             {t("table")} - {tableNumber || "N/A"}

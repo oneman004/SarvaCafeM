@@ -2,27 +2,30 @@
   "en": {
     "loading": "Loading billing details...",
     "fetchFailed": "❌ Failed to fetch order.",
-    "restaurantName": "Sarva Cafe",
+    "restaurantName": "Terra Cart",
     "table": "Table",
     "subtotal": "Sub-Total",
     "tax": "Tax (5%)",
     "total": "Total",
-    "proceedToPay": "Proceed to Pay"
+    "proceedToPay": "Proceed to Pay",
+    "orderId": "Order ID"
   },
   "hi": {
     "loading": "बिलिंग विवरण लोड हो रहा है...",
     "fetchFailed": "❌ ऑर्डर प्राप्त करने में विफल।",
-    "restaurantName": "सर्वा कैफे",
+    "restaurantName": "टेरा कार्ट",
     "table": "टेबल",
     "subtotal": "उप-योग",
     "tax": "कर (5%)",
     "total": "कुल",
-    "proceedToPay": "भुगतान करें"
+    "proceedToPay": "भुगतान करें",
+    "orderId": "ऑर्डर आईडी"
   },
   "mr": {
     "loading": "बिलिंग तपशील लोड होत आहे...",
     "fetchFailed": "❌ ऑर्डर मिळवण्यात अयशस्वी.",
-    "restaurantName": "सर्वा कॅफे",
+    "orderId": "ऑर्डर आयडी",
+    "restaurantName": "टेरा कार्ट",
     "table": "टेबल",
     "subtotal": "उप-एकूण",
     "tax": "कर (5%)",
@@ -32,7 +35,8 @@
   "gu": {
     "loading": "બિલિંગ વિગત લોડ થઈ રહી છે...",
     "fetchFailed": "❌ ઓર્ડર મેળવવામાં નિષ્ફળ.",
-    "restaurantName": "સર્વા કૅફે",
+    "orderId": "ઓર્ડર આઈડી",
+    "restaurantName": "ટેરા કાર્ટ",
     "table": "ટેબલ",
     "subtotal": "ઉપકુલ",
     "tax": "કર (5%)",
