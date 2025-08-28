@@ -1,10 +1,12 @@
 const mongoose = require("mongoose");
 const Order = require("../models/orderModel");
+const Counter = require("../models/countermodel");
 
-// Use integers for money (paise) to avoid float errors
+// Money helpers
 const toPaise = (n) => Math.round(Number(n) * 100);
 const toRupees = (p) => Number((p / 100).toFixed(2));
 
+// Build KOT
 function buildKot(items) {
   const lines = items.map(it => ({
     name: it.name,
@@ -24,6 +26,7 @@ function buildKot(items) {
   };
 }
 
+// Order status transitions
 const transitions = {
   Pending:   new Set(["Confirmed", "Cancelled"]),
   Confirmed: new Set(["Finalized", "Cancelled"]),
@@ -32,6 +35,7 @@ const transitions = {
   Cancelled: new Set([]),
 };
 
+// ---------------- CREATE ORDER ----------------
 const createOrder = async (req, res) => {
   try {
     const { tableNumber, items } = req.body;
@@ -40,13 +44,29 @@ const createOrder = async (req, res) => {
     }
 
     const kot = buildKot(items);
+
+    // Generate custom order ID
+    const today = new Date();
+    const dateStr = today.toISOString().slice(0, 10).replace(/-/g, ""); // YYYYMMDD
+
+    // Find today's counter
+    let counter = await Counter.findOneAndUpdate(
+      { date: dateStr },
+      { $inc: { seq: 1 } },
+      { new: true, upsert: true }
+    );
+
+    const seqStr = String(counter.seq).padStart(3, "0");
+    const orderId = `ORD-${dateStr}${seqStr}`;
+
     const order = await Order.create({
+      _id: orderId,
       tableNumber: String(tableNumber),
       kotLines: [kot],
       status: "Confirmed",
     });
 
-    // Emit socket event for new order
+    // Emit socket event
     const io = req.app.get("io");
     io.emit("newOrder", order);
 
@@ -56,6 +76,7 @@ const createOrder = async (req, res) => {
   }
 };
 
+// ---------------- ADD KOT ----------------
 const addKot = async (req, res) => {
   try {
     const { items } = req.body;
@@ -72,7 +93,6 @@ const addKot = async (req, res) => {
     order.kotLines.push(buildKot(items));
     await order.save();
 
-    // Emit socket event for updated order
     const io = req.app.get("io");
     io.emit("orderUpdated", order);
 
@@ -82,6 +102,7 @@ const addKot = async (req, res) => {
   }
 };
 
+// ---------------- FINALIZE ORDER ----------------
 const finalizeOrder = async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
@@ -93,7 +114,6 @@ const finalizeOrder = async (req, res) => {
     order.status = "Finalized";
     await order.save();
 
-    // Emit socket event for finalized order
     const io = req.app.get("io");
     io.emit("orderUpdated", order);
 
@@ -103,6 +123,7 @@ const finalizeOrder = async (req, res) => {
   }
 };
 
+// ---------------- GET ORDERS ----------------
 const getOrders = async (_req, res) => {
   try {
     const orders = await Order.find().sort({ createdAt: -1 }).lean();
@@ -112,11 +133,9 @@ const getOrders = async (_req, res) => {
   }
 };
 
+// ---------------- GET ORDER BY ID ----------------
 const getOrderById = async (req, res) => {
   try {
-    if (!mongoose.isValidObjectId(req.params.id)) {
-      return res.status(400).json({ message: "Invalid id" });
-    }
     const order = await Order.findById(req.params.id).lean();
     if (!order) return res.status(404).json({ message: "Order not found" });
     return res.json(order);
@@ -125,6 +144,7 @@ const getOrderById = async (req, res) => {
   }
 };
 
+// ---------------- UPDATE ORDER STATUS ----------------
 const updateOrderStatus = async (req, res) => {
   try {
     const { status } = req.body;
@@ -141,7 +161,6 @@ const updateOrderStatus = async (req, res) => {
     if (status === "Paid") order.paidAt = new Date();
     await order.save();
 
-    // Emit socket event for updated order
     const io = req.app.get("io");
     io.emit("orderUpdated", order);
 
@@ -151,12 +170,12 @@ const updateOrderStatus = async (req, res) => {
   }
 };
 
+// ---------------- DELETE ORDER ----------------
 const deleteOrder = async (req, res) => {
   try {
     const order = await Order.findByIdAndDelete(req.params.id);
     if (!order) return res.status(404).json({ message: "Order not found" });
 
-    // Emit socket event for deleted order
     const io = req.app.get("io");
     io.emit("orderDeleted", { id: req.params.id });
 

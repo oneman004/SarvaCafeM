@@ -24,9 +24,9 @@ const kotLineSchema = new mongoose.Schema(
 /* ---------- order schema ---------- */
 const orderSchema = new mongoose.Schema(
   {
+    _id:         { type: String }, // add this line
     tableNumber: { type: String, required: true },
     kotLines:    { type: [kotLineSchema], default: [] },
-
     status: {
       type:    String,
       enum:    ["Pending", "Confirmed", "Finalized", "Paid"],
@@ -36,5 +36,6 @@ const orderSchema = new mongoose.Schema(
   },
   { timestamps: true }
 );
+
 
 module.exports = mongoose.model("Order", orderSchema);

@@ -1,6 +1,6 @@
 import Header from "../components/Header";
 import { useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import { motion } from "framer-motion";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
 import floatingButtonTranslations from "../data/translations/floatingButtons.json";
@@ -25,6 +25,12 @@ export default function Landing() {
     localStorage.setItem("language", langCode);
     navigate("/secondpage");
   };
+
+    // ---------------- CLEAR sarva_orderId ----------------
+  useEffect(() => {
+    localStorage.removeItem("sarva_orderId");
+  }, []);
+  // -----------------------------------------------------
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
