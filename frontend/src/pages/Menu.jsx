@@ -9,7 +9,7 @@ import { HiSpeakerWave } from "react-icons/hi2";
 import { motion } from "framer-motion";
 import "./MenuPage.css";
 import { buildOrderPayload } from "../utils/orderUtils";
-
+// import AccessibilityFooter from "../components/AccessibilityFooter";
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
 const flaskApi = import.meta.env.VITE_FLASK_API_URL;
 
