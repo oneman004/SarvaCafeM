@@ -111,6 +111,7 @@ export default function MenuPage() {
   const [speakBtn] = useAITranslation("Speak Order");
   const [processingText] = useAITranslation("Processing your voice...");
   const [cartEmptyText] = useAITranslation("Cart is empty");
+  const [resetBtn] = useAITranslation("Reset Order");
 
   const handleAdd = (name) => {
     setCart((prev) => ({ ...prev, [name]: (prev[name] || 0) + 1 }));
@@ -311,8 +312,8 @@ export default function MenuPage() {
                     </button>
 
                     <button onClick={handleResetCart} className="reset-button">
-                      Reset Order
-                    </button>
+    {resetBtn}
+  </button>
                   </div>
                 </div>
               )}

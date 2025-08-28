@@ -54,14 +54,13 @@ const menuItems = [
   { name: "Pizza Bomb", price: 79, category: "All Time Hit", image: pizzaBombImg },
   { name: "Mini Batata Wada", price: 49, category: "All Time Hit", image: miniBatataWadaImg },
   { name: "Appe & Chutney", price: 69, category: "All Time Hit", image: appeChutneyImg },
-  { name: "namaste misal pav & dahi", price: 99, category: "Mini Thali", image: namasteMisalPavImg },
-  { name: "chola kulcha", price: 99, category: "Mini Thali", image: cholaKulchaImg },
-  { name: "rajma chawal", price: 99, category: "Mini Thali", image: rajmaChawalImg },
-  { name: "dal makhni jeera rice", price: 99, category: "Mini Thali", image: dalMakhniJeeraRiceImg },
-  { name: "veg korma & malbori paratha", price: 99, category: "Mini Thali", image: vegKormaParathaImg },
-  { name: "dal fry rice / dal khichadi dahi", price: 89, category: "Mini Thali", image: dalKhichadiDahiImg },
-  { name: "schezwan rice & manchurian", price: 99, category: "Mini Thali", image: schezwanRiceManchurianImg },
-
+  { name: "Namaste Misal Pav & Dahi", price: 99, category: "Mini Thali", image: namasteMisalPavImg },
+  { name: "Chola Kulcha", price: 99, category: "Mini Thali", image: cholaKulchaImg },
+  { name: "Rajma Chawal", price: 99, category: "Mini Thali", image: rajmaChawalImg },
+  { name: "Dal Makhni Jeera Rice", price: 99, category: "Mini Thali", image: dalMakhniJeeraRiceImg },
+  { name: "Veg Korma & Malbori Paratha", price: 99, category: "Mini Thali", image: vegKormaParathaImg },
+  { name: "Dal Fry Rice / Dal Khichadi Dahi", price: 89, category: "Mini Thali", image: dalKhichadiDahiImg },
+  { name: "Schezwan Rice & Manchurian", price: 99, category: "Mini Thali", image: schezwanRiceManchurianImg },
 
 
 
