@@ -28,7 +28,7 @@ export default function NavigationTabs({
   return (
     <>
       <div className="w-full flex border-t border-orange-500">
-        {/* Sign Menu */}
+        {/* Sign Menu 
         <button
           className={`flex-1 py-2 text-xs sm:text-sm md:text-base font-medium transition-colors border-r border-orange-500 ${
             activeTab === "signLanguage" ? buttonBase : inactiveTab
@@ -40,6 +40,7 @@ export default function NavigationTabs({
         >
           Sign Menu
         </button>
+        */}
 
         {/* Table Service */}
         <button
