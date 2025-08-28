@@ -1,18 +1,33 @@
 import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { FaArrowLeft, FaSignLanguage } from "react-icons/fa";
+import { FaArrowLeft } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import restaurantBg from "../assets/images/restaurant-img.jpg";
+import translations from "../data/translations/signname.json";
 
-export default function SignName({ accessibilityMode, translations }) {
+export default function SignName({ accessibilityMode }) {
   const navigate = useNavigate();
+
+  // Read language from localStorage with a safe fallback
+  const language = (() => {
+    try {
+      return localStorage.getItem("language") || "en";
+    } catch {
+      return "en";
+    }
+  })();
+
+  // Tiny local t() with fallback to English -> key
+  const t = (key) =>
+    (translations[language] && translations[language][key]) ||
+    (translations.en && translations.en[key]) ||
+    key;
+
   const [name, setName] = useState("");
   const [letters, setLetters] = useState([]);
   const [currentIndex, setCurrentIndex] = useState(0);
   const [formedLetters, setFormedLetters] = useState([]);
   const [shownImages, setShownImages] = useState([]);
-
-  const t = (key) => translations?.[key] || key;
 
   const handleShowSign = () => {
     if (!name.trim()) return;
@@ -37,68 +52,93 @@ export default function SignName({ accessibilityMode, translations }) {
     }
   }, [currentIndex, letters]);
 
+  // LIGHT PEACH THEME (no card)
+  const peachBg = "rgba(255, 243, 230, 0.92)"; // page overlay
+  const peachAccent = "#F7B27A";
+  const peachChip = "rgba(255, 240, 225, 0.85)";
+  const btn = "#F9A04B";
+  const btnHover = "#E68E3A";
+  const textPrimary = accessibilityMode ? "#111827" : "#4A2C2A";
+  const inputBg = accessibilityMode ? "#FFFFFF" : "rgba(255,255,255,0.85)";
+  const inputBorder = accessibilityMode ? "#111827" : peachAccent;
+
   return (
     <div className="relative min-h-screen w-full">
-      {/* Background */}
+      {/* Background image with light peach veil */}
       <div
-        className={`absolute inset-0 bg-cover bg-center ${
-          accessibilityMode ? "brightness-50 grayscale" : ""
-        }`}
+        className="absolute inset-0 bg-cover bg-center"
         style={{ backgroundImage: `url(${restaurantBg})` }}
       >
-        <div className="absolute inset-0 bg-black/80 backdrop-blur-lg"></div>
+        <div
+          className="absolute inset-0"
+          style={{ backgroundColor: peachBg, backdropFilter: "blur(2px)" }}
+        />
       </div>
 
-      {/* Content */}
+      {/* Content: full-page layout (no card) */}
       <div
-        className={`relative z-10 min-h-screen w-full flex flex-col items-center justify-center px-4 py-6 sm:p-6 ${
-          accessibilityMode ? "text-[#00BFFF]" : "text-white"
-        }`}
+        className="relative z-10 min-h-screen w-full flex flex-col items-center justify-center px-4 py-10"
+        style={{ color: textPrimary }}
       >
         {/* Back button */}
         <button
           onClick={() => navigate(-1)}
-          className={`absolute top-4 left-4 p-3 rounded-full shadow-lg text-lg font-bold hover:scale-110 transition-all ${
-            accessibilityMode
-              ? "bg-[#00BFFF] text-black hover:bg-blue-400"
-              : "bg-[#f28500] text-white hover:bg-[#d77400]"
-          }`}
+          className="absolute top-4 left-4 p-3 rounded-full shadow-md text-lg font-bold hover:scale-110 transition-all border"
           title={t("back")}
+          aria-label={t("back")}
+          style={{
+            backgroundColor: accessibilityMode ? "#FFFFFF" : btn,
+            color: accessibilityMode ? "#111827" : "#1F2937",
+            borderColor: accessibilityMode ? "#111827" : btn,
+          }}
+          onMouseOver={(e) => {
+            if (!accessibilityMode) e.currentTarget.style.backgroundColor = btnHover;
+          }}
+          onMouseOut={(e) => {
+            if (!accessibilityMode) e.currentTarget.style.backgroundColor = btn;
+          }}
         >
           <FaArrowLeft />
         </button>
 
-        <h1 className="text-2xl sm:text-3xl font-bold mb-4 text-center drop-shadow-md">
-          {t("Talk with Gestures")}
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-extrabold mb-6 text-center">
+          {t("title")}
         </h1>
 
-        <input
-          className={`border p-2 rounded mb-4 w-full max-w-[250px] text-center text-base font-semibold shadow-md outline-none ${
-            accessibilityMode
-              ? "bg-black border-[#00BFFF] text-[#00BFFF] placeholder-[#00BFFF]"
-              : "bg-white/10 border-white text-white placeholder-gray-300"
-          }`}
-          type="text"
-          placeholder={t("Enter any word or name")}
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-        />
+        {/* Input + CTA */}
+        <div className="flex flex-col items-center">
+          <input
+            className="border rounded w-full max-w-[320px] text-center text-base font-semibold shadow-sm outline-none px-3 py-2 placeholder-opacity-80 mb-3"
+            type="text"
+            placeholder={t("placeholder")}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            style={{
+              backgroundColor: inputBg,
+              borderColor: inputBorder,
+              color: textPrimary,
+            }}
+          />
 
-        <button
-          onClick={handleShowSign}
-          style={
-            accessibilityMode
-              ? { backgroundColor: "#00BFFF", color: "black" }
-              : { backgroundColor: "#facc15", color: "black" }
-          }
-          className="mt-2 font-bold px-4 py-2 rounded-full text-base shadow-md transition-transform transform hover:scale-105"
-        >
-          {t("Show in sign language")}
-        </button>
+          <button
+            onClick={handleShowSign}
+            className="font-bold px-5 py-2.5 rounded-full text-base shadow-md transition-transform transform hover:scale-[1.03] border"
+            style={{
+              backgroundColor: btn,
+              color: "#1F2937",
+              borderColor: btn,
+            }}
+            onMouseOver={(e) => (e.currentTarget.style.backgroundColor = btnHover)}
+            onMouseOut={(e) => (e.currentTarget.style.backgroundColor = btn)}
+          >
+            {t("cta")}
+          </button>
+        </div>
 
         {/* Sign language images */}
         <div className="mt-8 w-full overflow-x-auto">
-          <div className="flex justify-center gap-2 px-4 min-w-fit">
+          <div className="flex justify-center gap-2 px-2 sm:px-4 min-w-fit">
             <AnimatePresence>
               {shownImages.map((letter, idx) => {
                 const src = `/sign-language/${letter}.jpg`;
@@ -107,7 +147,11 @@ export default function SignName({ accessibilityMode, translations }) {
                     key={idx}
                     src={src}
                     alt={letter}
-                    className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0"
+                    className="w-14 h-14 sm:w-16 sm:h-16 object-contain shrink-0 rounded-lg"
+                    style={{
+                      backgroundColor: "#FFF8F1",
+                      border: `1px solid ${peachAccent}`,
+                    }}
                     initial={
                       idx === 0
                         ? { opacity: 0, scale: 0.3, rotate: -10 }
@@ -149,6 +193,12 @@ export default function SignName({ accessibilityMode, translations }) {
                   type: "spring",
                   bounce: 0.5,
                   delay: idx * 0.05,
+                }}
+                className="rounded-md px-1"
+                style={{
+                  color: textPrimary,
+                  backgroundColor: peachChip,
+                  border: `1px solid ${peachAccent}`,
                 }}
               >
                 {char}

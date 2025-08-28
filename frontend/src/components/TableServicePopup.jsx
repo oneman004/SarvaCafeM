@@ -1,20 +1,31 @@
 import React, { useRef, useState } from "react";
 import { FiX, FiMic, FiMicOff } from "react-icons/fi";
+import translations from "../data/translations/tableservicepopup.json";
 
 export default function TableServicePopup({ showCard, setShowCard }) {
+  // language from localStorage (fallback to en)
+  const language = (() => {
+    try {
+      return localStorage.getItem("language") || "en";
+    } catch {
+      return "en";
+    }
+  })();
+  const t = translations[language] || translations.en;
+
   const serviceRequests = [
-    { icon: "💧", text: "Water" },
-    { icon: "🧂", text: "Salt & Pepper" },
-    { icon: "🍽️", text: "Extra Plates" },
-    { icon: "🥄", text: "Spoons/Forks" },
-    { icon: "🧻", text: "Tissues/Napkins" },
-    { icon: "🧽", text: "Clean Table" },
-    { icon: "📋", text: "Menu Card" },
-    { icon: "💳", text: "Bill/Check" },
-    { icon: "🌶️", text: "Chutney/Sauce" },
-    { icon: "🥤", text: "Soft Drinks" },
-    { icon: "🍋", text: "Lemon Water" },
-    { icon: "🔔", text: "Call Waiter" },
+    { icon: "💧", key: "water" },
+    { icon: "🧂", key: "saltPepper" },
+    { icon: "🍽️", key: "plates" },
+    { icon: "🥄", key: "cutlery" },
+    { icon: "🧻", key: "napkins" },
+    { icon: "🧽", key: "cleanTable" },
+    { icon: "📋", key: "menuCard" },
+    { icon: "💳", key: "bill" },
+    { icon: "🌶️", key: "sauce" },
+    { icon: "🥤", key: "softDrinks" },
+    { icon: "🍋", key: "lemonWater" },
+    { icon: "🔔", key: "callWaiter" }
   ];
 
   const [customRequest, setCustomRequest] = useState("");
@@ -24,17 +35,17 @@ export default function TableServicePopup({ showCard, setShowCard }) {
   const mediaRecorderRef = useRef(null);
   const streamRef = useRef(null);
 
-  const handleServiceRequest = (service) => {
-    alert(`Request sent: ${service.text}`);
+  const handleServiceRequest = (serviceKey) => {
+    alert(`${t.alerts.requestSentPrefix} ${t.services[serviceKey]}`);
     setShowCard(false);
   };
 
   const handleSendCustom = () => {
     if (!customRequest.trim()) {
-      alert("Please type or speak your request.");
+      alert(t.alerts.emptyRequest);
       return;
     }
-    alert(`Request sent: ${customRequest.trim()}`);
+    alert(`${t.alerts.requestSentPrefix} ${customRequest.trim()}`);
     setCustomRequest("");
     setShowCard(false);
   };
@@ -72,13 +83,13 @@ export default function TableServicePopup({ showCard, setShowCard }) {
         try {
           const res = await fetch("http://localhost:5050/speech-to-text", {
             method: "POST",
-            body: formData,
+            body: formData
           });
           const data = await res.json();
           setCustomRequest(data.order || "");
         } catch (err) {
           console.error(err);
-          alert("Sorry, we couldn't process your voice. Please try again.");
+          alert(t.alerts.voiceError);
         } finally {
           setIsProcessing(false);
         }
@@ -88,7 +99,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
       setRecording(true);
     } catch (err) {
       console.error(err);
-      alert("Microphone access failed. Please allow mic permission.");
+      alert(t.alerts.micError);
       setRecording(false);
     }
   };
@@ -107,7 +118,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        padding: 20,
+        padding: 20
       }}
       onClick={() => {
         stopRecordingCleanup();
@@ -124,7 +135,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
           maxHeight: "85vh",
           overflow: "hidden",
           display: "flex",
-          flexDirection: "column",
+          flexDirection: "column"
         }}
         onClick={(e) => e.stopPropagation()}
       >
@@ -136,7 +147,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
             justifyContent: "space-between",
             padding: 16,
             borderBottom: "1px solid #e5e7eb",
-            background: "linear-gradient(to right, #fff7ed, white)",
+            background: "linear-gradient(to right, #fff7ed, white)"
           }}
         >
           <h3
@@ -144,10 +155,10 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               fontSize: 18,
               fontWeight: "bold",
               color: "#d97706",
-              margin: 0,
+              margin: 0
             }}
           >
-            🍽️ Assistance
+            {t.header}
           </h3>
           <button
             onClick={() => {
@@ -160,8 +171,9 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               border: "none",
               backgroundColor: "transparent",
               cursor: "pointer",
-              color: "#6b7280",
+              color: "#6b7280"
             }}
+            title="Close"
           >
             <FiX size={18} />
           </button>
@@ -175,10 +187,10 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               color: "#6b7280",
               marginBottom: 16,
               textAlign: "center",
-              fontWeight: 500,
+              fontWeight: 500
             }}
           >
-            👆 Tap any service you need
+            {t.tapService}
           </p>
 
           {/* Services Grid */}
@@ -187,13 +199,13 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               display: "grid",
               gridTemplateColumns: "1fr 1fr",
               gap: 12,
-              marginBottom: 16,
+              marginBottom: 16
             }}
           >
             {serviceRequests.map((service, index) => (
               <button
                 key={index}
-                onClick={() => handleServiceRequest(service)}
+                onClick={() => handleServiceRequest(service.key)}
                 style={{
                   padding: 12,
                   borderRadius: 8,
@@ -205,7 +217,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                   alignItems: "center",
                   gap: 8,
                   transition: "all 0.2s",
-                  boxShadow: "0 1px 3px 0 rgba(0,0,0,0.1)",
+                  boxShadow: "0 1px 3px 0 rgba(0,0,0,0.1)"
                 }}
                 onMouseOver={(e) => {
                   e.currentTarget.style.borderColor = "#fb923c";
@@ -223,10 +235,10 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                     fontWeight: 500,
                     textAlign: "center",
                     lineHeight: 1.2,
-                    color: "#374151",
+                    color: "#374151"
                   }}
                 >
-                  {service.text}
+                  {t.services[service.key]}
                 </span>
               </button>
             ))}
@@ -238,7 +250,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               border: "1px solid #e5e7eb",
               borderRadius: 12,
               padding: 12,
-              backgroundColor: "#fff7ed",
+              backgroundColor: "#fff7ed"
             }}
           >
             <div
@@ -246,13 +258,11 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                 display: "flex",
                 alignItems: "center",
                 justifyContent: "space-between",
-                marginBottom: 8,
+                marginBottom: 8
               }}
             >
-              <label
-                style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}
-              >
-                Speak or type your request
+              <label style={{ fontSize: 13, fontWeight: 600, color: "#374151" }}>
+                {t.speakOrType}
               </label>
               <button
                 onClick={handleVoiceInput}
@@ -264,16 +274,16 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                   cursor: "pointer",
                   color: "white",
                   backgroundColor: recording ? "#dc2626" : "#16a34a",
-                  opacity: isProcessing ? 0.7 : 1,
+                  opacity: isProcessing ? 0.7 : 1
                 }}
-                title={recording ? "Stop recording" : "Start recording"}
+                title={recording ? t.titleStop : t.titleStart}
               >
                 {recording ? <FiMicOff size={16} /> : <FiMic size={16} />}
               </button>
             </div>
 
             <textarea
-              placeholder="Type or speak your request..."
+              placeholder={t.placeholder}
               rows={3}
               value={customRequest}
               onChange={(e) => setCustomRequest(e.target.value)}
@@ -285,7 +295,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                 outline: "none",
                 resize: "vertical",
                 fontSize: 13,
-                backgroundColor: "white",
+                backgroundColor: "white"
               }}
             />
 
@@ -304,7 +314,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                 border: "none",
                 cursor: "pointer",
                 boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
-                opacity: isProcessing ? 0.7 : 1,
+                opacity: isProcessing ? 0.7 : 1
               }}
               onMouseOver={(e) => {
                 e.currentTarget.style.backgroundColor = "#ea580c";
@@ -313,7 +323,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                 e.currentTarget.style.backgroundColor = "#f97316";
               }}
             >
-              📩 Send to waiter
+              {t.sendButton}
             </button>
 
             {recording && (
@@ -322,10 +332,10 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                   marginTop: 8,
                   fontSize: 12,
                   color: "#dc2626",
-                  textAlign: "right",
+                  textAlign: "right"
                 }}
               >
-                🎙️ Listening…
+                {t.listening}
               </p>
             )}
             {isProcessing && (
@@ -334,10 +344,10 @@ export default function TableServicePopup({ showCard, setShowCard }) {
                   marginTop: 6,
                   fontSize: 12,
                   color: "#6b7280",
-                  textAlign: "right",
+                  textAlign: "right"
                 }}
               >
-                ⏳ Processing speech…
+                {t.processing}
               </p>
             )}
           </div>
@@ -345,7 +355,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
           {/* Emergency Call Button */}
           <button
             onClick={() => {
-              alert("🚨 Waiter called immediately!");
+              alert(t.alerts.urgentCalled);
               setShowCard(false);
             }}
             style={{
@@ -359,7 +369,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               color: "white",
               border: "none",
               cursor: "pointer",
-              boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)",
+              boxShadow: "0 4px 6px -1px rgba(0,0,0,0.1)"
             }}
             onMouseOver={(e) => {
               e.currentTarget.style.backgroundColor = "#b91c1c";
@@ -368,7 +378,7 @@ export default function TableServicePopup({ showCard, setShowCard }) {
               e.currentTarget.style.backgroundColor = "#dc2626";
             }}
           >
-            🚨 URGENT - Call Manager
+            {t.urgentButton}
           </button>
         </div>
 
@@ -378,11 +388,11 @@ export default function TableServicePopup({ showCard, setShowCard }) {
             padding: "12px 16px",
             borderTop: "1px solid #e5e7eb",
             backgroundColor: "#f9fafb",
-            textAlign: "center",
+            textAlign: "center"
           }}
         >
           <p style={{ fontSize: 12, color: "#6b7280", margin: 0 }}>
-            ⚡ Request sent instantly to nearest waiter
+            {t.footer}
           </p>
         </div>
       </div>

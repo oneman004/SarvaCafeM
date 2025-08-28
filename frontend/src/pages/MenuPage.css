@@ -73,6 +73,7 @@
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
   text-align: center;
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: rem;
 }
 @media (min-width: 768px) {
   .left-panel {
@@ -272,6 +273,7 @@
   border-radius: 0.75rem;
   box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -4px rgba(0,0,0,0.1);
   transition: all 0.15s cubic-bezier(0.4, 0, 0.2, 1);
+  margin-top: 2rem;
 }
 @media (min-width: 768px) {
   .right-panel {
@@ -286,7 +288,7 @@
   background-color: #ffffff;
 }
 .manual-entry-title {
-  font-size: 1.25rem;
+  font-size: 1.75rem;
   font-weight: 700;
   margin-bottom: 1rem;
 }

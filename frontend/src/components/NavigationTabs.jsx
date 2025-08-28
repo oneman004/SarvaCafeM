@@ -1,29 +1,34 @@
 // components/NavigationTabs.jsx
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import TableServicePopup from "./TableServicePopup";
-import translations from "../data/translations/Header.json";
+import translations from "../data/translations/navigationtabs.json";
 
-export default function NavigationTabs({ 
-  activeTab, 
-  setActiveTab, 
-  language, 
-  accessibilityMode 
+export default function NavigationTabs({
+  activeTab,
+  setActiveTab,
+  accessibilityMode,
 }) {
   const navigate = useNavigate();
-  const t = translations[language];
+
+  // Read language from localStorage with fallback to "en"
+  const language = useMemo(() => {
+    try {
+      return localStorage.getItem("language") || "en";
+    } catch {
+      return "en";
+    }
+  }, []);
+
+  // Select translations safely
+  const t = translations[language] || translations.en;
 
   // Internal state for Table Service popup
   const [showCard, setShowCard] = useState(false);
 
   // Updated color themes - plain white with black text and orange borders
-  const buttonBase = accessibilityMode
-    ? "bg-white text-black border-orange-500"
-    : "bg-white text-black border-orange-500";
-  
-  const inactiveTab = accessibilityMode
-    ? "bg-white text-black hover:bg-gray-50"
-    : "bg-white text-black hover:bg-gray-50";
+  const buttonBase = "bg-white text-black border-orange-500";
+  const inactiveTab = "bg-white text-black hover:bg-gray-50";
 
   return (
     <>
@@ -38,7 +43,7 @@ export default function NavigationTabs({
             navigate("/sign-language");
           }}
         >
-          Sign Menu
+          {t.signMenu || "Sign Menu"}
         </button>
         */}
 
@@ -49,7 +54,7 @@ export default function NavigationTabs({
           }`}
           onClick={() => {
             setActiveTab("table");
-            setShowCard(true); // Use internal state
+            setShowCard(true);
           }}
         >
           {t.tableService || "Assistance"}
@@ -65,11 +70,11 @@ export default function NavigationTabs({
             navigate("/sign-name");
           }}
         >
-          Sign Name
+          {t.signName || "Sign Name"}
         </button>
       </div>
 
-      {/* Table Service Popup - Built into NavigationTabs */}
+      {/* Table Service Popup */}
       <TableServicePopup
         showCard={showCard}
         setShowCard={setShowCard}
