@@ -105,7 +105,9 @@ export default function Billing() {
   }
 
   // Derive combined items and totals from all kotLines
-  const tableNumber = order.tableNumber;
+  // Derive combined items and totals from all kotLines
+const tableNumber = localStorage.getItem("takeaway") === "true" ? "0" : (order.tableNumber);
+
   const items = mergeKotLines(order.kotLines || []);
   const totals = sumTotals(order.kotLines || []);
 

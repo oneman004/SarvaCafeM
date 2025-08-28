@@ -117,26 +117,28 @@ export default function OrderSummary() {
       </div>
 
       {/* Order Details */}
-      <div className="bill-details">
-        <div className="detail-row">
-          <span>Order ID:</span>
-          <span>{order._id || "—"}</span>
-        </div>
-        <div className="detail-row">
-          <span>Date:</span>
-          <span>{new Date(order.createdAt).toLocaleDateString()}</span>
-        </div>
-        <div className="detail-row">
-          <span>Time:</span>
-          <span>{new Date(order.createdAt).toLocaleTimeString()}</span>
-        </div>
-        {order.tableNumber && (
-          <div className="detail-row">
-            <span>Table:</span>
-            <span>{order.tableNumber}</span>
-          </div>
-        )}
-      </div>
+<div className="bill-details">
+  <div className="detail-row">
+    <span>Order ID:</span>
+    <span>{order._id || "—"}</span>
+  </div>
+  <div className="detail-row">
+    <span>Date:</span>
+    <span>{new Date(order.createdAt).toLocaleDateString()}</span>
+  </div>
+  <div className="detail-row">
+    <span>Time:</span>
+    <span>{new Date(order.createdAt).toLocaleTimeString()}</span>
+  </div>
+  {/* Table Number / Takeaway display */}
+  <div className="detail-row">
+    <span>Table:</span>
+    <span>
+      {localStorage.getItem("takeaway") === "true" ? "0" : order.tableNumber }
+    </span>
+  </div>
+</div>
+
 
       {/* Items */}
       <div className="modal-items">

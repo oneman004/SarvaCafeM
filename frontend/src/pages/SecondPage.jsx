@@ -28,9 +28,12 @@ export default function SecondPage() {
   // Floating button translations
   const floatingButtonT = floatingButtonTranslations[language] || floatingButtonTranslations.en;
 
+  // Remove takeaway flag when this page mounts
   useEffect(() => {
+    localStorage.removeItem("takeaway");
     window.scrollTo({ top: 0, behavior: "smooth" });
   }, []);
+
 
   const toggleAccessibility = () => {
     const newMode = !accessibilityMode;
@@ -95,15 +98,16 @@ export default function SecondPage() {
           </button>
 
           <button
-            onClick={() => navigate("/takeaway")}
-            className={`nav-btn ${
-              accessibilityMode
-                ? "nav-btn-accessibility"
-                : "nav-btn-normal"
-            }`}
-          >
-            {t("takeAway")}
-          </button>
+  onClick={() => {
+    localStorage.setItem("takeaway", "true"); // Set flag in localStorage
+    navigate("/menu", { state: { tableNumber: 0 } }); // Navigate to Menu, pass tableNumber=0
+  }}
+  className={`nav-btn ${accessibilityMode ? "nav-btn-accessibility" : "nav-btn-normal"}`}
+>
+  {t("takeAway")}
+</button>
+
+
         </div>
 
         <div className="spacer"></div>
