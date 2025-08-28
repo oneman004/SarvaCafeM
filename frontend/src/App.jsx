@@ -13,13 +13,15 @@ import FloatingPDFButton from "./components/FloatingPDFButton";
 import FloatingSignLanguageButton from "./components/FloatingSignLanguageButton";
 import SignLanguage from "./pages/SignLanguage";
 import SignName from "./pages/SignName";
+import AccessibilityTools from "./components/AccessibilityTools";
 
 export default function App() {
   const [activeModal, setActiveModal] = useState(null); // "pdf" | "sign" | null
 
   return (
     <>
-    {/* <FloatingPDFButton
+      {/* Uncomment these if you want to use them alongside accessibility tools */}
+      {/* <FloatingPDFButton
         accessibilityMode={false}
         activeModal={activeModal}
         setActiveModal={setActiveModal}
@@ -28,8 +30,7 @@ export default function App() {
         accessibilityMode={false}
         activeModal={activeModal}
         setActiveModal={setActiveModal}
-      />
-    */}
+      /> */}
 
       <Routes>
         <Route path="/" element={<Landing />} />
@@ -44,6 +45,9 @@ export default function App() {
         <Route path="/sign-name" element={<SignName />} /> 
         <Route path="/sign-language" element={<SignLanguage />} />
       </Routes>
+
+      {/* Accessibility Tools - appears on all pages */}
+      <AccessibilityTools />
     </>
   );
 }
