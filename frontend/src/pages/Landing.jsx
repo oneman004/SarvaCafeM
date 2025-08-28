@@ -186,8 +186,7 @@ const startListening = () => {
                 className="text-5xl md:text-6xl font-extrabold leading-snug"
                 style={{ color: "#1B1212" }}
               >
-                <span className="block">Welcome&nbsp;to</span>
-                <span className="block">Terra&nbsp;Cart!</span>
+                <span className="block">Welcome&nbsp;!</span>
               </h1>
             </div>
           </div>

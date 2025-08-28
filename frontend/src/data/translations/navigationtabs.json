@@ -1,0 +1,22 @@
+{
+  "en": {
+    "tableService": "Assistance",
+    "signName": "Sign Name",
+    "signMenu": "Sign Menu"
+  },
+  "hi": {
+    "tableService": "मदद",
+    "signName": "साइन नाम",
+    "signMenu": "साइन मेन्यू"
+  },
+  "mr": {
+    "tableService": "मदत",
+    "signName": "साइन नाव",
+    "signMenu": "साइन मेनू"
+  },
+  "gu": {
+    "tableService": "મદદ",
+    "signName": "સાઇન નામ",
+    "signMenu": "સાઇન મેનૂ"
+  }
+}
