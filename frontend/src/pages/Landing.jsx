@@ -245,7 +245,7 @@ const startListening = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={readPageAloud}
-        className="fixed bottom-6 right-6 p-4 rounded-full shadow-lg bg-orange-500 text-white hover:bg-orange-600 focus:outline-none z-50"
+        className="fixed bottom-6 right-6 p-4 rounded-full shadow-lg bg-orange-600 text-white hover:bg-orange-700 focus:outline-none z-50"
       >
         <Volume2 className="w-6 h-6" />
       </motion.button>
