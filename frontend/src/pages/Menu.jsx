@@ -74,6 +74,37 @@ const TranslatedSummaryItem = ({ item, qty }) => {
   return <li className="summary-item">{qty} x {translatedItem}</li>;
 };
 
+// NEW: CategoryBlock.jsx-inlined component
+const CategoryBlock = ({ category, items, openCategory, setOpenCategory, cart, onAdd, onRemove }) => {
+  const [translatedCategory] = useAITranslation(category);
+
+  return (
+    <div className="category-wrapper">
+      <button
+        onClick={() => setOpenCategory(openCategory === category ? null : category)}
+        className="category-button"
+      >
+        {translatedCategory} <span>{openCategory === category ? "▲" : "▼"}</span>
+      </button>
+
+      {openCategory === category && (
+        <div className="category-items">
+          {items.map((item, idx) => (
+            <TranslatedItem
+              key={idx}
+              item={item}
+              onAdd={onAdd}
+              onRemove={onRemove}
+              count={cart[item.name] || 0}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 export default function MenuPage() {
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
@@ -233,7 +264,7 @@ const [recordVoiceAria] = useAITranslation("Record voice order");
         const match = entry.match(/(\d+)\s+(.*)/);
         if (match) {
           const qty = parseInt(match[1], 10);
-          const itemName = match[10];
+          const itemName = match[2];
           const matchedItem = menuItems.find(
             (item) => item.name.toLowerCase() === itemName.toLowerCase()
           );
@@ -357,38 +388,21 @@ const [recordVoiceAria] = useAITranslation("Record voice order");
                     ))}
                 </div>
               ) : (
-                <div className="category-container">
-                  {Object.entries(groupedMenu).map(([category, items]) => {
-                    const [translatedCategory] = useAITranslation(category);
-                    return (
-                      <div key={category} className="category-wrapper">
-                        <button
-                          onClick={() =>
-                            setOpenCategory(openCategory === category ? null : category)
-                          }
-                          className="category-button"
-                        >
-                          {translatedCategory}{" "}
-                          <span>{openCategory === category ? "▲" : "▼"}</span>
-                        </button>
+<div className="category-container">
+  {Object.entries(groupedMenu).map(([category, items]) => (
+    <CategoryBlock
+      key={category}
+      category={category}
+      items={items}
+      openCategory={openCategory}
+      setOpenCategory={setOpenCategory}
+      cart={cart}
+      onAdd={handleAdd}
+      onRemove={handleRemove}
+    />
+  ))}
+</div>
 
-                        {openCategory === category && (
-                          <div className="category-items">
-                            {items.map((item, idx) => (
-                              <TranslatedItem
-                                key={idx}
-                                item={item}
-                                onAdd={handleAdd}
-                                onRemove={handleRemove}
-                                count={cart[item.name] || 0}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
               )}
             </div>
           </div>
