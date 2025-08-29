@@ -112,6 +112,11 @@ export default function MenuPage() {
   const [processingText] = useAITranslation("Processing your voice...");
   const [cartEmptyText] = useAITranslation("Cart is empty");
   const [resetBtn] = useAITranslation("Reset Order");
+  const [tapToOrder] = useAITranslation("Tap to Order");
+const [tapToStop] = useAITranslation("Tap to Stop");
+const [searchPlaceholder] = useAITranslation("Search item...");
+const [recordVoiceAria] = useAITranslation("Record voice order");
+
 
   const handleAdd = (name) => {
     setCart((prev) => ({ ...prev, [name]: (prev[name] || 0) + 1 }));
@@ -275,17 +280,19 @@ export default function MenuPage() {
               <h3 className="smart-serve-title">{smartServe}</h3>
 
               <button
-                onClick={handleVoiceOrder}
-                className={`voice-button ${recording ? "recording" : ""}`}
-                aria-pressed={recording}
-                aria-label="Record voice order"
-              >
-                {recording ? <FiMicOff /> : <FiMic />}
-              </button>
+  onClick={handleVoiceOrder}
+  className={`voice-button ${recording ? "recording" : ""}`}
+  aria-pressed={recording}
+  aria-label={recordVoiceAria}
+>
+  {recording ? <FiMicOff /> : <FiMic />}
+</button>
+
 
               <p className="instruction-text">
-                {isProcessing ? processingText : recording ? "Tap to Stop" : "Tap to Order"}
-              </p>
+  {isProcessing ? processingText : recording ? tapToStop : tapToOrder}
+</p>
+
 
               {orderText && (
                 <p className="ai-ordered-text">
@@ -325,12 +332,13 @@ export default function MenuPage() {
               <h3 className="manual-entry-title">{menu}</h3>
 
               <input
-                type="text"
-                placeholder="Search item..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
+  type="text"
+  placeholder={searchPlaceholder}
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="search-input"
+/>
+
 
               {searchQuery.trim() ? (
                 <div className="search-results">
