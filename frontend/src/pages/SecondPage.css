@@ -185,3 +185,38 @@
 .spacer {
   height: 2rem;
 }
+
+.floating-voice-btn {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  background-color: orange;
+  border: none;
+  border-radius: 50%;
+  width: 60px;
+  height: 60px;
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  z-index: 9999; /* ✅ High z-index to ensure it's on top */
+  pointer-events: auto; /* ✅ Ensure pointer events work */
+  user-select: none; /* ✅ Prevent text selection */
+  outline: none; /* ✅ Remove focus outline */
+  transition: all 0.3s ease; /* ✅ Smooth transitions */
+}
+
+.floating-voice-btn:hover {
+  background-color: darkorange;
+  transform: scale(1.1); /* ✅ Visual feedback on hover */
+}
+
+.floating-voice-btn:active {
+  transform: scale(0.95); /* ✅ Visual feedback on click */
+  background-color: #cc7a00;
+}
+
+.floating-voice-btn:focus {
+  outline: 2px solid #fff;
+  outline-offset: 2px;
+}
