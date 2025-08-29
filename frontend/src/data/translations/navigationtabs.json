@@ -1,22 +1,22 @@
 {
   "en": {
     "tableService": "Assistance",
-    "signName": "Sign Name",
+    "signName": "Talk with Gesture",
     "signMenu": "Sign Menu"
   },
   "hi": {
     "tableService": "मदद",
-    "signName": "साइन नाम",
+    "signName": "हावभाव से बात करें",
     "signMenu": "साइन मेन्यू"
   },
   "mr": {
     "tableService": "मदत",
-    "signName": "साइन नाव",
+    "signName": "हावभावाने बोला",
     "signMenu": "साइन मेनू"
   },
   "gu": {
     "tableService": "મદદ",
-    "signName": "સાઇન નામ",
+    "signName": "હાવભાવથી વાત કરો",
     "signMenu": "સાઇન મેનૂ"
   }
 }

@@ -9,6 +9,7 @@ import { HiSpeakerWave } from "react-icons/hi2";
 import { motion } from "framer-motion";
 import "./MenuPage.css";
 import { buildOrderPayload } from "../utils/orderUtils";
+import ProcessOverlay from "../components/ProcessOverlay";
 // import AccessibilityFooter from "../components/AccessibilityFooter";
 const nodeApi = import.meta.env.VITE_NODE_API_URL;
 const flaskApi = import.meta.env.VITE_FLASK_API_URL;
@@ -69,12 +70,62 @@ const TranslatedItem = ({ item, onAdd, onRemove, count }) => {
   );
 };
 
+
+
 const TranslatedSummaryItem = ({ item, qty }) => {
   const [translatedItem] = useAITranslation(item);
   return <li className="summary-item">{qty} x {translatedItem}</li>;
 };
 
+// NEW: CategoryBlock.jsx-inlined component
+const CategoryBlock = ({ category, items, openCategory, setOpenCategory, cart, onAdd, onRemove }) => {
+  const [translatedCategory] = useAITranslation(category);
+
+  return (
+    <div className="category-wrapper">
+      <button
+        onClick={() => setOpenCategory(openCategory === category ? null : category)}
+        className="category-button"
+      >
+        {translatedCategory} <span>{openCategory === category ? "▲" : "▼"}</span>
+      </button>
+
+      {openCategory === category && (
+        <div className="category-items">
+          {items.map((item, idx) => (
+            <TranslatedItem
+              key={idx}
+              item={item}
+              onAdd={onAdd}
+              onRemove={onRemove}
+              count={cart[item.name] || 0}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+  );
+};
+
+
 export default function MenuPage() {
+
+  const initialProcessSteps = [
+  { label: "Validating cart", state: "pending" },
+  { label: "Order processing", state: "pending" },
+  { label: "Sending to backend", state: "pending" },
+  { label: "Routing to kitchen", state: "pending" },
+  { label: "Loading order summary", state: "pending" },
+];
+
+const [processOpen, setProcessOpen] = useState(false);
+const [processSteps, setProcessSteps] = useState(initialProcessSteps);
+
+const setStepState = (index, state) =>
+  setProcessSteps(prev =>
+    prev.map((s, i) => (i === index ? { ...s, state } : s))
+  );
+
   const [accessibilityMode, setAccessibilityMode] = useState(
     localStorage.getItem("accessibilityMode") === "true"
   );
@@ -111,6 +162,12 @@ export default function MenuPage() {
   const [speakBtn] = useAITranslation("Speak Order");
   const [processingText] = useAITranslation("Processing your voice...");
   const [cartEmptyText] = useAITranslation("Cart is empty");
+  const [resetBtn] = useAITranslation("Reset Order");
+  const [tapToOrder] = useAITranslation("Tap to Order");
+const [tapToStop] = useAITranslation("Tap to Stop");
+const [searchPlaceholder] = useAITranslation("Search item...");
+const [recordVoiceAria] = useAITranslation("Record voice order");
+
 
   const handleAdd = (name) => {
     setCart((prev) => ({ ...prev, [name]: (prev[name] || 0) + 1 }));
@@ -127,43 +184,97 @@ export default function MenuPage() {
     });
   };
 
-  // Create or update the same order before navigating to summary (KOT workflow)
-  const handleContinue = async () => {
-    if (Object.keys(cart).length === 0) return alert(cartEmptyText);
+// ADD: helper for step delays
+const wait = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+
+// Optional: tweak durations per step (ms)
+const DUR = {
+  validate: 1000,     // time to show "Validating cart"
+  order: 1000,        // "Order processing"
+  beforeSend: 1000,   // brief pause before sending to backend
+  kitchen: 1000,     // "Routing to kitchen"
+  summary: 1000,     // "Loading order summary"
+  error: 1000        // how long to keep error visible
+};
+
+
+  // REPLACE the whole handleContinue with this
+const handleContinue = async () => {
+  if (Object.keys(cart).length === 0) return alert(cartEmptyText);
+
+  // Reset & open overlay
+  setProcessSteps(initialProcessSteps.map(s => ({ ...s, state: "pending" })));
+  setProcessOpen(true);
+
+  try {
+    // Step 0: Validating cart
+    setStepState(0, "active");
+    await wait(DUR.validate);
+    setStepState(0, "done");
+
+    // Step 1: Order processing
+    setStepState(1, "active");
+    await wait(DUR.order);
+    setStepState(1, "done");
+
+    // Step 2: Sending to backend (active before fetch)
+    setStepState(2, "active");
+    await wait(DUR.beforeSend);
 
     const orderPayload = buildOrderPayload(cart, "1"); // tableNumber "1"
+    const existingId = localStorage.getItem("sarva_orderId");
+    const url = existingId
+      ? `${nodeApi}/api/orders/${existingId}/kot`
+      : `${nodeApi}/api/orders`;
+    const method = "POST";
 
-    try {
-      const existingId = localStorage.getItem("sarva_orderId");
-      // EDIT 1: use /kot when an order exists
-      const url = existingId
-        ? `${nodeApi}/api/orders/${existingId}/kot`
-        : `${nodeApi}/api/orders`;
-      // EDIT 2: always POST (a KOT is an append, not a replace)
-      const method = "POST";
+    const res = await fetch(url, {
+      method,
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderPayload),
+    });
 
-      const res = await fetch(url, {
-        method,
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(orderPayload),
-      });
+    const data = await res.json();
 
-      const data = await res.json();
-      if (res.ok && data?._id) {
-        localStorage.setItem("sarva_orderId", data._id);
-        // Optional: clear only the UI cart so the sheet resets visually
-        setCart({});
-        localStorage.removeItem("sarva_cart");
-        // Keep original flow: go to Order Summary
-        navigate("/order-summary");
-      } else {
-        alert("❌ Failed to save order.");
-      }
-    } catch (err) {
-      alert("❌ Server Error");
-      console.error(err);
+    if (!(res.ok && data?._id)) {
+      // Backend failed → mark error on step 2
+      setStepState(2, "error");
+      alert("❌ Failed to save order.");
+      await wait(DUR.error);
+      setProcessOpen(false);
+      return;
     }
-  };
+
+    // Backend OK
+    setStepState(2, "done");
+
+    // Step 3: Routing to kitchen
+    setStepState(3, "active");
+    await wait(DUR.kitchen);
+    setStepState(3, "done");
+
+    // Persist & clear cart
+    localStorage.setItem("sarva_orderId", data._id);
+    setCart({});
+    localStorage.removeItem("sarva_cart");
+
+    // Step 4: Loading order summary
+    setStepState(4, "active");
+    await wait(DUR.summary);
+    setStepState(4, "done");
+
+    // Navigate when all steps done
+    navigate("/order-summary");
+  } catch (err) {
+    // Network or unexpected error → mark backend step as error
+    setStepState(2, "error");
+    alert("❌ Server Error");
+    console.error(err);
+    await wait(DUR.error);
+    setProcessOpen(false);
+  }
+};
+
 
   const handleVoiceOrder = async () => {
     setOrderText("");
@@ -227,7 +338,7 @@ export default function MenuPage() {
         const match = entry.match(/(\d+)\s+(.*)/);
         if (match) {
           const qty = parseInt(match[1], 10);
-          const itemName = match[10];
+          const itemName = match[2];
           const matchedItem = menuItems.find(
             (item) => item.name.toLowerCase() === itemName.toLowerCase()
           );
@@ -274,17 +385,19 @@ export default function MenuPage() {
               <h3 className="smart-serve-title">{smartServe}</h3>
 
               <button
-                onClick={handleVoiceOrder}
-                className={`voice-button ${recording ? "recording" : ""}`}
-                aria-pressed={recording}
-                aria-label="Record voice order"
-              >
-                {recording ? <FiMicOff /> : <FiMic />}
-              </button>
+  onClick={handleVoiceOrder}
+  className={`voice-button ${recording ? "recording" : ""}`}
+  aria-pressed={recording}
+  aria-label={recordVoiceAria}
+>
+  {recording ? <FiMicOff /> : <FiMic />}
+</button>
+
 
               <p className="instruction-text">
-                {isProcessing ? processingText : recording ? "Tap to Stop" : "Tap to Order"}
-              </p>
+  {isProcessing ? processingText : recording ? tapToStop : tapToOrder}
+</p>
+
 
               {orderText && (
                 <p className="ai-ordered-text">
@@ -311,8 +424,8 @@ export default function MenuPage() {
                     </button>
 
                     <button onClick={handleResetCart} className="reset-button">
-                      Reset Order
-                    </button>
+    {resetBtn}
+  </button>
                   </div>
                 </div>
               )}
@@ -324,12 +437,13 @@ export default function MenuPage() {
               <h3 className="manual-entry-title">{menu}</h3>
 
               <input
-                type="text"
-                placeholder="Search item..."
-                value={searchQuery}
-                onChange={(e) => setSearchQuery(e.target.value)}
-                className="search-input"
-              />
+  type="text"
+  placeholder={searchPlaceholder}
+  value={searchQuery}
+  onChange={(e) => setSearchQuery(e.target.value)}
+  className="search-input"
+/>
+
 
               {searchQuery.trim() ? (
                 <div className="search-results">
@@ -348,43 +462,31 @@ export default function MenuPage() {
                     ))}
                 </div>
               ) : (
-                <div className="category-container">
-                  {Object.entries(groupedMenu).map(([category, items]) => {
-                    const [translatedCategory] = useAITranslation(category);
-                    return (
-                      <div key={category} className="category-wrapper">
-                        <button
-                          onClick={() =>
-                            setOpenCategory(openCategory === category ? null : category)
-                          }
-                          className="category-button"
-                        >
-                          {translatedCategory}{" "}
-                          <span>{openCategory === category ? "▲" : "▼"}</span>
-                        </button>
+<div className="category-container">
+  {Object.entries(groupedMenu).map(([category, items]) => (
+    <CategoryBlock
+      key={category}
+      category={category}
+      items={items}
+      openCategory={openCategory}
+      setOpenCategory={setOpenCategory}
+      cart={cart}
+      onAdd={handleAdd}
+      onRemove={handleRemove}
+    />
+  ))}
+</div>
 
-                        {openCategory === category && (
-                          <div className="category-items">
-                            {items.map((item, idx) => (
-                              <TranslatedItem
-                                key={idx}
-                                item={item}
-                                onAdd={handleAdd}
-                                onRemove={handleRemove}
-                                count={cart[item.name] || 0}
-                              />
-                            ))}
-                          </div>
-                        )}
-                      </div>
-                    );
-                  })}
-                </div>
               )}
             </div>
           </div>
         </div>
       </div>
+      <ProcessOverlay
+        open={processOpen}
+        steps={processSteps}
+        title="Processing your order"
+      />
     </div>
   );
 }

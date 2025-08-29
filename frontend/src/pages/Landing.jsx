@@ -178,12 +178,12 @@ const startListening = () => {
           <div className="mb-16">
             <div
               className={`
-                rounded-lg py-8 px-10 text-center
+                rounded-lg py-1 px-1 text-center
                 ${accessibilityMode ? "border-2 border-orange-800" : ""}
               `}
             >
               <h1
-                className="text-5xl md:text-6xl font-extrabold leading-snug"
+                className="text-5xl md:text-6xl sm:text-6xl font-extrabold leading-snug"
                 style={{ color: "#1B1212" }}
               >
                 <span className="block">Welcome&nbsp;!</span>
@@ -245,7 +245,7 @@ const startListening = () => {
         whileHover={{ scale: 1.1 }}
         whileTap={{ scale: 0.9 }}
         onClick={readPageAloud}
-        className="fixed bottom-6 right-6 p-4 rounded-full shadow-lg bg-orange-500 text-white hover:bg-orange-600 focus:outline-none z-50"
+        className="fixed bottom-6 right-6 p-4 rounded-full shadow-lg bg-orange-600 text-white hover:bg-orange-700 focus:outline-none z-50"
       >
         <Volume2 className="w-6 h-6" />
       </motion.button>
